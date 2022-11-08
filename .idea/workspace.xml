@@ -4,45 +4,55 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3cb8c8a0-4af0-4451-9b26-0fb520dd6951" name="Changes" comment="Update to use gradle instead of DevKit plus improvements">
+    <list default="true" id="3cb8c8a0-4af0-4451-9b26-0fb520dd6951" name="Changes" comment="Remove unneeded files/directories">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.run/Run Plugin.run.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/META-INF/plugin.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/AbstractLayout.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/DimensionInfo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/GridConstraints.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/GridLayoutManager.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/HorizontalInfo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/LayoutState.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/Spacer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/SupportCode$TextWithMnemonic.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/SupportCode.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/Util.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/VerticalInfo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/Collection$InfoBean.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/Collection$ItemBean$RequestBean$BodyBean$FormdataBean.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/Collection$ItemBean$RequestBean$BodyBean$UrlencodedBean.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/Collection$ItemBean$RequestBean$BodyBean.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/Collection$ItemBean$RequestBean$HeaderBean.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/Collection$ItemBean$RequestBean.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/Collection$ItemBean.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/Collection.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/JsonDialog$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/JsonDialog.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/Model.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/Retrofit2Generator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/source/Collection.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/source/JsonDialog.form" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/source/JsonDialog.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/source/Model.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/source/Retrofit2Generator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/test/Test.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation>
+            <after_sync>
+              <task name="setupDependencies" />
+            </after_sync>
+          </activation>
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="PostmanToRetrofit2-v2" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="PostmanToRetrofit2-v2" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="PostmanToRetrofit2-v2" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="intellij" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -113,18 +123,65 @@
       <pane id="Scope" />
     </panes>
   </component>
-  <component name="PropertiesComponent">
-    <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1590635816775" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "settings.editor.selected.configurable": "preferences.pluginManager"
+  }
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/src/source" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.Run Plugin">
+  <component name="RunManager" selected="Application.Test">
+    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.Test" />
+      <module name="PostmanToRetrofit2-v2.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PostmanToRetrofit2-v2 [runPluginVerifier]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="runPluginVerifier" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="PostmanToRetrofit2-v2" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="PostmanToRetrofit2-v2" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Plugin" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType">
       <module name="Retrofit2Plugin" />
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -ea" />
@@ -144,9 +201,17 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="Application.Test" />
       <item itemvalue="Gradle.Run Plugin" />
+      <item itemvalue="Gradle.PostmanToRetrofit2-v2 [runPluginVerifier]" />
       <item itemvalue="Plugin.Plugin" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Test" />
+        <item itemvalue="Gradle.PostmanToRetrofit2-v2 [runPluginVerifier]" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -159,6 +224,14 @@
       <option name="presentableId" value="Default" />
       <updated>1547104908494</updated>
     </task>
+    <task id="LOCAL-00001" summary="Remove unneeded files/directories">
+      <created>1667940307300</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1667940307300</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TodoView">
@@ -216,7 +289,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Update to use gradle instead of DevKit" />
     <MESSAGE value="Update to use gradle instead of DevKit plus improvements" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update to use gradle instead of DevKit plus improvements" />
+    <MESSAGE value="Remove unneeded files/directories" />
+    <option name="LAST_COMMIT_MESSAGE" value="Remove unneeded files/directories" />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
