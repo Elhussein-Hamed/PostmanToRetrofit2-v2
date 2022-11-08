@@ -1,31 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="52b31793-0b57-425b-98da-a49b110bc87c" name="Default Changelist" comment="">
+    <list default="true" id="3cb8c8a0-4af0-4451-9b26-0fb520dd6951" name="Changes" comment="Update to use gradle instead of DevKit plus improvements">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Retrofit2Plugin.jar" beforeDir="false" afterPath="$PROJECT_DIR$/Retrofit2Plugin.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/META-INF/plugin.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/source/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/source/Model.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.run/Run Plugin.run.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/META-INF/plugin.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/AbstractLayout.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/DimensionInfo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/GridConstraints.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/GridLayoutManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/HorizontalInfo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/LayoutState.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/Spacer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/SupportCode$TextWithMnemonic.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/SupportCode.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/Util.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/com/intellij/uiDesigner/core/VerticalInfo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/Collection$InfoBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/Collection$ItemBean$RequestBean$BodyBean$FormdataBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/Collection$ItemBean$RequestBean$BodyBean$UrlencodedBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/Collection$ItemBean$RequestBean$BodyBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/Collection$ItemBean$RequestBean$HeaderBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/Collection$ItemBean$RequestBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/Collection$ItemBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/Collection.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/JsonDialog$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/JsonDialog.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/Model.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Retrofit2Plugin/source/Retrofit2Generator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/Collection.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/JsonDialog.form" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/JsonDialog.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/Model.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/source/Retrofit2Generator.java" beforeDir="false" />
     </list>
-    <ignored path="$PROJECT_DIR$/out/" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/resources/META-INF/plugin.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="3" column="14" selection-start-line="3" selection-start-column="14" selection-end-line="3" selection-end-column="14" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -107,19 +124,7 @@
       <recent name="$PROJECT_DIR$/src/source" />
     </key>
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Gradle.Run Plugin">
     <configuration name="Plugin" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType">
       <module name="Retrofit2Plugin" />
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -ea" />
@@ -138,6 +143,10 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Gradle.Run Plugin" />
+      <item itemvalue="Plugin.Plugin" />
+    </list>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -192,6 +201,22 @@
       <window_info anchor="right" id="Capture Analysis" order="6" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
     </layout>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Update to use gradle instead of DevKit" />
+    <MESSAGE value="Update to use gradle instead of DevKit plus improvements" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update to use gradle instead of DevKit plus improvements" />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
