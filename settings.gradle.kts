@@ -1,0 +1,1 @@
+rootProject.name = "PostmanToRetrofit2-v2"
