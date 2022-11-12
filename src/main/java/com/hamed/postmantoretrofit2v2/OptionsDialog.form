@@ -110,7 +110,7 @@
               <focusable value="false"/>
               <font size="14"/>
               <opaque value="true"/>
-              <text value="RxJava Resopnse type: "/>
+              <text value="RxJava Response type: "/>
               <verticalAlignment value="1"/>
               <verticalTextPosition value="1"/>
             </properties>

@@ -15,7 +15,7 @@
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
       Convert postman collection to Retrofit2 java code<br>
-      This is a fork of https://plugins.jetbrains.com/plugin/11612-postman-to-retrofit2
+      This is a fork of <a href="https://plugins.jetbrains.com/plugin/11612-postman-to-retrofit2">Postman to Retrofit2</a>.
     ]]></description>
 
     <!-- Product and plugin compatibility requirements.
