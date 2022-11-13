@@ -20,15 +20,15 @@ gradle
 
 	implementation 'com.squareup.retrofit2:retrofit:2.5.0'
 
-The version can be changed to suit the required need.
+Other versions can be found in [Maven](https://mvnrepository.com/artifact/com.squareup.retrofit2/retrofit)
+
 ### Import RxJava2
 gradle
 
 	implementation "io.reactivex.rxjava2:rxjava:2.0.1"
 
-The version can be changed to suit the required need.
-	
-### Create ApiService.java
+Other versions can be found in [Maven](https://mvnrepository.com/artifact/io.reactivex.rxjava2/rxjava)
+### Create ApiService.java Interface
 
 <kbd>Right click</kbd>  > <kbd>Generate</kbd> > <kbd>Retrofit2Generator</kbd> > Paste your postman collection > <kbd>OK</kbd>
 
@@ -40,7 +40,7 @@ Or
 The plugin currently supports RxJava response types only. The default type used for the response is `Observable<T>`, where T is the object created from the APIs in Postman collection.
 
 To change the type,
-<kbd>Right click</kbd> > <kbd>Generate</kbd> > <kbd>Retrofit2Generator</kbd> > <kbd>Options</kbd> > Select the RxJava type from the drop-down menu
+<kbd>Right click</kbd> > <kbd>Generate</kbd> > <kbd>Retrofit2Generator</kbd> > <kbd>Options</kbd> > Select the RxJava type from the drop-down menu.
 
 The other types supported are
 * `Observable<Response<T>>`

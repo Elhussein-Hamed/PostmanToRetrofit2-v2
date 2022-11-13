@@ -16,7 +16,7 @@ public class Retrofit2Generator extends AnAction {
 
         JsonDialog jsonDialog = new JsonDialog(project, editor);
         jsonDialog.pack();
-        jsonDialog.setTitle("Postman collection");
+        jsonDialog.setTitle("Postman To Retrofit2 V2");
         jsonDialog.setSize(600, 400);
         jsonDialog.setVisible(true);
     }
