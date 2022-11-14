@@ -19,6 +19,14 @@
       More details in the <a href="https://github.com/Elhussein-Hamed/PostmanToRetrofit2-v2">GitHup page</a>.
     ]]></description>
 
+    <change-notes><![CDATA[
+        <h3>Improvements</h3>
+        <ul>
+          <li>Remember the last opened directory</li>
+          <li>Remember the selected response type</li>
+        </ul>
+    ]]></change-notes>
+
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>

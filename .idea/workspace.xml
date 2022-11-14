@@ -4,13 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3cb8c8a0-4af0-4451-9b26-0fb520dd6951" name="Changes" comment="Persist the plugin data:&#10;* The directory navigated to is remembered&#10;* The selected response type is remembered">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/PluginService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/PluginState.java" afterDir="false" />
+    <list default="true" id="3cb8c8a0-4af0-4451-9b26-0fb520dd6951" name="Changes" comment="Update the plugin jar file">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PostmanToRetrofit2-v2.jar" beforeDir="false" afterPath="$PROJECT_DIR$/PostmanToRetrofit2-v2.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/JsonDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/JsonDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/OptionsDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/OptionsDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -49,6 +46,24 @@
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="PostmanToRetrofit2-v2" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="PostmanToRetrofit2-v2" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build setup" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="PostmanToRetrofit2-v2" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="intellij" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="PostmanToRetrofit2-v2" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="other" type="c8890929:TasksNode$1" />
               </path>
               <path>
@@ -79,6 +94,12 @@
     </findStrings>
   </component>
   <component name="Git.Settings">
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--tags" />
+        <option name="title" value="All" />
+      </GitPushTagMode>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
@@ -146,14 +167,14 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW": "false",
     "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW": "false",
-    "last_opened_file_path": "C:/Users/hamed/IdeaProjects/PostmanToRetrofit2-v2/media/demonstration",
+    "last_opened_file_path": "C:/Users/hamed/IdeaProjects/PostmanToRetrofit2-v2",
     "settings.editor.selected.configurable": "preferences.pluginManager"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\hamed\IdeaProjects\PostmanToRetrofit2-v2\media\demonstration" />
       <recent name="C:\Users\hamed\IdeaProjects\PostmanToRetrofit2-v2" />
+      <recent name="C:\Users\hamed\IdeaProjects\PostmanToRetrofit2-v2\media\demonstration" />
       <recent name="C:\Users\hamed\IdeaProjects\PostmanToRetrofit2-v2\src\main\resources" />
       <recent name="C:\Users\hamed\IdeaProjects\PostmanToRetrofit2-v2\src\main\resources\META-INF" />
     </key>
@@ -179,6 +200,35 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="PostmanToRetrofit2-v2 [publishPlugin]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="env">
+          <map>
+            <entry key="CERTIFICATE_CHAIN" value="C:\Users\hamed\chain.crt" />
+            <entry key="PRIVATE_KEY" value="C:\Users\hamed\private.pem" />
+            <entry key="PRIVATE_KEY_PASSWORD" value="mpormANiTzei" />
+            <entry key="PUBLISH_TOKEN" value="perm:ZWxodXNzZWluLm11emFtaWw=.OTItNjk4Nw==.8w1VZQDPLqq50PSqMJf2PRpgf9OnSW" />
+          </map>
+        </option>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--debug" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="publishPlugin" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
     <configuration name="PostmanToRetrofit2-v2 [runPluginVerifier]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -191,6 +241,27 @@
         <option name="taskNames">
           <list>
             <option value="runPluginVerifier" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="PostmanToRetrofit2-v2 [signPlugin]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="signPlugin" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -222,11 +293,15 @@
     <list>
       <item itemvalue="Application.Test" />
       <item itemvalue="Gradle.Run Plugin" />
+      <item itemvalue="Gradle.PostmanToRetrofit2-v2 [publishPlugin]" />
+      <item itemvalue="Gradle.PostmanToRetrofit2-v2 [signPlugin]" />
       <item itemvalue="Gradle.PostmanToRetrofit2-v2 [runPluginVerifier]" />
       <item itemvalue="Plugin.Plugin" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.PostmanToRetrofit2-v2 [publishPlugin]" />
+        <item itemvalue="Gradle.PostmanToRetrofit2-v2 [signPlugin]" />
         <item itemvalue="Gradle.PostmanToRetrofit2-v2 [runPluginVerifier]" />
         <item itemvalue="Application.Test" />
       </list>
@@ -272,7 +347,21 @@
       <option name="project" value="LOCAL" />
       <updated>1668362974023</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Persist the plugin data:&#10;* The directory navigated to is remembered&#10;* The selected response type is remembered">
+      <created>1668413045195</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1668413045195</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Update the plugin jar file">
+      <created>1668413227204</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1668413227204</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TodoView">
@@ -347,7 +436,8 @@
     <MESSAGE value="Update README.md" />
     <MESSAGE value="Add screenshots and demo. &#10;Update README.md.&#10;Update the plugin window title" />
     <MESSAGE value="Persist the plugin data:&#10;* The directory navigated to is remembered&#10;* The selected response type is remembered" />
-    <option name="LAST_COMMIT_MESSAGE" value="Persist the plugin data:&#10;* The directory navigated to is remembered&#10;* The selected response type is remembered" />
+    <MESSAGE value="Update the plugin jar file" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update the plugin jar file" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
