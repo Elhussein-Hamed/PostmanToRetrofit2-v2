@@ -21,6 +21,13 @@ public class OptionsDialog extends JDialog {
         System.out.println("OptionsDialog");
         storedSelectedResponseType = "";
 
+        // Display the last response type selected by the user
+        PluginState state = PluginService.getInstance().getState();
+        if (!state.getRxJavaResponseType().isEmpty()) {
+            rxJavaResponseTypeComboBox.setSelectedItem(state.getRxJavaResponseType());
+            storedSelectedResponseType = state.getRxJavaResponseType();
+        }
+
         setContentPane(panel1);
         buttonOk.addActionListener(e -> onOK());
         buttonCancel.addActionListener(e -> onCancel());
@@ -36,6 +43,9 @@ public class OptionsDialog extends JDialog {
                 else
                 {
                     storedSelectedResponseType = getRxJavaResponseTypeComboBoxItem();
+
+                    // Save the response type
+                    state.setRxJavaResponseType(storedSelectedResponseType);
                 }
 
                 rxJavaResponseTypeComboBox.hidePopup();

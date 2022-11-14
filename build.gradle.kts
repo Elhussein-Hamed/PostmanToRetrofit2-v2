@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.hamed"
-version = "1.2.0"
+version = "1.2.1"
 
 repositories {
     mavenCentral()
@@ -45,5 +45,12 @@ tasks {
 
     publishPlugin {
         token.set(System.getenv("PUBLISH_TOKEN"))
+    }
+
+    setupDependencies {
+        doLast {
+            // Fixes IDEA-298989.
+            fileTree("$buildDir/instrumented/instrumentCode") { include("**/**/*Dialog.class") }.files.forEach { delete(it) }
+        }
     }
 }

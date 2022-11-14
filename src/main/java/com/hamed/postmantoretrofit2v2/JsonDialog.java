@@ -39,12 +39,22 @@ public class JsonDialog extends JDialog {
         mModel = new Model(project, editor);
         optionsDialog = new OptionsDialog(this);
 
-        fileChooser = new JFileChooser();
+        // Open the last directory that the user navigated to
+        PluginState state = PluginService.getInstance().getState();
+        if (!state.getFileSelectionDir().isEmpty())
+            fileChooser = new JFileChooser(state.getFileSelectionDir());
+        else
+            fileChooser = new JFileChooser();
+
         fileChooser.addActionListener(e ->
         {
             if (e.getActionCommand().equals(APPROVE_SELECTION))
             {
                 File selectedFile = fileChooser.getSelectedFile();
+
+                // Save the current directory
+                String currentDirectory = fileChooser.getCurrentDirectory().toString();
+                state.setFileSelectionDir(currentDirectory);
                 try {
                     String fileContent = Files.readString(selectedFile.toPath());
                     jsonTextArea.setText(fileContent);
