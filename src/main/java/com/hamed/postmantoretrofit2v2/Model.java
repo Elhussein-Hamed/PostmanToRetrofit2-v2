@@ -11,8 +11,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 public class Model {
-    private Project mProject;
-    private Editor mEditor;
+    private final Project mProject;
+    private final Editor mEditor;
 
     Model(Project project, Editor editor) {
         mProject = project;
@@ -21,7 +21,9 @@ public class Model {
 
     Collection parsePostman(String jsonString) {
         try{
-            return new Gson().fromJson(jsonString, Collection.class);
+            Collection collection = new Gson().fromJson(jsonString, Collection.class);
+            System.out.println(collection);
+            return collection;
         } catch (Exception e){
             System.out.println("Json parse failed.");
         }
@@ -29,15 +31,27 @@ public class Model {
     }
 
     void generateRxJavaCode(List<Collection.ItemBean> items, boolean isDynamicHeader, String responseFormat) {
+
+        int lastCaretPosition =  mEditor.getCaretModel().getOffset();
+
+        // Moving the caret after each item write doesn't write them correctly within the function body hence
+        // keep the caret in the same place and invert the list instead to write the items in the correct order
         for(Collection.ItemBean item : items) {
-            int startOffset;
-            startOffset = mEditor.getCaretModel().getCurrentCaret().getOffset();
-            String header = (isDynamicHeader)? "" : getStaticHeader(item);
-            String annotation = getAnnotation(item);
-            String method = getMethod(item, isDynamicHeader, responseFormat);
-            int finalStartOffset = startOffset;
-            WriteCommandAction.runWriteCommandAction(mProject, ()-> mEditor.getDocument().insertString(finalStartOffset, "\n\n" +header + annotation + method));
+            if (item.getItem() != null && item.getItem().size() > 0) {
+                generateRxJavaCode(item.getItem(), isDynamicHeader, responseFormat);
+                lastCaretPosition =  mEditor.getCaretModel().getOffset();
+            }
+            else {
+                String header = (isDynamicHeader) ? "" : getStaticHeader(item);
+                String annotation = getAnnotation(item);
+                String method = getMethod(item, isDynamicHeader, responseFormat);
+                int finalLastCaretPosition = lastCaretPosition;
+                WriteCommandAction.runWriteCommandAction(mProject, () -> mEditor.getDocument().insertString(finalLastCaretPosition,  "\n" + header + annotation + method + "\n"));
+                lastCaretPosition += header.length() + annotation.length() + method.length() + 2 /* 2 '\n'*/;
+                mEditor.getCaretModel().getCurrentCaret().moveToOffset(lastCaretPosition);
+            }
         }
+        mEditor.getCaretModel().getCurrentCaret().moveToOffset(lastCaretPosition);
     }
 
     private String getStaticHeader(Collection.ItemBean item) {

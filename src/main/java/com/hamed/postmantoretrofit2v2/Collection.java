@@ -32,6 +32,15 @@ public class Collection {
         this.item = item;
     }
 
+    @Override
+    public String toString() {
+        return "Collection{" +
+                "info=" + info +
+                ", variables=" + variables +
+                ", item=" + item +
+                '}';
+    }
+
     public static class InfoBean {
 
         private String name;
@@ -70,12 +79,24 @@ public class Collection {
         public void setSchema(String schema) {
             this.schema = schema;
         }
+
+        @Override
+        public String toString() {
+            return "InfoBean{" +
+                    "name='" + name + '\'' +
+                    ", _postman_id='" + _postman_id + '\'' +
+                    ", description='" + description + '\'' +
+                    ", schema='" + schema + '\'' +
+                    '}';
+        }
     }
 
     public static class ItemBean {
 
         private String name;
+
         private RequestBean request;
+        private List<ItemBean> item;
         private List<?> response;
 
         public String getName() {
@@ -85,6 +106,10 @@ public class Collection {
         public void setName(String name) {
             this.name = name;
         }
+
+        public List<ItemBean> getItem() { return item; }
+
+        public void setItem(List<ItemBean> item) { this.item = item; }
 
         public RequestBean getRequest() {
             return request;
@@ -100,6 +125,16 @@ public class Collection {
 
         public void setResponse(List<?> response) {
             this.response = response;
+        }
+
+        @Override
+        public String toString() {
+            return "ItemBean{" +
+                    "name='" + name + '\'' +
+                    ", request=" + request +
+                    ", item=" + item +
+                    ", response=" + response +
+                    '}';
         }
 
         public static class RequestBean {
@@ -147,6 +182,17 @@ public class Collection {
 
             public void setHeader(List<HeaderBean> header) {
                 this.header = header;
+            }
+
+            @Override
+            public String toString() {
+                return "RequestBean{" +
+                        "url=" + url +
+                        ", method='" + method + '\'' +
+                        ", body=" + body +
+                        ", description='" + description + '\'' +
+                        ", header=" + header +
+                        '}';
             }
 
             public static class BodyBean {
@@ -215,6 +261,16 @@ public class Collection {
                     public void setType(String type) {
                         this.type = type;
                     }
+
+                    @Override
+                    public String toString() {
+                        return "UrlencodedBean{" +
+                                "key='" + key + '\'' +
+                                ", value='" + value + '\'' +
+                                ", description='" + description + '\'' +
+                                ", type='" + type + '\'' +
+                                '}';
+                    }
                 }
 
                 public static class FormdataBean {
@@ -244,6 +300,15 @@ public class Collection {
 
                     public void setType(String type) {
                         this.type = type;
+                    }
+
+                    @Override
+                    public String toString() {
+                        return "FormdataBean{" +
+                                "key='" + key + '\'' +
+                                ", value='" + value + '\'' +
+                                ", type='" + type + '\'' +
+                                '}';
                     }
                 }
             }
@@ -275,6 +340,15 @@ public class Collection {
 
                 public void setDescription(String description) {
                     this.description = description;
+                }
+
+                @Override
+                public String toString() {
+                    return "HeaderBean{" +
+                            "key='" + key + '\'' +
+                            ", value='" + value + '\'' +
+                            ", description='" + description + '\'' +
+                            '}';
                 }
             }
         }

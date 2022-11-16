@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3cb8c8a0-4af0-4451-9b26-0fb520dd6951" name="Changes" comment="Update the plugin jar file">
+    <list default="true" id="3cb8c8a0-4af0-4451-9b26-0fb520dd6951" name="Changes" comment="Add change notes in plugin.xml">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PostmanToRetrofit2-v2.jar" beforeDir="false" afterPath="$PROJECT_DIR$/PostmanToRetrofit2-v2.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/Collection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/Collection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/Model.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -161,16 +161,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW": "false",
-    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW": "false",
-    "last_opened_file_path": "C:/Users/hamed/IdeaProjects/PostmanToRetrofit2-v2",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW&quot;: &quot;false&quot;,
+    &quot;UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/hamed/IdeaProjects/PostmanToRetrofit2-v2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\hamed\IdeaProjects\PostmanToRetrofit2-v2" />
@@ -294,8 +294,8 @@
       <item itemvalue="Application.Test" />
       <item itemvalue="Gradle.Run Plugin" />
       <item itemvalue="Gradle.PostmanToRetrofit2-v2 [publishPlugin]" />
-      <item itemvalue="Gradle.PostmanToRetrofit2-v2 [signPlugin]" />
       <item itemvalue="Gradle.PostmanToRetrofit2-v2 [runPluginVerifier]" />
+      <item itemvalue="Gradle.PostmanToRetrofit2-v2 [signPlugin]" />
       <item itemvalue="Plugin.Plugin" />
     </list>
     <recent_temporary>
@@ -361,7 +361,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668413227204</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Add change notes in plugin.xml">
+      <created>1668431431006</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1668431431006</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TodoView">
@@ -437,7 +444,18 @@
     <MESSAGE value="Add screenshots and demo. &#10;Update README.md.&#10;Update the plugin window title" />
     <MESSAGE value="Persist the plugin data:&#10;* The directory navigated to is remembered&#10;* The selected response type is remembered" />
     <MESSAGE value="Update the plugin jar file" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update the plugin jar file" />
+    <MESSAGE value="Add change notes in plugin.xml" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add change notes in plugin.xml" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.NullPointerException" package="java.lang" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
