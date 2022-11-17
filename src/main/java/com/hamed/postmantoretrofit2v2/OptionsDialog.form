@@ -59,32 +59,34 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="5738c" layout-manager="FlowLayout" hgap="10" vgap="5" flow-align="1">
+              <grid id="5738c" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="173c7" class="javax.swing.JComboBox" binding="rxJavaResponseTypeComboBox">
-                    <constraints/>
+                  <component id="173c7" class="javax.swing.JComboBox" binding="responseTypeComboBox">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
                     <properties>
                       <autoscrolls value="true"/>
                       <model>
-                        <item value="Observable&lt;T&gt;"/>
-                        <item value="Observable&lt;Response&lt;T&gt;&gt;"/>
-                        <item value="Observable&lt;Result&lt;T&gt;&gt;"/>
-                        <item value="Flowable&lt;T&gt;"/>
-                        <item value="Flowable&lt;Response&lt;T&gt;&gt;"/>
-                        <item value="Flowable&lt;Result&lt;T&gt;&gt;"/>
-                        <item value="Single&lt;T&gt;"/>
-                        <item value="Single&lt;Response&lt;T&gt;&gt;"/>
-                        <item value="Single&lt;Result&lt;T&gt;&gt;"/>
-                        <item value="Maybe&lt;T&gt;"/>
-                        <item value="Maybe&lt;Response&lt;T&gt;&gt;"/>
-                        <item value="Maybe&lt;Result&lt;T&gt;&gt;"/>
-                        <item value="Completable"/>
+                        <item value="Call&lt;T&gt;"/>
+                        <item value="Call&lt;Response&lt;T&gt;&gt;"/>
                       </model>
+                    </properties>
+                  </component>
+                  <component id="ad81a" class="javax.swing.JCheckBox" binding="useRxJavaResponseTypesCheckBox" default-binding="true">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Use RxJava response types"/>
+                      <verticalAlignment value="0"/>
+                      <verticalTextPosition value="0"/>
                     </properties>
                   </component>
                 </children>
@@ -110,7 +112,7 @@
               <focusable value="false"/>
               <font size="14"/>
               <opaque value="true"/>
-              <text value="RxJava Response type: "/>
+              <text value="Response type: "/>
               <verticalAlignment value="1"/>
               <verticalTextPosition value="1"/>
             </properties>

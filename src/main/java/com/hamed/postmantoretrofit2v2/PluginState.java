@@ -2,22 +2,22 @@ package com.hamed.postmantoretrofit2v2;
 
 public class PluginState {
 
-    private String rxJavaResponseType;
+    private String responseType;
     private Boolean isLanguageJava;
     private String fileSelectionDir;
 
     public PluginState() {
-        this.rxJavaResponseType = "";
+        this.responseType = "";
         this.isLanguageJava = true;
         this.fileSelectionDir = "";
     }
 
-    public String getRxJavaResponseType() {
-        return rxJavaResponseType;
+    public String getResponseType() {
+        return responseType;
     }
 
-    public void setRxJavaResponseType(String rxJavaResponseType) {
-        this.rxJavaResponseType = rxJavaResponseType;
+    public void setResponseType(String responseType) {
+        this.responseType = responseType;
     }
 
     public Boolean getLanguageJava() {
