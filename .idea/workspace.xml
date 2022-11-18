@@ -6,9 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="3cb8c8a0-4af0-4451-9b26-0fb520dd6951" name="Changes" comment="Add Retrofit2 raw response types">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/OptionsDialog.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/OptionsDialog.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/OptionsDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/OptionsDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/PluginState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/PluginState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -376,7 +374,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668606978798</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Add Retrofit2 raw response types">
+      <created>1668728729215</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1668728729215</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TodoView">
