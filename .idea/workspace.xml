@@ -4,10 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3cb8c8a0-4af0-4451-9b26-0fb520dd6951" name="Changes" comment="Add Retrofit2 raw response types">
+    <list default="true" id="3cb8c8a0-4af0-4451-9b26-0fb520dd6951" name="Changes" comment="Add a new dialog to prompt the user to select a class for the response type.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/ClassPickerDialog.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/ClassPickerDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/JsonDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/JsonDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/Model.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/OptionsDialog.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/OptionsDialog.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/OptionsDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/OptionsDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/PluginState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/PluginState.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -160,16 +165,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW": "true",
-    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW": "true",
-    "last_opened_file_path": "C:/Users/hamed/IdeaProjects/PostmanToRetrofit2-v2",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW&quot;: &quot;true&quot;,
+    &quot;UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/hamed/IdeaProjects/PostmanToRetrofit2-v2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\hamed\IdeaProjects\PostmanToRetrofit2-v2" />
@@ -381,7 +386,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668728729215</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Update to version 1.3.0">
+      <created>1668730016127</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1668730016127</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TodoView">
@@ -460,7 +472,9 @@
     <MESSAGE value="Add change notes in plugin.xml" />
     <MESSAGE value="Add the support for parsing sub-collections in Postman collection" />
     <MESSAGE value="Add Retrofit2 raw response types" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add Retrofit2 raw response types" />
+    <MESSAGE value="Update to version 1.3.0" />
+    <MESSAGE value="Add a new dialog to prompt the user to select a class for the response type." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add a new dialog to prompt the user to select a class for the response type." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

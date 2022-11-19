@@ -37,7 +37,7 @@ public class JsonDialog extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
         mModel = new Model(project, editor);
-        optionsDialog = new OptionsDialog(this);
+        optionsDialog = new OptionsDialog(this, project);
 
         // Open the last directory that the user navigated to
         PluginState state = PluginService.getInstance().getState();
@@ -65,11 +65,8 @@ public class JsonDialog extends JDialog {
         });
 
         buttonOK.addActionListener(e -> onOK());
-
         buttonCancel.addActionListener(e -> onCancel());
-
         buttonSelectFile.addActionListener( e -> onSelectFile());
-
         buttonOptions.addActionListener(e -> onOptions());
 
         // call onCancel() when cross is clicked
