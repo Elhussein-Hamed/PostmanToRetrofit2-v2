@@ -1,5 +1,7 @@
-package com.hamed.postmantoretrofit2v2;
+package com.hamed.postmantoretrofit2v2.forms;
 
+import com.hamed.postmantoretrofit2v2.PluginService;
+import com.hamed.postmantoretrofit2v2.PluginState;
 import com.intellij.openapi.project.Project;
 
 import javax.swing.*;

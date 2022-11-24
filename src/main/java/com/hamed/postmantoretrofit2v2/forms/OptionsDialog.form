@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.hamed.postmantoretrofit2v2.OptionsDialog">
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.hamed.postmantoretrofit2v2.forms.OptionsDialog">
   <grid id="27dc6" binding="panel1" default-binding="true" layout-manager="GridLayoutManager" row-count="6" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="8" left="8" bottom="8" right="8"/>
     <constraints>
@@ -155,7 +155,7 @@
             </constraints>
             <properties>
               <selected value="false"/>
-              <text value="Prompt to select a class for the response type"/>
+              <text value="Prompt to select/generate a class for the response type"/>
             </properties>
           </component>
         </children>

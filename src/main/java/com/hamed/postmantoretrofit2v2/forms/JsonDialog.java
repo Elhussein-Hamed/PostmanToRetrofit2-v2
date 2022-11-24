@@ -1,5 +1,6 @@
-package com.hamed.postmantoretrofit2v2;
+package com.hamed.postmantoretrofit2v2.forms;
 
+import com.hamed.postmantoretrofit2v2.*;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 
