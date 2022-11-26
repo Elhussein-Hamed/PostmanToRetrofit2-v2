@@ -149,7 +149,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="fb558" class="javax.swing.JCheckBox" binding="promptToSelectACheckBox" default-binding="true">
+          <component id="fb558" class="javax.swing.JCheckBox" binding="promptToSelectClassCheckBox">
             <constraints>
               <card name="Card1"/>
             </constraints>

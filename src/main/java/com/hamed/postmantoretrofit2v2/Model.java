@@ -2,7 +2,6 @@ package com.hamed.postmantoretrofit2v2;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
-import com.hamed.postmantoretrofit2v2.eventlisteners.FileCreatedListener;
 import com.hamed.postmantoretrofit2v2.eventlisteners.MyPsiTreeChangeListener;
 import com.hamed.postmantoretrofit2v2.forms.ClassPickerDialog;
 import com.intellij.analysis.AnalysisScope;
@@ -45,12 +44,12 @@ public class Model {
 
     public void generateRxJavaCode(List<Collection.ItemBean> items, boolean isDynamicHeader, String responseFormat) {
 
-        PluginState state = PluginService.getInstance().getState();
-        state.setJavaFileNamesList(new ArrayList<>());
-        ArrayList<String> classesList = state.getJavaFileNamesList();
-        if (!state.getJavaFilesDirectory().isEmpty() && state.getPromptToSelectClassForResponseType())
+        PluginState state = PluginService.getInstance(mProject).getState();
+        state.setResponseTypeClassesList(new ArrayList<>());
+        ArrayList<String> classesList = state.getResponseTypeClassesList();
+        if (!state.getResponseTypeClassesDirectory().isEmpty() && state.getPromptToSelectClassForResponseType())
         {
-             VirtualFile file = LocalFileSystem.getInstance().findFileByPath(state.getJavaFilesDirectory());
+             VirtualFile file = LocalFileSystem.getInstance().findFileByPath(state.getResponseTypeClassesDirectory());
              System.out.println("Selected directory virtual file: " + file.getPath());
             ArrayList<String> finalClassesList = classesList;
             classesList.addAll(ApplicationManager.getApplication().runReadAction(new Computable<ArrayList<String>>() {
@@ -67,7 +66,7 @@ public class Model {
                 }
             }));
 
-            state.setJavaFileNamesList(classesList);
+            state.setResponseTypeClassesList(classesList);
         }
 
         int lastCaretPosition =  mEditor.getCaretModel().getOffset();
@@ -93,26 +92,26 @@ public class Model {
     }
 
     private String getStaticHeader(Collection.ItemBean item) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         if(item.getRequest().getHeader()!=null && item.getRequest().getHeader().size()>0) {
-            result = "    @Headers({";
+            result = new StringBuilder("    @Headers({");
             for(Collection.ItemBean.RequestBean.HeaderBean header : item.getRequest().getHeader()) {
-                result += "\"" + Utils.skipQuotes(header.getKey()) + ": " + Utils.skipQuotes(header.getValue()) + "\"";
-                if(item.getRequest().getHeader().indexOf(header) != item.getRequest().getHeader().size()-1) result += ",\n              ";
+                result.append("\"").append(Utils.skipQuotes(header.getKey())).append(": ").append(Utils.skipQuotes(header.getValue())).append("\"");
+                if(item.getRequest().getHeader().indexOf(header) != item.getRequest().getHeader().size()-1) result.append(",\n              ");
             }
-            result += "})\n";
+            result.append("})\n");
         }
-        return result;
+        return result.toString();
     }
 
     private String getDynamicHeader(Collection.ItemBean item) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         if(item.getRequest().getHeader()!=null && item.getRequest().getHeader().size() > 0) {
             for(Collection.ItemBean.RequestBean.HeaderBean headerBean : item.getRequest().getHeader()) {
-                result += "@Header(\""+headerBean.getKey()+"\")" + "String " + headerBean.getKey().replaceAll("[^A-Za-z0-9()\\[\\]]", "") + ", ";
+                result.append("@Header(\"").append(headerBean.getKey()).append("\")").append("String ").append(headerBean.getKey().replaceAll("[^A-Za-z0-9()\\[\\]]", "")).append(", ");
             }
         }
-        return result;
+        return result.toString();
     }
 
     private String getAnnotation(Collection.ItemBean item) {
@@ -163,22 +162,22 @@ public class Model {
         if(item.getRequest().getMethod().equalsIgnoreCase("GET")) result = addQueryParams(item, result);
         else result = addFieldParams(item, result);
 
-        PluginState state = PluginService.getInstance().getState();
+        PluginState state = PluginService.getInstance(mProject).getState();
         if (state.getPromptToSelectClassForResponseType()) {
 
-            ArrayList<String> classesList = state.getJavaFileNamesList();
+            ArrayList<String> classesList = state.getResponseTypeClassesList();
 
             PsiManager.getInstance(mProject).addPsiTreeChangeListener(new MyPsiTreeChangeListener(file -> {
                 if (file.getName().contains(".java"))
                 {
                     String filename = file.getName().replace(".java", "");
-                    VirtualFile javaDirVirtualFile = LocalFileSystem.getInstance().findFileByPath(state.getJavaFilesDirectory());
-                    PsiDirectory psiDirectory = PsiManager.getInstance(mProject).findDirectory(javaDirVirtualFile);
+                    VirtualFile responseTypeClassesDirVirtualFile = LocalFileSystem.getInstance().findFileByPath(state.getResponseTypeClassesDirectory());
+                    PsiDirectory psiDirectory = PsiManager.getInstance(mProject).findDirectory(responseTypeClassesDirVirtualFile);
 
                     if (file.getParent().equals(psiDirectory) && !classesList.contains(filename)) {
                         classesList.add(filename);
                         System.out.println("childAdded Directory: " + file.getParent().toString());
-                        state.setJavaFileNamesList(classesList);
+                        state.setResponseTypeClassesList(classesList);
                     }
                 }
             }));
@@ -199,22 +198,28 @@ public class Model {
     }
 
     private String addFieldParams(Collection.ItemBean item, String result) {
+
         //from Url-encoded
         if(item.getRequest().getBody().getUrlencoded()!=null) {
+            StringBuilder resultBuilder = new StringBuilder(result);
             for (Collection.ItemBean.RequestBean.BodyBean.UrlencodedBean urlencoded : item.getRequest().getBody().getUrlencoded()) {
-                result += "@Field(\"" + urlencoded.getKey() + "\") " + "String " + urlencoded.getKey();
+                resultBuilder.append("@Field(\"").append(urlencoded.getKey()).append("\") ").append("String ").append(urlencoded.getKey());
                 if (item.getRequest().getBody().getUrlencoded().indexOf(urlencoded) != item.getRequest().getBody().getUrlencoded().size() - 1)
-                    result += ", ";
+                    resultBuilder.append(", ");
             }
+            result = resultBuilder.toString();
             return result + ");";
         }
+
         //from form-data
         if(item.getRequest().getBody().getFormdata()!=null) {
+            StringBuilder resultBuilder = new StringBuilder(result);
             for (Collection.ItemBean.RequestBean.BodyBean.FormdataBean formdata : item.getRequest().getBody().getFormdata()) {
-                result += "@Field(\"" + formdata.getKey() + "\") " + "String " + formdata.getKey();
+                resultBuilder.append("@Field(\"").append(formdata.getKey()).append("\") ").append("String ").append(formdata.getKey());
                 if (item.getRequest().getBody().getFormdata().indexOf(formdata) != item.getRequest().getBody().getFormdata().size() - 1)
-                    result += ", ";
+                    resultBuilder.append(", ");
             }
+            result = resultBuilder.toString();
             return result + ");";
         }
         return result+");";

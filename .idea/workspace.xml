@@ -4,21 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3cb8c8a0-4af0-4451-9b26-0fb520dd6951" name="Changes" comment="Added class generation for response types">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/eventlisteners/FileCreatedListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/eventlisteners/MyPsiTreeChangeListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/forms/ClassPickerDialog.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/myPluginId-roboPojoGenerator.xml" afterDir="false" />
+    <list default="true" id="3cb8c8a0-4af0-4451-9b26-0fb520dd6951" name="Changes" comment="Refactoring and code improvements. Implement an error report submitter for the plugin.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/errorreporting/PluginErrorReportSubmitter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/ClassPickerDialog.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/forms/ClassPickerDialog.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/ClassPickerDialog.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/JsonDialog.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/forms/JsonDialog.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/JsonDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/forms/JsonDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/Model.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/OptionsDialog.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/forms/OptionsDialog.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/OptionsDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/forms/OptionsDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/PluginService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/PluginService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/PluginState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/PluginState.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/Retrofit2Generator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/Retrofit2Generator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/forms/ClassPickerDialog.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/forms/ClassPickerDialog.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/forms/ClassPickerDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/forms/ClassPickerDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/forms/JsonDialog.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/forms/JsonDialog.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/forms/JsonDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/forms/JsonDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/forms/OptionsDialog.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/forms/OptionsDialog.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/forms/OptionsDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hamed/postmantoretrofit2v2/forms/OptionsDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -93,8 +92,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Action" />
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -183,11 +182,19 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;true&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW&quot;: &quot;true&quot;,
     &quot;UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/hamed/IdeaProjects/PostmanToRetrofit2-v2&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/hamed/IdeaProjects/PostmanToRetrofit2-v2/build/libs/PostmanToRetrofit2-v2-1.4.0-beta.jar&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
@@ -416,7 +423,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668820685601</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Added class generation for response types">
+      <created>1669326588833</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1669326588833</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TodoView">
@@ -499,7 +513,8 @@
     <MESSAGE value="Add a new dialog to prompt the user to select a class for the response type." />
     <MESSAGE value="Improve class generation logic" />
     <MESSAGE value="Added class generation for response types" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added class generation for response types" />
+    <MESSAGE value="Refactoring and code improvements. Implement an error report submitter for the plugin." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactoring and code improvements. Implement an error report submitter for the plugin." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

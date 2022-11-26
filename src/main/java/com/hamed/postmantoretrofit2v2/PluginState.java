@@ -6,18 +6,18 @@ public class PluginState {
 
     private String responseType;
     private Boolean isLanguageJava;
-    private String fileSelectionDir;
+    private String lastVisitedDir;
     private Boolean promptToSelectClassForResponseType;
-    private ArrayList<String> javaFileNamesList;
-    private String javaFilesDirectory;
+    private ArrayList<String> responseTypeClassesList;
+    private String responseTypeClassesDirectory;
 
     public PluginState() {
         this.responseType = "";
         this.isLanguageJava = true;
-        this.fileSelectionDir = "";
+        this.lastVisitedDir = "";
         this.promptToSelectClassForResponseType = false;
-        this.javaFileNamesList = new ArrayList<>();
-        this.javaFilesDirectory = "";
+        this.responseTypeClassesList = new ArrayList<>();
+        this.responseTypeClassesDirectory = "";
     }
 
     public String getResponseType() {
@@ -36,12 +36,12 @@ public class PluginState {
         isLanguageJava = languageJava;
     }
 
-    public String getFileSelectionDir() {
-        return fileSelectionDir;
+    public String getLastVisitedDir() {
+        return lastVisitedDir;
     }
 
-    public void setFileSelectionDir(String fileSelectionDir) {
-        this.fileSelectionDir = fileSelectionDir;
+    public void setLastVisitedDir(String lastVisitedDir) {
+        this.lastVisitedDir = lastVisitedDir;
     }
 
     public Boolean getPromptToSelectClassForResponseType() {
@@ -52,12 +52,12 @@ public class PluginState {
         this.promptToSelectClassForResponseType = promptToSelectClassForResponseType;
     }
 
-    public ArrayList<String> getJavaFileNamesList() { return javaFileNamesList; }
+    public ArrayList<String> getResponseTypeClassesList() { return responseTypeClassesList; }
 
-    public void setJavaFileNamesList(ArrayList<String> javaFileNamesList) { this.javaFileNamesList = javaFileNamesList; }
+    public void setResponseTypeClassesList(ArrayList<String> responseTypeClassesList) { this.responseTypeClassesList = responseTypeClassesList; }
 
-    public String getJavaFilesDirectory() { return javaFilesDirectory; }
+    public String getResponseTypeClassesDirectory() { return responseTypeClassesDirectory; }
 
-    public void setJavaFilesDirectory(String javaFilesDirectory) { this.javaFilesDirectory = javaFilesDirectory; }
+    public void setResponseTypeClassesDirectory(String responseTypeClassesDirectory) { this.responseTypeClassesDirectory = responseTypeClassesDirectory; }
 
 }

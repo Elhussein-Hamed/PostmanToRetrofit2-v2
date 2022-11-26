@@ -23,6 +23,7 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Objects;
 
 public class ClassPickerDialog extends JDialog {
     private JPanel contentPane;
@@ -36,11 +37,12 @@ public class ClassPickerDialog extends JDialog {
     private final Editor mEditor;
 
     public ClassPickerDialog(Project project, Editor editor, String result, String method) {
+        mProject = project;
+        mEditor = editor;
+
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        mProject = project;
-        mEditor = editor;
 
         System.out.println("CheckPickerDialog");
 
@@ -124,14 +126,14 @@ public class ClassPickerDialog extends JDialog {
             return;
         }
 
-        PluginState state = PluginService.getInstance().getState();
-        VirtualFile javaFileDirVirtualfile = LocalFileSystem.getInstance().findFileByPath(state.getJavaFilesDirectory());
-        PsiDirectory psiDirectory = PsiManager.getInstance(mProject).findDirectory(javaFileDirVirtualfile);
+        PluginState state = PluginService.getInstance(mProject).getState();
+        VirtualFile responseTypeClassesDirVirtualfile = LocalFileSystem.getInstance().findFileByPath(state.getResponseTypeClassesDirectory());
+        PsiDirectory psiDirectory = PsiManager.getInstance(mProject).findDirectory(responseTypeClassesDirVirtualfile);
 
         DataContext dataContext = SimpleDataContext.builder()
                 .setParent(DataManager.getInstance().getDataContext(mEditor.getComponent()))
                 .add(CommonDataKeys.NAVIGATABLE, psiDirectory)
-                .add(LangDataKeys.VIRTUAL_FILE, javaFileDirVirtualfile)
+                .add(LangDataKeys.VIRTUAL_FILE, responseTypeClassesDirVirtualfile)
                 .build();
 
         // Prepare a listener to handle any new files that might be added by RoboPojoGenerator plugin
@@ -146,7 +148,7 @@ public class ClassPickerDialog extends JDialog {
                     classListComboBox.setSelectedItem(filename);
 
                     // Check if setSelectedItem change the selected item
-                    if (!classListComboBox.getSelectedItem().equals(filename)) {
+                    if (classListComboBox.getSelectedItem() == null || !classListComboBox.getSelectedItem().equals(filename)) {
                         classListComboBox.addItem(filename);
                         classListComboBox.setSelectedItem(filename);
                         System.out.println("Added file: " + filename + " to Combo Box list");
@@ -173,12 +175,13 @@ public class ClassPickerDialog extends JDialog {
     }
 
     private void createUIComponents() {
+        Objects.requireNonNull(mProject, "mProject must be initiated before createUIComponents");
         // TODO: place custom component creation code here
         classListComboBox = new ComboBox<String>();
 
-        PluginState state = PluginService.getInstance().getState();
+        PluginState state = PluginService.getInstance(mProject).getState();
         // Get the list of classes in the project
-        for (String cls: state.getJavaFileNamesList())
+        for (String cls: state.getResponseTypeClassesList())
             classListComboBox.addItem(cls);
     }
 }

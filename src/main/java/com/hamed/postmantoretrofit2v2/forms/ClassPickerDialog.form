@@ -64,7 +64,7 @@
             <properties>
               <font size="12" style="1"/>
               <horizontalTextPosition value="2"/>
-              <text value="Select the class correspinding to the response type in: "/>
+              <text value="Select the class corresponding to the response type in: "/>
             </properties>
           </component>
           <hspacer id="182b2">

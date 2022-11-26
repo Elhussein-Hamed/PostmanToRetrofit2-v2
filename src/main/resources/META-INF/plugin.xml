@@ -52,7 +52,8 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.hamed.postmantoretrofit2v2.PluginService"/>
+        <projectService serviceImplementation="com.hamed.postmantoretrofit2v2.PluginService"/>
+        <errorHandler implementation="com.hamed.postmantoretrofit2v2.errorreporting.PluginErrorReportSubmitter"/>
     </extensions>
 
     <actions>
