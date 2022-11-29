@@ -16,10 +16,23 @@
     <description><![CDATA[
       Convert postman collection to Retrofit2 java code<br>
       This is a fork of <a href="https://plugins.jetbrains.com/plugin/11612-postman-to-retrofit2">Postman to Retrofit2</a>.<br>
-      More details in the <a href="https://github.com/Elhussein-Hamed/PostmanToRetrofit2-v2">GitHup page</a>.
+      This is an open source project, please check out the <a href="https://github.com/Elhussein-Hamed/PostmanToRetrofit2-v2">GitHup page</a>.
+      Any suggestions and improvements are most welcome!
     ]]></description>
 
     <change-notes><![CDATA[
+        <h2>1.4.0</h2>
+        <h3>New Features</h3>
+        <ul>
+          <li>Added a new dialog to select a class for each response</li>
+          <li>Added a option to generate new classes</li>
+          <li>Added an error reporting mechanism in case of exceptions</li>
+        </ul>
+        <h3>Improvements</h3>
+        <ul>
+          <li>Each project will have its persistent plugin state instead of one global state</li>
+        </ul>
+
         <h2>1.3.0</h2>
         <h3>New Features</h3>
         <ul>
