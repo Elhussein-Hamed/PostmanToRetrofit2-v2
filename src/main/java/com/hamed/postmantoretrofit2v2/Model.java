@@ -186,6 +186,7 @@ public class Model {
             classPickerDialog.pack();
             classPickerDialog.setTitle("Postman To Retrofit2 V2");
             classPickerDialog.setSize(600, 400);
+            classPickerDialog.setLocationRelativeTo(null);
             classPickerDialog.setVisible(true);
 
             System.out.println("classPickerDialog.getClassName():" + classPickerDialog.getClassName());

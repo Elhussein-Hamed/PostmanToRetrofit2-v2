@@ -1,6 +1,9 @@
 package com.hamed.postmantoretrofit2v2.forms;
 
-import com.hamed.postmantoretrofit2v2.*;
+import com.hamed.postmantoretrofit2v2.Collection;
+import com.hamed.postmantoretrofit2v2.Model;
+import com.hamed.postmantoretrofit2v2.PluginService;
+import com.hamed.postmantoretrofit2v2.PluginState;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
@@ -9,7 +12,10 @@ import com.intellij.openapi.project.Project;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,7 +23,7 @@ import java.nio.file.Files;
 import static javax.swing.JFileChooser.APPROVE_SELECTION;
 import static javax.swing.JFileChooser.FILES_ONLY;
 
-public class JsonDialog extends JDialog {
+public class JsonDialog extends JDialog  {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
@@ -140,6 +146,7 @@ public class JsonDialog extends JDialog {
         optionsDialog.pack();
         optionsDialog.setTitle("Options");
         optionsDialog.setSize(600, 400);
+        optionsDialog.setLocationRelativeTo(null);
 
         optionsDialog.addWindowListener(new WindowAdapter() {
             @Override

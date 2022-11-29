@@ -21,11 +21,17 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        <h2>NEXT_RELEASE</h2>
+        <h3>Improvements</h3>
+        <ul>
+          <li>Display the dialogs in the center of the screen</li>
+        </ul>
+
         <h2>1.4.0</h2>
         <h3>New Features</h3>
         <ul>
           <li>Added a new dialog to select a class for each response</li>
-          <li>Added a option to generate new classes</li>
+          <li>Added an option to generate new classes</li>
           <li>Added an error reporting mechanism in case of exceptions</li>
         </ul>
         <h3>Improvements</h3>
