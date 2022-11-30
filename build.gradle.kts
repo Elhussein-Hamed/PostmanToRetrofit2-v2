@@ -13,7 +13,7 @@ repositories {
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
-    version.set("2022.2.3")
+    version.set("2022.2.4")
     type.set("IC") // Target IDE Platform
 
     plugins.set(listOf("com.robohorse.robopojogenerator:2.3.8"))
@@ -22,7 +22,7 @@ intellij {
 dependencies {
 
     implementation("org.jsonschema2pojo:jsonschema2pojo:1.1.2")
-    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation("com.squareup.okhttp3:okhttp:3.14.5")
 }
 
 tasks {
@@ -43,6 +43,8 @@ tasks {
             privateKey.set(File(System.getenv("PRIVATE_KEY")).readText(Charsets.UTF_8))
             password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
         }
+        else
+            assert(false)
     }
 
     publishPlugin {

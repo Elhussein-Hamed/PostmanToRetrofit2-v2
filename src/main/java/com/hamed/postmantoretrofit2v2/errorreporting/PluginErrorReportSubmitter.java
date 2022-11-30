@@ -61,7 +61,7 @@ public class PluginErrorReportSubmitter extends ErrorReportSubmitter {
                         .build();
 
                     MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
-                    RequestBody body = RequestBody.create(content, mediaType);
+                    RequestBody body = RequestBody.create(mediaType, content);
                     Request request = new Request.Builder()
                             .url(URL)
                             .method("POST", body)
