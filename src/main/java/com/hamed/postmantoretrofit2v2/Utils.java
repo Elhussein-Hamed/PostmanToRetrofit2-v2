@@ -1,6 +1,9 @@
 package com.hamed.postmantoretrofit2v2;
 
 import com.esotericsoftware.kryo.util.IntArray;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ex.ApplicationEx;
+import com.intellij.openapi.ui.Messages;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -40,5 +43,22 @@ public class Utils {
         }
 
         return output.toString();
+    }
+
+    public static void restartIde()
+    {
+        boolean result = Messages.showYesNoDialog(
+                "Would you like to restart the IDE?",
+                "Restart?",
+                "Restart",
+                "Cancel",
+                Messages.getWarningIcon()
+        ) == Messages.YES;
+
+        if (result) {
+            final ApplicationEx app = (ApplicationEx) ApplicationManager.getApplication();
+
+            app.restart(true);
+        }
     }
 }

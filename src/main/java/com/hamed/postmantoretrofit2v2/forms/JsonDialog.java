@@ -110,7 +110,9 @@ public class JsonDialog extends JDialog  {
             if (collection != null)
                 mModel.generateRxJavaCode(collection.getItem(), dynamic_header.isSelected(), optionsDialog.getRxJavaResponseFormat());
             else if (!jsonTextArea.getText().isEmpty()) {
+
                 Notification notification = new Notification("Error Report"
+                        , "Parsing error"
                         , "Failed to parse the postman collection, please check if the postman collection is correct " +
                         "or Create an issue " +
                         " <a href=\"https://github.com/Elhussein-Hamed/PostmanToRetrofit2-v2/issues\">here</a>"
@@ -118,6 +120,7 @@ public class JsonDialog extends JDialog  {
 
                 notification.setListener(NotificationListener.URL_OPENING_LISTENER);
                 notification.notify(mProject);
+
             }
         }
         catch (Exception e)

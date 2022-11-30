@@ -2,12 +2,13 @@ package com.hamed.postmantoretrofit2v2.forms;
 
 import com.hamed.postmantoretrofit2v2.PluginService;
 import com.hamed.postmantoretrofit2v2.PluginState;
+import com.hamed.postmantoretrofit2v2.Utils;
+import com.hamed.postmantoretrofit2v2.datacontext.DataContextWrapper;
 import com.hamed.postmantoretrofit2v2.eventlisteners.MyPsiTreeChangeListener;
 import com.intellij.ide.DataManager;
-import com.intellij.ide.actions.RestartIdeAction;
+import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
@@ -23,6 +24,8 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class ClassPickerDialog extends JDialog {
@@ -110,11 +113,9 @@ public class ClassPickerDialog extends JDialog {
             ) == Messages.YES;
 
             if (doEnable) {
-                PluginManagerCore.enablePlugin(PluginId.getId("com.robohorse.robopojogenerator"));
+                PluginManager.getInstance().enablePlugin(PluginId.getId("com.robohorse.robopojogenerator"));
                 System.out.println("Enabled RoboPojoGenerator plugin");
-                new RestartIdeAction().actionPerformed(new AnActionEvent(null, DataManager.getInstance().getDataContext(),
-                        ActionPlaces.UNKNOWN, new Presentation(),
-                        ActionManager.getInstance(), 0));
+                Utils.restartIde();
             }
             else
                 return;
@@ -130,11 +131,11 @@ public class ClassPickerDialog extends JDialog {
         VirtualFile responseTypeClassesDirVirtualfile = LocalFileSystem.getInstance().findFileByPath(state.getResponseTypeClassesDirectory());
         PsiDirectory psiDirectory = PsiManager.getInstance(mProject).findDirectory(responseTypeClassesDirVirtualfile);
 
-        DataContext dataContext = SimpleDataContext.builder()
-                .setParent(DataManager.getInstance().getDataContext(mEditor.getComponent()))
-                .add(CommonDataKeys.NAVIGATABLE, psiDirectory)
-                .add(LangDataKeys.VIRTUAL_FILE, responseTypeClassesDirVirtualfile)
-                .build();
+        Map<String, Object> map = new HashMap<>();
+        map.put(CommonDataKeys.NAVIGATABLE.getName(), psiDirectory);
+        map.put(LangDataKeys.VIRTUAL_FILE.getName(), responseTypeClassesDirVirtualfile);
+
+        DataContext dataContext = DataContextWrapper.getContext(map, DataManager.getInstance().getDataContext(mEditor.getComponent()));
 
         // Prepare a listener to handle any new files that might be added by RoboPojoGenerator plugin
         PsiManager.getInstance(mProject).addPsiTreeChangeListener(new MyPsiTreeChangeListener(file -> {

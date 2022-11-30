@@ -13,7 +13,7 @@ repositories {
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
-    version.set("2021.3.3")
+    version.set("2022.2.3")
     type.set("IC") // Target IDE Platform
 
     plugins.set(listOf("com.robohorse.robopojogenerator:2.3.8"))
@@ -33,7 +33,7 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("192.0")
+        sinceBuild.set("203.0")
         untilBuild.set("223.*")
     }
 
