@@ -2,20 +2,10 @@ package com.hamed.postmantoretrofit2v2;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
-import com.hamed.postmantoretrofit2v2.eventlisteners.MyPsiTreeChangeListener;
 import com.hamed.postmantoretrofit2v2.forms.ClassPickerDialog;
-import com.intellij.analysis.AnalysisScope;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.packageDependencies.ForwardDependenciesBuilder;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -23,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Model {
+
+    public static final String RESPONSE_POSTFIX = "Response";
+
     private final Project mProject;
     private final Editor mEditor;
 
@@ -44,51 +37,53 @@ public class Model {
 
     public void generateRxJavaCode(List<Collection.ItemBean> items, boolean isDynamicHeader, String responseFormat) {
 
-        PluginState state = PluginService.getInstance(mProject).getState();
-        state.setResponseTypeClassesList(new ArrayList<>());
-        ArrayList<String> classesList = state.getResponseTypeClassesList();
-        if (!state.getResponseTypeClassesDirectory().isEmpty() && state.getPromptToSelectClassForResponseType())
-        {
-             VirtualFile file = LocalFileSystem.getInstance().findFileByPath(state.getResponseTypeClassesDirectory());
-             System.out.println("Selected directory virtual file: " + file.getPath());
-            ArrayList<String> finalClassesList = classesList;
-            classesList.addAll(ApplicationManager.getApplication().runReadAction(new Computable<ArrayList<String>>() {
-                @Override
-                public ArrayList<String> compute() {
-                    ArrayList<String> javaFilesList = new ArrayList<>();
-                    ForwardDependenciesBuilder forwardDependenciesBuilder = new ForwardDependenciesBuilder(mProject, new AnalysisScope(mProject, List.of(file)));
-                    forwardDependenciesBuilder.analyze();
-                    ArrayList<PsiFile> list = new ArrayList<>(forwardDependenciesBuilder.getDirectDependencies().keySet());
-                    for (PsiFile f : list)
-                        if (f.getName().contains(".java") && !finalClassesList.contains(f.getName()))
-                            javaFilesList.add(f.getName().replace(".java", ""));
-                    return javaFilesList;
-                }
-            }));
+        int lastCaretPosition = mEditor.getCaretModel().getOffset();
 
-            state.setResponseTypeClassesList(classesList);
+        ArrayList<String> retrofitAnnotatedMethods = constructRetrofitAnnotatedMethods(items, isDynamicHeader, responseFormat);
+
+        for (String retrofitAnnotatedMethod : retrofitAnnotatedMethods) {
+
+            PluginState state = PluginService.getInstance(mProject).getState();
+            if (state.getPromptToSelectClassForResponseType()) {
+
+                ClassPickerDialog classPickerDialog = new ClassPickerDialog(mProject, mEditor, retrofitAnnotatedMethod);
+                classPickerDialog.pack();
+                classPickerDialog.setTitle("Postman To Retrofit2 V2");
+                classPickerDialog.setSize(600, 400);
+                classPickerDialog.setLocationRelativeTo(null);
+                classPickerDialog.setVisible(true);
+
+                System.out.println("classPickerDialog.getClassName():" + classPickerDialog.getModifiedRetrofitAnnotatedMethod());
+                if (classPickerDialog.getModifiedRetrofitAnnotatedMethod() != null) {
+                    retrofitAnnotatedMethod = classPickerDialog.getModifiedRetrofitAnnotatedMethod();
+                }
+            }
+
+            int finalLastCaretPosition = lastCaretPosition;
+            String finalRetrofitAnnotatedMethod = retrofitAnnotatedMethod;
+            WriteCommandAction.runWriteCommandAction(mProject, () -> mEditor.getDocument().insertString(finalLastCaretPosition, "\n" + finalRetrofitAnnotatedMethod + "\n"));
+            lastCaretPosition += retrofitAnnotatedMethod.length() + 2 /* 2 '\n'*/;
         }
 
-        int lastCaretPosition =  mEditor.getCaretModel().getOffset();
+        mEditor.getCaretModel().getCurrentCaret().moveToOffset(lastCaretPosition);
+    }
 
-        // Moving the caret after each item write doesn't write them correctly within the function body hence
-        // keep the caret in the same place and invert the list instead to write the items in the correct order
+    private ArrayList<String> constructRetrofitAnnotatedMethods(List<Collection.ItemBean> items, boolean isDynamicHeader, String responseFormat)
+    {
+        ArrayList<String> retrofitAnnotatedMethods = new ArrayList<>();
         for(Collection.ItemBean item : items) {
             if (item.getItem() != null && item.getItem().size() > 0) {
-                generateRxJavaCode(item.getItem(), isDynamicHeader, responseFormat);
-                lastCaretPosition =  mEditor.getCaretModel().getOffset();
+                retrofitAnnotatedMethods.addAll(constructRetrofitAnnotatedMethods(item.getItem(), isDynamicHeader, responseFormat));
             }
             else {
                 String header = (isDynamicHeader) ? "" : getStaticHeader(item);
                 String annotation = getAnnotation(item);
                 String method = getMethod(item, isDynamicHeader, responseFormat);
-                int finalLastCaretPosition = lastCaretPosition;
-                WriteCommandAction.runWriteCommandAction(mProject, () -> mEditor.getDocument().insertString(finalLastCaretPosition,  "\n" + header + annotation + method + "\n"));
-                lastCaretPosition += header.length() + annotation.length() + method.length() + 2 /* 2 '\n'*/;
-                mEditor.getCaretModel().getCurrentCaret().moveToOffset(lastCaretPosition);
+                retrofitAnnotatedMethods.add(header + annotation + method);
             }
         }
-        mEditor.getCaretModel().getCurrentCaret().moveToOffset(lastCaretPosition);
+
+        return retrofitAnnotatedMethods;
     }
 
     private String getStaticHeader(Collection.ItemBean item) {
@@ -150,50 +145,17 @@ public class Model {
         if (method.startsWith("http"))
         {
             System.out.println("The item: " + item.getName() + ", seems to be a url, consider updating it to a proper name");
-        }
-        else {
-            method = Utils.convertToTitleCase(method);
-            method = method.replace(" ", ""); // Remove any white spaces
+            method = item.getRequest().getMethod();
         }
 
-        String response = responseFormat.replace("<T>", "<" + method + "Response>");
+        method = Utils.convertToTitleCase(method);
+        method = method.replace(" ", ""); // Remove any white spaces
+
+        String response = responseFormat.replace("<T>", "<" + method + RESPONSE_POSTFIX + ">");
         String result = "    " + response + " " + method + "(";
         if(isDynamicHeader) result += getDynamicHeader(item);
         if(item.getRequest().getMethod().equalsIgnoreCase("GET")) result = addQueryParams(item, result);
         else result = addFieldParams(item, result);
-
-        PluginState state = PluginService.getInstance(mProject).getState();
-        if (state.getPromptToSelectClassForResponseType()) {
-
-            ArrayList<String> classesList = state.getResponseTypeClassesList();
-
-            PsiManager.getInstance(mProject).addPsiTreeChangeListener(new MyPsiTreeChangeListener(file -> {
-                if (file.getName().contains(".java"))
-                {
-                    String filename = file.getName().replace(".java", "");
-                    VirtualFile responseTypeClassesDirVirtualFile = LocalFileSystem.getInstance().findFileByPath(state.getResponseTypeClassesDirectory());
-                    PsiDirectory psiDirectory = PsiManager.getInstance(mProject).findDirectory(responseTypeClassesDirVirtualFile);
-
-                    if (file.getParent().equals(psiDirectory) && !classesList.contains(filename)) {
-                        classesList.add(filename);
-                        System.out.println("childAdded Directory: " + file.getParent().toString());
-                        state.setResponseTypeClassesList(classesList);
-                    }
-                }
-            }));
-
-            ClassPickerDialog classPickerDialog = new ClassPickerDialog(mProject, mEditor, result, method);
-            classPickerDialog.pack();
-            classPickerDialog.setTitle("Postman To Retrofit2 V2");
-            classPickerDialog.setSize(600, 400);
-            classPickerDialog.setLocationRelativeTo(null);
-            classPickerDialog.setVisible(true);
-
-            System.out.println("classPickerDialog.getClassName():" + classPickerDialog.getClassName());
-            if (classPickerDialog.getClassName() != null) {
-                result = result.replace(method + "Response", classPickerDialog.getClassName());
-            }
-        }
 
         return result;
     }

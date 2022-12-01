@@ -4,6 +4,8 @@ import com.esotericsoftware.kryo.util.IntArray;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.text.StringUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -12,9 +14,11 @@ public class Utils {
 
    private static final String WORD_SEPARATOR = " ";
 
-    public static String convertToTitleCase(String text) {
-        if (text == null || !text.contains(" ")) {
-            return text;
+    public static String convertToTitleCase(@NotNull String text) {
+        if (!text.contains(" ")) {
+            if (StringUtil.isUpperCase(text))
+                text = text.toLowerCase();
+            return StringUtil.toTitleCase(text);
         }
 
         return Arrays

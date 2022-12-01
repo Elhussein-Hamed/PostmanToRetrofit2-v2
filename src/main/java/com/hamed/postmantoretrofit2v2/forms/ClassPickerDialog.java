@@ -1,10 +1,14 @@
 package com.hamed.postmantoretrofit2v2.forms;
 
+import com.hamed.postmantoretrofit2v2.Model;
 import com.hamed.postmantoretrofit2v2.PluginService;
 import com.hamed.postmantoretrofit2v2.PluginState;
 import com.hamed.postmantoretrofit2v2.Utils;
 import com.hamed.postmantoretrofit2v2.datacontext.DataContextWrapper;
-import com.hamed.postmantoretrofit2v2.eventlisteners.MyPsiTreeChangeListener;
+import com.hamed.postmantoretrofit2v2.messaging.Message;
+import com.hamed.postmantoretrofit2v2.messaging.MessageBroker;
+import com.hamed.postmantoretrofit2v2.messaging.MessageSubscriber;
+import com.hamed.postmantoretrofit2v2.messaging.NewJavaFileMessage;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
@@ -28,40 +32,46 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class ClassPickerDialog extends JDialog {
+public class ClassPickerDialog extends JDialog implements MessageSubscriber {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
-    private JTextField inputOveriewTextField;
+    private JTextField inputOverviewTextField;
     private JComboBox classListComboBox;
     private JTextField outputOverviewTextField;
     private JButton generateANewClassButton;
     private final Project mProject;
     private final Editor mEditor;
 
-    public ClassPickerDialog(Project project, Editor editor, String result, String method) {
-        mProject = project;
-        mEditor = editor;
+    private String mRetrofitAnnotatedMethod;
 
+    public ClassPickerDialog(Project project, Editor editor, String retrofitAnnotatedMethods) {
+        this.mProject = project;
+        this.mEditor = editor;
+        this.mRetrofitAnnotatedMethod = retrofitAnnotatedMethods;
+
+        MessageBroker.getInstance().addSubscriber(this);
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
         System.out.println("CheckPickerDialog");
 
-        inputOveriewTextField.setText(result);
-        inputOveriewTextField.setCaretPosition(0);
-        if (classListComboBox.getSelectedItem() != null)
-            outputOverviewTextField.setText(result.replace(method + "Response", (String) classListComboBox.getSelectedItem()));
-        outputOverviewTextField.setCaretPosition(0);
+        inputOverviewTextField.setText(mRetrofitAnnotatedMethod);
+        inputOverviewTextField.setCaretPosition(0);
+        if (classListComboBox.getSelectedItem() != null) {
+            outputOverviewTextField.setText(replaceResponseInRetrofitAnnotatedMethod((String) classListComboBox.getSelectedItem()));
+            outputOverviewTextField.setCaretPosition(0);
+        }
 
         classListComboBox.addActionListener(e ->
         {
             if (e.getActionCommand().equals(classListComboBox.getActionCommand()))
             {
                 String className = (String) classListComboBox.getSelectedItem();
-                if (className != null)
-                    outputOverviewTextField.setText(result.replace(method + "Response", className));
+                if (className != null) {
+                    outputOverviewTextField.setText(replaceResponseInRetrofitAnnotatedMethod((String) classListComboBox.getSelectedItem()));
+                }
 
                 outputOverviewTextField.setCaretPosition(0);
             }
@@ -97,6 +107,38 @@ public class ClassPickerDialog extends JDialog {
         dispose();
     }
 
+    @Override
+    public void dispose() {
+        super.dispose();
+        MessageBroker.getInstance().removeSubscriber(this);
+    }
+
+    @Override
+    public void onMessageReceived(Message message) {
+
+        System.out.println("ClassPickerDialog: onMessageReceived");
+
+        if (message instanceof NewJavaFileMessage) {
+            String filename = (String) message.getContent();
+
+            // Use setSelectedItem behaviour to check if the filename already exists in the combo
+            // box list. setSelectedItem doesn't do anything if filename does not exist.
+            classListComboBox.setSelectedItem(filename);
+
+            // Check if setSelectedItem change the selected item
+            if (classListComboBox.getSelectedItem() == null || !classListComboBox.getSelectedItem().equals(filename)) {
+                classListComboBox.addItem(filename);
+                classListComboBox.setSelectedItem(filename);
+                System.out.println("Added file: " + filename + " to Combo Box list");
+            }
+        }
+    }
+
+    private String replaceResponseInRetrofitAnnotatedMethod(String response)
+    {
+        return mRetrofitAnnotatedMethod.replaceAll("<\\w+" + Model.RESPONSE_POSTFIX + ">", "<" + response + ">");
+    }
+
     private void onGenerateNewClass()
     {
         if (PluginManagerCore.isDisabled(PluginId.getId("com.robohorse.robopojogenerator")))
@@ -128,35 +170,14 @@ public class ClassPickerDialog extends JDialog {
         }
 
         PluginState state = PluginService.getInstance(mProject).getState();
-        VirtualFile responseTypeClassesDirVirtualfile = LocalFileSystem.getInstance().findFileByPath(state.getResponseTypeClassesDirectory());
-        PsiDirectory psiDirectory = PsiManager.getInstance(mProject).findDirectory(responseTypeClassesDirVirtualfile);
+        VirtualFile responseTypeClassesDirVirtualFile = LocalFileSystem.getInstance().findFileByPath(state.getResponseTypeClassesDirectory());
+        PsiDirectory psiDirectory = PsiManager.getInstance(mProject).findDirectory(responseTypeClassesDirVirtualFile);
 
         Map<String, Object> map = new HashMap<>();
         map.put(CommonDataKeys.NAVIGATABLE.getName(), psiDirectory);
-        map.put(LangDataKeys.VIRTUAL_FILE.getName(), responseTypeClassesDirVirtualfile);
+        map.put(LangDataKeys.VIRTUAL_FILE.getName(), responseTypeClassesDirVirtualFile);
 
         DataContext dataContext = DataContextWrapper.getContext(map, DataManager.getInstance().getDataContext(mEditor.getComponent()));
-
-        // Prepare a listener to handle any new files that might be added by RoboPojoGenerator plugin
-        PsiManager.getInstance(mProject).addPsiTreeChangeListener(new MyPsiTreeChangeListener(file -> {
-            if (file.getName().contains(".java"))
-            {
-                System.out.println("MyPsiTreeChangeListener in ClassPickerDialog");
-                String filename = file.getName().replace(".java", "");
-                if (file.getParent().equals(psiDirectory)) {
-                    // Use setSelectedItem behaviour to check if the filename already exists in the combo
-                    // box list. setSelectedItem doesn't do anything if filename does not exist.
-                    classListComboBox.setSelectedItem(filename);
-
-                    // Check if setSelectedItem change the selected item
-                    if (classListComboBox.getSelectedItem() == null || !classListComboBox.getSelectedItem().equals(filename)) {
-                        classListComboBox.addItem(filename);
-                        classListComboBox.setSelectedItem(filename);
-                        System.out.println("Added file: " + filename + " to Combo Box list");
-                    }
-                }
-            }
-        }));
 
         try {
             new GeneratePOJOAction().actionPerformed(
@@ -170,9 +191,13 @@ public class ClassPickerDialog extends JDialog {
         }
     }
 
-    public String getClassName()
+    public String getModifiedRetrofitAnnotatedMethod()
     {
-        return (String) classListComboBox.getSelectedItem();
+        // If the dialog was not cancelled, the combo-box will have a valid value
+        if (classListComboBox.getSelectedItem() == null)
+            return mRetrofitAnnotatedMethod;
+        else
+            return replaceResponseInRetrofitAnnotatedMethod((String) classListComboBox.getSelectedItem());
     }
 
     private void createUIComponents() {

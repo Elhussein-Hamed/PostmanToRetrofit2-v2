@@ -78,4 +78,11 @@
         </action>
     </actions>
 
+    <projectListeners>
+        <listener class="com.hamed.postmantoretrofit2v2.eventlisteners.MyBulkFileListener"
+                  topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
+        <listener class="com.hamed.postmantoretrofit2v2.eventlisteners.MyProjectStartupListener"
+                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
+    </projectListeners>
+
 </idea-plugin>

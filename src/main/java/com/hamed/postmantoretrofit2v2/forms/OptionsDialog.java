@@ -2,7 +2,14 @@ package com.hamed.postmantoretrofit2v2.forms;
 
 import com.hamed.postmantoretrofit2v2.PluginService;
 import com.hamed.postmantoretrofit2v2.PluginState;
+import com.intellij.analysis.AnalysisScope;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.packageDependencies.ForwardDependenciesBuilder;
+import com.intellij.psi.PsiFile;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -171,9 +178,37 @@ public class OptionsDialog extends JDialog {
         // Save the response type
         PluginState state = PluginService.getInstance(mProject).getState();
         state.setResponseType(getResponseTypeComboBoxItem());
-        state.setResponseTypeClassesDirectory(selectedDirTextField.getText());
         state.setPromptToSelectClassForResponseType(promptToSelectClassCheckBox.isSelected());
-        // Do nothing as the json dialog has access to the necessary functions from here.
+
+        if (!state.getResponseTypeClassesDirectory().equals(selectedDirTextField.getText())) {
+            state.setResponseTypeClassesDirectory(selectedDirTextField.getText());
+
+            if (promptToSelectClassCheckBox.isSelected())
+            {
+                VirtualFile file = LocalFileSystem.getInstance().findFileByPath(state.getResponseTypeClassesDirectory());
+                System.out.println("Selected classes directory virtual file: " + file.getPath());
+                ArrayList<String> classesList = new ArrayList<>();
+
+                ApplicationManager.getApplication().executeOnPooledThread(() -> {
+                    classesList.addAll(ApplicationManager.getApplication().runReadAction(new Computable<ArrayList<String>>() {
+                        @Override
+                        public ArrayList<String> compute() {
+                            ArrayList<String> javaFilesList = new ArrayList<>();
+                            ForwardDependenciesBuilder forwardDependenciesBuilder = new ForwardDependenciesBuilder(mProject, new AnalysisScope(mProject, List.of(file)));
+                            forwardDependenciesBuilder.analyze();
+                            ArrayList<PsiFile> list = new ArrayList<>(forwardDependenciesBuilder.getDirectDependencies().keySet());
+                            for (PsiFile f : list)
+                                if (f.getName().contains(".java") && !classesList.contains(f.getName()))
+                                    javaFilesList.add(f.getName().replace(".java", ""));
+                            return javaFilesList;
+                        }
+                    }));
+
+                    state.setResponseTypeClassesList(classesList);
+                });
+            }
+        }
+
         dispose();
     }
 

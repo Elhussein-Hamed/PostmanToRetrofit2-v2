@@ -12,6 +12,7 @@ public class UtilsTest {
         Assert.assertEquals(Utils.convertToTitleCase("small case"), "Small Case");
         Assert.assertEquals(Utils.convertToTitleCase("unOrDEreD CAsE"), "Unordered Case");
         Assert.assertEquals(Utils.convertToTitleCase("TitleCase"), "TitleCase");
+        Assert.assertEquals(Utils.convertToTitleCase("GET"), "Get");
     }
 
     @Test
