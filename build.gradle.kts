@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.hamed"
-version = "1.4.0"
+version = "1.4.1"
 
 repositories {
     mavenCentral()
@@ -22,7 +22,7 @@ intellij {
 dependencies {
 
     implementation("org.jsonschema2pojo:jsonschema2pojo:1.1.2")
-    implementation("com.squareup.okhttp3:okhttp:3.14.5")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
 }
 
 tasks {

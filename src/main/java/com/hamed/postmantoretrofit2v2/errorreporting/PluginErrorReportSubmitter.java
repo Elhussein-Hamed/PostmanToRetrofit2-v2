@@ -61,7 +61,7 @@ public class PluginErrorReportSubmitter extends ErrorReportSubmitter {
                         .build();
 
                     MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
-                    RequestBody body = RequestBody.create(mediaType, content);
+                    RequestBody body = RequestBody.create(content, mediaType);
                     Request request = new Request.Builder()
                             .url(URL)
                             .method("POST", body)
@@ -73,12 +73,7 @@ public class PluginErrorReportSubmitter extends ErrorReportSubmitter {
                         System.out.println("Successfully submitted the error report");
                         consumer.consume(new SubmittedReportInfo(SubmittedReportInfo.SubmissionStatus.NEW_ISSUE));
 
-                        ApplicationManager.getApplication().invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                Messages.showInfoMessage(parentComponent, "The error report has been submitted successfully. Thank you for your feedback!", "Postman To Retrofit2 V2 Error Submission");
-                            }
-                        });
+                        ApplicationManager.getApplication().invokeLater(() -> Messages.showInfoMessage(parentComponent, "The error report has been submitted successfully. Thank you for your feedback!", "Postman To Retrofit2 V2 Error Submission"));
                     } else {
                         System.out.println("Failed to submit the error report");
                         consumer.consume(new SubmittedReportInfo(SubmittedReportInfo.SubmissionStatus.FAILED));
@@ -86,12 +81,9 @@ public class PluginErrorReportSubmitter extends ErrorReportSubmitter {
 
                     response.close();
                 } catch (Exception e) {
-                    ApplicationManager.getApplication().invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            Messages.showWarningDialog(parentComponent, "Failed to submit the error report, please check your internet connection.", "Postman To Retrofit2 V2 Error Submission");
-                            consumer.consume(new SubmittedReportInfo(SubmittedReportInfo.SubmissionStatus.FAILED));
-                        }
+                    ApplicationManager.getApplication().invokeLater(() -> {
+                        Messages.showWarningDialog(parentComponent, "Failed to submit the error report, please check your internet connection.", "Postman To Retrofit2 V2 Error Submission");
+                        consumer.consume(new SubmittedReportInfo(SubmittedReportInfo.SubmissionStatus.FAILED));
                     });
                 }
             }
