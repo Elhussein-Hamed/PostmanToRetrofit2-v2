@@ -1,10 +1,10 @@
 plugins {
     id("java")
-    id("org.jetbrains.intellij") version "1.9.0"
+    id("org.jetbrains.intellij") version "1.8.0"
 }
 
 group = "com.hamed"
-version = "1.4.1"
+version = "1.4.2"
 
 repositories {
     mavenCentral()

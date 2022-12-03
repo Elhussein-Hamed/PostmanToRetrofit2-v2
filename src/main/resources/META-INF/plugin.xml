@@ -21,6 +21,13 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        <h2>1.4.2</h2>
+        <h3>Bug fixes</h3>
+        <ul>
+          <li>Fixed exception when a new project is created</li>
+          <li>Fixed exception when parsing a Post request without a body in Postman collection (<a href="https://github.com/Elhussein-Hamed/PostmanToRetrofit2-v2/issues/4#issue">Issue #4</a>)</li>
+        </ul>
+
         <h2>1.4.1</h2>
         <h3>Improvements</h3>
         <ul>
@@ -74,6 +81,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceImplementation="com.hamed.postmantoretrofit2v2.PluginService"/>
         <errorHandler implementation="com.hamed.postmantoretrofit2v2.errorreporting.PluginErrorReportSubmitter"/>
+        <postStartupActivity implementation="com.hamed.postmantoretrofit2v2.eventlisteners.MyProjectStartupListener"/>
     </extensions>
 
     <actions>
@@ -87,8 +95,6 @@
     <projectListeners>
         <listener class="com.hamed.postmantoretrofit2v2.eventlisteners.MyBulkFileListener"
                   topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
-        <listener class="com.hamed.postmantoretrofit2v2.eventlisteners.MyProjectStartupListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
     </projectListeners>
 
 </idea-plugin>

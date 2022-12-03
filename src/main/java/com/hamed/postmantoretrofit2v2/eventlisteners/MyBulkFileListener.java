@@ -35,11 +35,21 @@ public class MyBulkFileListener implements BulkFileListener {
     @Override
     public void after(@NotNull List<? extends @NotNull VFileEvent> events) {
         ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(mProject).getFileIndex();
+
+       if (mProject.getProjectFile() == null)
+       {
+           System.out.println("The project file doesn't seem to exit yet, " +
+                   "hence it cannot be used to deduce the project directory. " +
+                   "The following events are ignored: " + events);
+           return;
+       }
+
+        VirtualFile projectRootDir = projectFileIndex.getContentRootForFile(mProject.getProjectFile());
         events = events.stream()
                 .filter(event -> event.getFile() != null
                         && (projectFileIndex.isInContent(event.getFile())
-                        || event.getFile().getPath().contains(projectFileIndex.getContentRootForFile(mProject.getProjectFile()).getPath()))
-                        && event.getFile().getName().contains(".java"))
+                        || event.getFile().getPath().contains(projectRootDir.getPath())
+                        && event.getFile().getName().contains(".java")))
                 .collect(Collectors.toList());
 
         events.forEach(this::handleEvent);
@@ -66,7 +76,7 @@ public class MyBulkFileListener implements BulkFileListener {
             System.out.println("Handle event: " + event);
             if (event.getFile().getParent().equals(responseTypeClassesDirVirtualFile)) {
                 String filename = event.getFile().getName().replace(".java", "");
-                System.out.println("Removed file: " + event.getFile().toString());
+                System.out.println("Removed file: " + filename);
                 ArrayList<String> classesList = state.getResponseTypeClassesList();
                 if (classesList.contains(filename)) {
                     classesList.remove(filename);

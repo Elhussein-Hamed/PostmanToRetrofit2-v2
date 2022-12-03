@@ -21,7 +21,7 @@ import static javax.swing.JFileChooser.APPROVE_SELECTION;
 import static javax.swing.JFileChooser.DIRECTORIES_ONLY;
 
 public class OptionsDialog extends JDialog {
-    private JPanel panel1;
+    private JPanel contentPane;
     private JLabel generationOptionsLabel;
     private JComboBox<String> responseTypeComboBox;
     private JButton buttonCancel;
@@ -49,7 +49,7 @@ public class OptionsDialog extends JDialog {
         super(owner);
         mProject = project;
 
-        setContentPane(panel1);
+        setContentPane(contentPane);
         getRootPane().setDefaultButton(buttonOk);
         System.out.println("OptionsDialog");
         storedSelectedResponseType = "";
@@ -101,7 +101,7 @@ public class OptionsDialog extends JDialog {
         });
 
         // call onCancel() on ESCAPE
-        panel1.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
     private void onResponseTypeComboBoxChanged(ActionEvent e) {

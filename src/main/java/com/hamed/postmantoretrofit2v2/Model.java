@@ -162,28 +162,31 @@ public class Model {
 
     private String addFieldParams(Collection.ItemBean item, String result) {
 
-        //from Url-encoded
-        if(item.getRequest().getBody().getUrlencoded()!=null) {
-            StringBuilder resultBuilder = new StringBuilder(result);
-            for (Collection.ItemBean.RequestBean.BodyBean.UrlencodedBean urlencoded : item.getRequest().getBody().getUrlencoded()) {
-                resultBuilder.append("@Field(\"").append(urlencoded.getKey()).append("\") ").append("String ").append(urlencoded.getKey());
-                if (item.getRequest().getBody().getUrlencoded().indexOf(urlencoded) != item.getRequest().getBody().getUrlencoded().size() - 1)
-                    resultBuilder.append(", ");
+        // It is possible to have a Post without a body
+        if (item.getRequest().getBody() != null) {
+            //from Url-encoded
+            if (item.getRequest().getBody().getUrlencoded() != null) {
+                StringBuilder resultBuilder = new StringBuilder(result);
+                for (Collection.ItemBean.RequestBean.BodyBean.UrlencodedBean urlencoded : item.getRequest().getBody().getUrlencoded()) {
+                    resultBuilder.append("@Field(\"").append(urlencoded.getKey()).append("\") ").append("String ").append(urlencoded.getKey());
+                    if (item.getRequest().getBody().getUrlencoded().indexOf(urlencoded) != item.getRequest().getBody().getUrlencoded().size() - 1)
+                        resultBuilder.append(", ");
+                }
+                result = resultBuilder.toString();
+                return result + ");";
             }
-            result = resultBuilder.toString();
-            return result + ");";
-        }
 
-        //from form-data
-        if(item.getRequest().getBody().getFormdata()!=null) {
-            StringBuilder resultBuilder = new StringBuilder(result);
-            for (Collection.ItemBean.RequestBean.BodyBean.FormdataBean formdata : item.getRequest().getBody().getFormdata()) {
-                resultBuilder.append("@Field(\"").append(formdata.getKey()).append("\") ").append("String ").append(formdata.getKey());
-                if (item.getRequest().getBody().getFormdata().indexOf(formdata) != item.getRequest().getBody().getFormdata().size() - 1)
-                    resultBuilder.append(", ");
+            //from form-data
+            if (item.getRequest().getBody().getFormdata() != null) {
+                StringBuilder resultBuilder = new StringBuilder(result);
+                for (Collection.ItemBean.RequestBean.BodyBean.FormdataBean formdata : item.getRequest().getBody().getFormdata()) {
+                    resultBuilder.append("@Field(\"").append(formdata.getKey()).append("\") ").append("String ").append(formdata.getKey());
+                    if (item.getRequest().getBody().getFormdata().indexOf(formdata) != item.getRequest().getBody().getFormdata().size() - 1)
+                        resultBuilder.append(", ");
+                }
+                result = resultBuilder.toString();
+                return result + ");";
             }
-            result = resultBuilder.toString();
-            return result + ");";
         }
         return result+");";
     }

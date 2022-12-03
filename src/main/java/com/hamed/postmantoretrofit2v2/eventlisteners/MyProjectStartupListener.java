@@ -6,7 +6,7 @@ import com.intellij.analysis.AnalysisScope;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManagerListener;
+import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packageDependencies.ForwardDependenciesBuilder;
@@ -16,12 +16,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyProjectStartupListener implements ProjectManagerListener {
-    @Override
-    public void projectOpened(@NotNull Project project) {
-        ProjectManagerListener.super.projectOpened(project);
+public class MyProjectStartupListener implements StartupActivity {
 
+    @Override
+    public void runActivity(@NotNull Project project) {
         PluginState state = PluginService.getInstance(project).getState();
+        System.out.println("Re-calculate the ResponseTypeClassesList");
         if(!state.getResponseTypeClassesDirectory().isEmpty())
         {
             VirtualFile file = LocalFileSystem.getInstance().findFileByPath(state.getResponseTypeClassesDirectory());
