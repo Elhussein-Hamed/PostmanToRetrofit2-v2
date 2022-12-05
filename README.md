@@ -28,13 +28,8 @@ gradle
 	implementation "io.reactivex.rxjava2:rxjava:2.0.1"
 
 Other versions can be found in [Maven](https://mvnrepository.com/artifact/io.reactivex.rxjava2/rxjava)
-### Create ApiService.java Interface
 
-<kbd>Right click</kbd>  > <kbd>Generate</kbd> > <kbd>Retrofit2Generator</kbd> > Paste your postman collection > <kbd>OK</kbd>
-
-Or  
-
-<kbd>Right click</kbd>  > <kbd>Generate</kbd> > <kbd>Retrofit2Generator</kbd> > <kbd>Select File</kbd> > Find and select postman collection file > <kbd>OK</kbd>
+![plugin_preview](https://user-images.githubusercontent.com/36441143/205748419-1330b67f-49e0-4c4f-9bfb-eef37ef1e7d7.gif)
 
 ### Modify the generated response type
 The plugin currently supports RxJava response types only. The default type used for the response is `Observable<T>`, where T is the object created from the APIs in Postman collection.
