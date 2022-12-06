@@ -7,10 +7,10 @@ Open Android Studio:
 - <kbd>File</kbd>  > <kbd>Settings</kbd> (For Mac <kbd>Android Studio</kbd> > <kbd>Preferences</kbd>) > <kbd>Plugins</kbd> >  Search and install **Postman to Retrofit2 V2**
 
 ### Installing manually
-- Clone or download **PostmanToRetrofit2-v2.jar**
+- Download the latest plugin jar file from [here](https://github.com/Elhussein-Hamed/PostmanToRetrofit2-v2/releases/latest)
 
 - Open Android Studio
-	- <kbd>File</kbd>  > <kbd>Settings</kbd> (For Mac <kbd>Android Studion</kbd> > <kbd>Preferences</kbd>) > <kbd>Plugins</kbd> >  click <img src="gear_icon.png" align="center" alt="Gear Icon" style="height: 25px; width:30px;"/> > <kbd>Install plugin from disk..</kbd> > import **PostmanToRetrofit2-v2.jar**
+	- <kbd>File</kbd>  > <kbd>Settings</kbd> (For Mac <kbd>Android Studion</kbd> > <kbd>Preferences</kbd>) > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk..</kbd> > import **PostmanToRetrofit2-v2-Plugin-*.jar**
 
 - Restart Android Studio
 
