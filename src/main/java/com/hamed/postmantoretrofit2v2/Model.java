@@ -28,6 +28,8 @@ public class Model {
         try{
             Collection collection = new Gson().fromJson(jsonString, Collection.class);
             System.out.println(collection);
+            if (!collection.isValid())
+                throw new Exception("Invalid collection");
             return collection;
         } catch (Exception e){
             System.out.println("Json parse failed.");

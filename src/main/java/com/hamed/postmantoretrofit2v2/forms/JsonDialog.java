@@ -120,7 +120,6 @@ public class JsonDialog extends JDialog  {
 
                 notification.setListener(NotificationListener.URL_OPENING_LISTENER);
                 notification.notify(mProject);
-
             }
         }
         catch (Exception e)
@@ -132,8 +131,6 @@ public class JsonDialog extends JDialog  {
 
         dispose();
     }
-
-
 
     private void onCancel() {
         // add your code here if necessary

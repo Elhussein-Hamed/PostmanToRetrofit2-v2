@@ -32,6 +32,8 @@ public class Collection {
         this.item = item;
     }
 
+    public boolean isValid() { return this.info != null && this.variables != null && this.item != null; }
+
     @Override
     public String toString() {
         return "Collection{" +
