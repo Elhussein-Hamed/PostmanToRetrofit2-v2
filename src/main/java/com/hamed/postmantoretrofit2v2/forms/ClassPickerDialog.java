@@ -295,10 +295,10 @@ public class ClassPickerDialog extends JDialog implements MessageSubscriber {
 
         changeReturnTypeComboBox = new ComboBox<>();
         String[] returnTypeList;
-        if (state.getReturnTypeRadioButton() == ReturnTypeRadioButton.BUTTON_1) {
+        if (state.getReturnTypeRadioButton() == ReturnTypeRadioButton.BUTTON_RETROFIT_RAW_TYPES) {
             returnTypeList = Constants.retrofit2RawTypes;
         }
-        else if (state.getReturnTypeRadioButton() == ReturnTypeRadioButton.BUTTON_2) {
+        else if (state.getReturnTypeRadioButton() == ReturnTypeRadioButton.BUTTON_RXJAVA_TYPES) {
             returnTypeList = Constants.rxJavaReturnTypes;
         }
         else {

@@ -7,6 +7,7 @@ import com.hamed.postmantoretrofit2v2.forms.ClassPickerDialog;
 import com.hamed.postmantoretrofit2v2.pluginstate.Language;
 import com.hamed.postmantoretrofit2v2.pluginstate.PluginService;
 import com.hamed.postmantoretrofit2v2.pluginstate.PluginState;
+import com.hamed.postmantoretrofit2v2.pluginstate.ReturnTypeRadioButton;
 import com.hamed.postmantoretrofit2v2.utils.RetrofitSyntaxHelper;
 import com.hamed.postmantoretrofit2v2.utils.Utils;
 import com.intellij.application.options.CodeStyle;
@@ -77,7 +78,7 @@ public class Model {
         return null;
     }
 
-    public void generateRxJavaCode(List<Item> items, boolean isDynamicHeader, String returnTypeFormat, JDialog parentDialog) {
+    public void generateRetrofitCode(List<Item> items, boolean isDynamicHeader, String returnTypeFormat, JDialog parentDialog) {
 
         updateIndentSize();
         int lastCaretPosition = mEditor.getCaretModel().getOffset();
@@ -239,8 +240,10 @@ public class Model {
         if (isDynamicHeader)
                 dynamicHeader = getDynamicHeader(item);
 
+        boolean useCoroutines = state.getReturnTypeRadioButton() == ReturnTypeRadioButton.BUTTON_RETROFIT_AND_COROUTINES;
+
         result.append(RetrofitSyntaxHelper.constructMethodSignature(state.getLanguage(), returnType, methodName,
-                dynamicHeader, addPathParams(item), addFieldParams(item), addQueryParams(item), addBodyParam(item)));
+                dynamicHeader, addPathParams(item), addFieldParams(item), addQueryParams(item), addBodyParam(item), useCoroutines));
 
         return result.toString();
     }

@@ -18,6 +18,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import static javax.swing.JFileChooser.APPROVE_SELECTION;
 import static javax.swing.JFileChooser.DIRECTORIES_ONLY;
@@ -63,9 +64,9 @@ public class OptionsDialog extends JDialog {
         initialSelectedDirectory = "";
 
         // Create custom action command to make it easier to know which button is which
-        retrofitTypesRadioButton.setActionCommand(ReturnTypeRadioButton.BUTTON_1.name()); // BUTTON_1
-        rxJavaTypesRadioButton.setActionCommand(ReturnTypeRadioButton.BUTTON_2.name()); // BUTTON_2
-        retrofitCoroutinesRadioButton.setActionCommand(ReturnTypeRadioButton.BUTTON_3.name()); // BUTTON_3
+        retrofitTypesRadioButton.setActionCommand(ReturnTypeRadioButton.BUTTON_RETROFIT_RAW_TYPES.name()); // BUTTON_1
+        rxJavaTypesRadioButton.setActionCommand(ReturnTypeRadioButton.BUTTON_RXJAVA_TYPES.name()); // BUTTON_2
+        retrofitCoroutinesRadioButton.setActionCommand(ReturnTypeRadioButton.BUTTON_RETROFIT_AND_COROUTINES.name()); // BUTTON_3
 
         // Set the listeners for the GUI components
         buttonOk.addActionListener(this::onOK);
@@ -88,8 +89,19 @@ public class OptionsDialog extends JDialog {
 
             for (Iterator<AbstractButton> it = returnTypeButtonGroup.getElements().asIterator(); it.hasNext(); ) {
                 AbstractButton button = it.next();
-                if (button.getActionCommand().equals(state.getReturnTypeRadioButton().name()))
-                    button.doClick();
+                if (state.getReturnTypeRadioButton() != null)
+                    if (button.getActionCommand().equals(state.getReturnTypeRadioButton().name())) {
+                        button.doClick();
+                        break;
+                    }
+                else {
+                    if (List.of(Constants.retrofit2RawTypes).contains(state.getReturnType()))
+                        retrofitTypesRadioButton.doClick();
+                    else if (List.of(Constants.rxJavaReturnTypes).contains(state.getReturnType()))
+                        rxJavaTypesRadioButton.doClick();
+                    else
+                        retrofitCoroutinesRadioButton.doClick();
+                }
             }
 
             returnTypeComboBox.setSelectedItem(state.getReturnType());
@@ -279,7 +291,7 @@ public class OptionsDialog extends JDialog {
         return (String) languageComboBox.getSelectedItem();
     }
 
-    public String getRxJavaReturnFormat()
+    public String getReturnTypeFormat()
     {
         return getReturnTypeComboBoxItem();
     }

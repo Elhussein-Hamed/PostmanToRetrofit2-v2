@@ -47,13 +47,16 @@ public class RetrofitSyntaxHelper {
         return result.toString();
     }
 
-    public static String constructMethodSignature(Language language, String returnType, String methodName, String dynamicHeader, String pathParams, String fieldParams, String queryParams, String bodyParam)
+    public static String constructMethodSignature(Language language, String returnType, String methodName, String dynamicHeader, String pathParams, String fieldParams, String queryParams, String bodyParam, boolean useKotlinCoroutines)
     {
         StringBuilder result = new StringBuilder();
 
-        if (Language.KOTLIN == language)
+        if (Language.KOTLIN == language) {
+            if (useKotlinCoroutines)
+                result.append("suspend ");
             result.append("fun ")
                     .append(methodName);
+        }
         else
             result.append(returnType)
                     .append(" ")
@@ -81,6 +84,6 @@ public class RetrofitSyntaxHelper {
     // TODO: Update all the occurrences to provide all the parameters and remove this method
     public static String constructMethodSignature(Language language, String returnType, String methodName, String dynamicHeader, String fieldParams, String queryParams)
     {
-        return constructMethodSignature(language, returnType, methodName, dynamicHeader, "", fieldParams, queryParams, "");
+        return constructMethodSignature(language, returnType, methodName, dynamicHeader, "", fieldParams, queryParams, "", false);
     }
 }

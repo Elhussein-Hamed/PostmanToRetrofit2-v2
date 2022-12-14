@@ -109,10 +109,10 @@ public class JsonDialog extends JDialog  {
     @SuppressWarnings("deprecation")
     private void onOK() {
         Collection collection = mModel.parsePostman(jsonTextArea.getText());
-        System.out.println("RxJava Response Format: " + optionsDialog.getRxJavaReturnFormat());
+        System.out.println("RxJava Response Format: " + optionsDialog.getReturnTypeFormat());
         try {
             if (collection != null)
-                mModel.generateRxJavaCode(collection.getItems(), dynamic_header.isSelected(), optionsDialog.getRxJavaReturnFormat(), this);
+                mModel.generateRetrofitCode(collection.getItems(), dynamic_header.isSelected(), optionsDialog.getReturnTypeFormat(), this);
             else if (!jsonTextArea.getText().isEmpty()) {
 
                 Notification notification = new Notification("Error Report"
