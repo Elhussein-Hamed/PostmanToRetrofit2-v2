@@ -74,12 +74,12 @@
     <depends>com.intellij.modules.platform</depends>
     <depends
         optional="true"
-         config-file="myPluginId-roboPojoGenerator.xml">com.robohorse.robopojogenerator</depends>
+        config-file="myPluginId-roboPojoGenerator.xml">com.robohorse.robopojogenerator</depends>
 
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <projectService serviceImplementation="com.hamed.postmantoretrofit2v2.PluginService"/>
+        <projectService serviceImplementation="com.hamed.postmantoretrofit2v2.pluginstate.PluginService"/>
         <errorHandler implementation="com.hamed.postmantoretrofit2v2.errorreporting.PluginErrorReportSubmitter"/>
         <postStartupActivity implementation="com.hamed.postmantoretrofit2v2.eventlisteners.MyProjectStartupListener"/>
     </extensions>

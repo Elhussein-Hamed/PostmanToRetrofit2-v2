@@ -1,46 +1,51 @@
 package com.hamed.postmantoretrofit2v2.forms;
 
-import com.hamed.postmantoretrofit2v2.PluginService;
-import com.hamed.postmantoretrofit2v2.PluginState;
-import com.intellij.analysis.AnalysisScope;
+import com.hamed.postmantoretrofit2v2.Constants;
+import com.hamed.postmantoretrofit2v2.pluginstate.Language;
+import com.hamed.postmantoretrofit2v2.pluginstate.PluginService;
+import com.hamed.postmantoretrofit2v2.pluginstate.PluginState;
+import com.hamed.postmantoretrofit2v2.pluginstate.ReturnTypeRadioButton;
+import com.hamed.postmantoretrofit2v2.utils.ClassInfo;
+import com.hamed.postmantoretrofit2v2.utils.ProjectUtils;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.packageDependencies.ForwardDependenciesBuilder;
-import com.intellij.psi.PsiFile;
 
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 
 import static javax.swing.JFileChooser.APPROVE_SELECTION;
 import static javax.swing.JFileChooser.DIRECTORIES_ONLY;
 
 public class OptionsDialog extends JDialog {
     private JPanel contentPane;
+    @SuppressWarnings("unused")
     private JLabel generationOptionsLabel;
-    private JComboBox<String> responseTypeComboBox;
+    private JComboBox<String> returnTypeComboBox;
     private JButton buttonCancel;
     private JButton buttonOk;
-    private JCheckBox useRxJavaResponseTypesCheckBox;
     private JCheckBox promptToSelectClassCheckBox;
     private JTextField selectedDirTextField;
     private JButton browseButton;
-    private String storedSelectedResponseType;
-    private String initialSelectedResponseType;
-    private Boolean isInitialUseRxJavaResponseTypesCheckBoxStateSelected;
+    private JComboBox<String> languageComboBox;
+    private JRadioButton retrofitTypesRadioButton;
+    private JRadioButton rxJavaTypesRadioButton;
+    private JRadioButton retrofitCoroutinesRadioButton;
+    private ButtonGroup returnTypeButtonGroup;
+    private String storedSelectedReturnType;
+    private String initialSelectedReturnType;
     private String initialSelectedDirectory;
     private Boolean isInitialPromptToSelectClassCheckBoxStateSelected;
 
-    private final String[] retrofit2RawTypes = { "Call<T>", "Call<Response<T>>" };
+    private String initialLanguage;
 
-    private final String[] rxJavaResponseTypes = { "Observable<T>", "Observable<Response<T>>", "Observable<Result<T>>",
-                                                   "Flowable<T>", "Flowable<Response<T>>", "Flowable<Result<T>>", "Single<T>", "Single<Response<T>>",
-                                                   "Single<Result<T>>", "Maybe<T>", "Maybe<Response<T>>", "Maybe<Result<T>>", "Completable" };
+    private String initialSelectedReturnTypeRadioButton;
+
     private final JFileChooser fileChooser;
 
     private final Project mProject;
@@ -48,43 +53,60 @@ public class OptionsDialog extends JDialog {
     public OptionsDialog(JDialog owner, Project project) {
         super(owner);
         mProject = project;
+        PluginState state = PluginService.getInstance(project).getState();
+        assert state != null;
 
         setContentPane(contentPane);
         getRootPane().setDefaultButton(buttonOk);
-        System.out.println("OptionsDialog");
-        storedSelectedResponseType = "";
+
+        storedSelectedReturnType = "";
         initialSelectedDirectory = "";
+
+        // Create custom action command to make it easier to know which button is which
+        retrofitTypesRadioButton.setActionCommand(ReturnTypeRadioButton.BUTTON_1.name()); // BUTTON_1
+        rxJavaTypesRadioButton.setActionCommand(ReturnTypeRadioButton.BUTTON_2.name()); // BUTTON_2
+        retrofitCoroutinesRadioButton.setActionCommand(ReturnTypeRadioButton.BUTTON_3.name()); // BUTTON_3
 
         // Set the listeners for the GUI components
         buttonOk.addActionListener(this::onOK);
         buttonCancel.addActionListener(e -> onCancel());
-        useRxJavaResponseTypesCheckBox.addActionListener(this::onUseRxJavaResponseTypesCheckBoxStateChanged);
-        responseTypeComboBox.addActionListener(this::onResponseTypeComboBoxChanged);
+        languageComboBox.addActionListener(this::onLanguageComboBoxChanged);
+        returnTypeComboBox.addActionListener(this::onReturnTypeComboBoxChanged);
         promptToSelectClassCheckBox.addActionListener(this::onPromptToSelectClassCheckBoxStateChanged);
+        retrofitTypesRadioButton.addItemListener(e -> onRadioButtonSelected(e, Constants.retrofit2RawTypes));
+        rxJavaTypesRadioButton.addItemListener(e -> onRadioButtonSelected(e, Constants.rxJavaReturnTypes));
+        retrofitCoroutinesRadioButton.addItemListener(e -> onRadioButtonSelected(e, Constants.retrofit2RawTypesKotlinCoroutines));
 
         // Update the GUI components to reflect the restored state
-        PluginState state = PluginService.getInstance(project).getState();
-        if (state.getPromptToSelectClassForResponseType())
-            promptToSelectClassCheckBox.doClick();
+        if (state.getLanguage() == Language.JAVA)
+            languageComboBox.setSelectedIndex(0);
+        else
+            languageComboBox.setSelectedIndex(1);
 
-        // Display the last response type selected by the user
-        if (!state.getResponseType().isEmpty()) {
-            System.out.println("state response type: " + state.getResponseType());
-            if (!useRxJavaResponseTypesCheckBox.isSelected() && new ArrayList<>(List.of(rxJavaResponseTypes)).contains(state.getResponseType()))
-                useRxJavaResponseTypesCheckBox.doClick();
+        // Display the last return type selected by the user
+        if (!state.getReturnType().isEmpty()) {
 
-            responseTypeComboBox.setSelectedItem(state.getResponseType());
-            storedSelectedResponseType = state.getResponseType();
+            for (Iterator<AbstractButton> it = returnTypeButtonGroup.getElements().asIterator(); it.hasNext(); ) {
+                AbstractButton button = it.next();
+                if (button.getActionCommand().equals(state.getReturnTypeRadioButton().name()))
+                    button.doClick();
+            }
+
+            returnTypeComboBox.setSelectedItem(state.getReturnType());
+            storedSelectedReturnType = state.getReturnType();
         }
 
+        if (state.getPromptToSelectClassForReturnType())
+            promptToSelectClassCheckBox.doClick();
+
         // Setting up the Directory chooser
-        if (state.getResponseTypeClassesDirectory().isEmpty()) {
+        if (state.getReturnTypeClassesDirectory().isEmpty()) {
             fileChooser = new JFileChooser(project.getBasePath());
             selectedDirTextField.setText(project.getBasePath());
         }
         else {
-            selectedDirTextField.setText(state.getResponseTypeClassesDirectory());
-            fileChooser = new JFileChooser(state.getResponseTypeClassesDirectory());
+            selectedDirTextField.setText(state.getReturnTypeClassesDirectory());
+            fileChooser = new JFileChooser(state.getReturnTypeClassesDirectory());
         }
 
         fileChooser.setFileSelectionMode(DIRECTORIES_ONLY);
@@ -104,18 +126,46 @@ public class OptionsDialog extends JDialog {
         contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
-    private void onResponseTypeComboBoxChanged(ActionEvent e) {
-
-        if (e.getActionCommand().equals(responseTypeComboBox.getActionCommand()))
+    private void onLanguageComboBoxChanged(ActionEvent e) {
+        if (e.getActionCommand().equals(languageComboBox.getActionCommand()))
         {
-            if (getResponseTypeComboBoxItem() != null) {
-                if (storedSelectedResponseType.equals(getResponseTypeComboBoxItem())) {
-                    // Nothing changed, so do nothing
-                } else {
-                    storedSelectedResponseType = getResponseTypeComboBoxItem();
+            if (languageComboBox.getSelectedIndex() == 0) { // Java
+
+                // Disable the coroutines option as it is not applicable to java
+                retrofitCoroutinesRadioButton.setEnabled(false);
+
+                // If it was selected unselect it and select the first one instead
+                if (returnTypeButtonGroup.getSelection().getActionCommand().equals(retrofitCoroutinesRadioButton.getActionCommand())) {
+                    retrofitTypesRadioButton.setSelected(true);
                 }
             }
-            responseTypeComboBox.hidePopup();
+            else { // Kotlin
+
+                // Enable the coroutines option
+                retrofitCoroutinesRadioButton.setEnabled(true);
+            }
+        }
+    }
+
+    private void onRadioButtonSelected(ItemEvent e, String [] returnTypesList) {
+        if (e.getStateChange() == ItemEvent.SELECTED)
+        {
+            returnTypeComboBox.removeAllItems();
+            for (String returnType: returnTypesList)
+                returnTypeComboBox.addItem(returnType);
+        }
+    }
+
+    private void onReturnTypeComboBoxChanged(ActionEvent e) {
+
+        if (e.getActionCommand().equals(returnTypeComboBox.getActionCommand()))
+        {
+            if (getReturnTypeComboBoxItem() != null) {
+                if (!storedSelectedReturnType.equals(getReturnTypeComboBoxItem())) {
+                    storedSelectedReturnType = getReturnTypeComboBoxItem();
+                }
+                // else do nothing
+            }
         }
     }
 
@@ -125,24 +175,6 @@ public class OptionsDialog extends JDialog {
             File selectedDirectory = fileChooser.getSelectedFile();
             System.out.println("selected directory: " + selectedDirectory.getAbsolutePath());
             selectedDirTextField.setText(selectedDirectory.getAbsolutePath());
-        }
-    }
-
-    private void onUseRxJavaResponseTypesCheckBoxStateChanged(ActionEvent e) {
-
-        if (e.getID() == ActionEvent.ACTION_PERFORMED)
-        {
-            System.out.println("useRxJavaResponseTypesCheckBox.isSelected(): " + useRxJavaResponseTypesCheckBox.isSelected());
-            if (useRxJavaResponseTypesCheckBox.isSelected()) {
-                responseTypeComboBox.removeAllItems();
-                for (String rxJavaResponseType : rxJavaResponseTypes)
-                    responseTypeComboBox.addItem(rxJavaResponseType);
-            }
-            else
-            {
-                responseTypeComboBox.removeAllItems();
-                for (String retrofit2RawType : retrofit2RawTypes) responseTypeComboBox.addItem(retrofit2RawType);
-            }
         }
     }
 
@@ -164,47 +196,46 @@ public class OptionsDialog extends JDialog {
 
     @Override
     public void setVisible(boolean b) {
-        System.out.println("setVisible (" + b + ")");
         if (b) {
-            initialSelectedResponseType = getResponseTypeComboBoxItem();
-            isInitialUseRxJavaResponseTypesCheckBoxStateSelected = useRxJavaResponseTypesCheckBox.isSelected();
-            isInitialPromptToSelectClassCheckBoxStateSelected    = promptToSelectClassCheckBox.isSelected();
+            initialLanguage = getLanguageComboBoxItem();
+            initialSelectedReturnType = getReturnTypeComboBoxItem();
+            initialSelectedReturnTypeRadioButton = returnTypeButtonGroup.getSelection().getActionCommand();
+            isInitialPromptToSelectClassCheckBoxStateSelected  = promptToSelectClassCheckBox.isSelected();
             initialSelectedDirectory = selectedDirTextField.getText();
         }
+        getRootPane().setDefaultButton(buttonOk);
         super.setVisible(b);
     }
 
     private void onOK(ActionEvent e) {
-        // Save the response type
+        // Save the return type
         PluginState state = PluginService.getInstance(mProject).getState();
-        state.setResponseType(getResponseTypeComboBoxItem());
-        state.setPromptToSelectClassForResponseType(promptToSelectClassCheckBox.isSelected());
+        assert state != null;
 
-        if (!state.getResponseTypeClassesDirectory().equals(selectedDirTextField.getText())) {
-            state.setResponseTypeClassesDirectory(selectedDirTextField.getText());
+        state.setReturnType(getReturnTypeComboBoxItem());
+        state.setReturnTypeRadioButton(ReturnTypeRadioButton.valueOf(returnTypeButtonGroup.getSelection().getActionCommand()));
+        state.setPromptToSelectClassForReturnType(promptToSelectClassCheckBox.isSelected());
+        String language = (String) languageComboBox.getSelectedItem();
+        assert language != null;
+        state.setLanguage(Language.valueOf((language).toUpperCase()));
+
+        if (!state.getReturnTypeClassesDirectory().equals(selectedDirTextField.getText())) {
+            state.setReturnTypeClassesDirectory(selectedDirTextField.getText());
 
             if (promptToSelectClassCheckBox.isSelected())
             {
-                VirtualFile file = LocalFileSystem.getInstance().findFileByPath(state.getResponseTypeClassesDirectory());
-                System.out.println("Selected classes directory virtual file: " + file.getPath());
-                ArrayList<String> classesList = new ArrayList<>();
+                ArrayList<ClassInfo> classesList = new ArrayList<>();
 
                 ApplicationManager.getApplication().executeOnPooledThread(() -> {
-                    classesList.addAll(ApplicationManager.getApplication().runReadAction(new Computable<ArrayList<String>>() {
+                    classesList.addAll(ApplicationManager.getApplication().runReadAction(new Computable<ArrayList<ClassInfo>>() {
                         @Override
-                        public ArrayList<String> compute() {
-                            ArrayList<String> javaFilesList = new ArrayList<>();
-                            ForwardDependenciesBuilder forwardDependenciesBuilder = new ForwardDependenciesBuilder(mProject, new AnalysisScope(mProject, List.of(file)));
-                            forwardDependenciesBuilder.analyze();
-                            ArrayList<PsiFile> list = new ArrayList<>(forwardDependenciesBuilder.getDirectDependencies().keySet());
-                            for (PsiFile f : list)
-                                if (f.getName().contains(".java") && !classesList.contains(f.getName()))
-                                    javaFilesList.add(f.getName().replace(".java", ""));
-                            return javaFilesList;
+                        public ArrayList<ClassInfo> compute() {
+                            VirtualFile file = LocalFileSystem.getInstance().findFileByPath(state.getReturnTypeClassesDirectory());
+                            return ProjectUtils.getClassesInDirectory(mProject, file, classesList);
                         }
                     }));
 
-                    state.setResponseTypeClassesList(classesList);
+                    state.setReturnTypeClassInfoList(classesList);
                 });
             }
         }
@@ -214,16 +245,19 @@ public class OptionsDialog extends JDialog {
 
     private void onCancel() {
 
-        System.out.println("onCancel");
-
         // Set back the initial values
-        if (isInitialUseRxJavaResponseTypesCheckBoxStateSelected != useRxJavaResponseTypesCheckBox.isSelected()) {
-            useRxJavaResponseTypesCheckBox.doClick();
-            responseTypeComboBox.setSelectedItem(initialSelectedResponseType);
-        }
-        else
-        {
-            responseTypeComboBox.setSelectedItem(initialSelectedResponseType);
+        if(!initialLanguage.equals(getLanguageComboBoxItem()))
+            languageComboBox.setSelectedItem(initialLanguage);
+
+        if(!initialSelectedReturnTypeRadioButton.equals(returnTypeButtonGroup.getSelection().getActionCommand())) {
+            for (Iterator<AbstractButton> it = returnTypeButtonGroup.getElements().asIterator(); it.hasNext(); ) {
+                AbstractButton button = it.next();
+                if (button.getActionCommand().equals(initialSelectedReturnTypeRadioButton))
+                    button.doClick();
+            }
+
+            if (!initialSelectedReturnType.equals(getReturnTypeComboBoxItem()))
+                returnTypeComboBox.setSelectedItem(initialSelectedReturnType);
         }
 
         if (!initialSelectedDirectory.equals(selectedDirTextField.getText()))
@@ -232,17 +266,21 @@ public class OptionsDialog extends JDialog {
         if (isInitialPromptToSelectClassCheckBoxStateSelected != promptToSelectClassCheckBox.isSelected())
             promptToSelectClassCheckBox.doClick();
 
-        // add your code here if necessary
         dispose();
     }
 
-    private String getResponseTypeComboBoxItem()
+    private String getReturnTypeComboBoxItem()
     {
-        return (String) responseTypeComboBox.getSelectedItem();
+        return (String) returnTypeComboBox.getSelectedItem();
     }
 
-    public String getRxJavaResponseFormat()
+    private String getLanguageComboBoxItem()
     {
-        return getResponseTypeComboBoxItem();
+        return (String) languageComboBox.getSelectedItem();
+    }
+
+    public String getRxJavaReturnFormat()
+    {
+        return getReturnTypeComboBoxItem();
     }
 }

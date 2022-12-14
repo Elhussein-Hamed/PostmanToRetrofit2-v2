@@ -1,4 +1,4 @@
-package com.hamed.postmantoretrofit2v2;
+package com.hamed.postmantoretrofit2v2.pluginstate;
 
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
@@ -26,7 +26,6 @@ public class PluginService implements PersistentStateComponent<PluginState> {
     }
 
     public static PersistentStateComponent<PluginState> getInstance(Project project) {
-        System.out.println("getInstance(): Project name: " + project.getName());
         return project.getService(PluginService.class);
     }
 }

@@ -1,6 +1,6 @@
 package test;
 
-import com.hamed.postmantoretrofit2v2.Utils;
+import com.hamed.postmantoretrofit2v2.utils.Utils;
 import org.junit.Assert;
 import org.junit.Test;
 

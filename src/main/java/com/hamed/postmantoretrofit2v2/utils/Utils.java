@@ -1,13 +1,14 @@
-package com.hamed.postmantoretrofit2v2;
+package com.hamed.postmantoretrofit2v2.utils;
 
 import com.esotericsoftware.kryo.util.IntArray;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.ui.Messages;
+import com.google.gson.internal.LinkedTreeMap;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Utils {
@@ -49,20 +50,51 @@ public class Utils {
         return output.toString();
     }
 
-    public static void restartIde()
+    public static String getIndentation(int size)
     {
-        boolean result = Messages.showYesNoDialog(
-                "Would you like to restart the IDE?",
-                "Restart?",
-                "Restart",
-                "Cancel",
-                Messages.getWarningIcon()
-        ) == Messages.YES;
+        return " ".repeat(size);
+    }
 
-        if (result) {
-            final ApplicationEx app = (ApplicationEx) ApplicationManager.getApplication();
+    public static String highlightReturnTypeWithHashes(String returnType)
+    {
+        return "##" + returnType + "##";
+    }
 
-            app.restart(true);
+    public static String removeHashesAroundReturnType(String method)
+    {
+        return method.replaceAll("#", "");
+    }
+
+    @SuppressWarnings("rawtypes")
+    public static String getUrlFromGsonObject(Object urlObject)
+    {
+        String url = "";
+        if(urlObject instanceof String) {
+            url = (String) urlObject;
         }
+        else if(urlObject instanceof LinkedTreeMap) {
+            LinkedTreeMap urlMap = (LinkedTreeMap) urlObject;
+            url = urlMap.get("raw").toString();
+        }
+        else {
+            System.out.println("The url within the collection is of an unsupported type");
+        }
+
+        return url;
+    }
+
+    public static ArrayList<String> extractParamsFromUrlApiPath(String urlApiPath)
+    {
+        ArrayList<String> params = new ArrayList<>();
+
+        Pattern pattern = Pattern.compile("\\{(\\w+)}");
+        Matcher matcher = pattern.matcher(urlApiPath);
+        if (matcher.find())
+        {
+            for (int i = 1; i <= matcher.groupCount(); i++)
+                params.add(matcher.group(i));
+        }
+
+        return params;
     }
 }

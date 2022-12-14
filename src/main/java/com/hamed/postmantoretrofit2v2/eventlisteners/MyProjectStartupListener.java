@@ -1,48 +1,39 @@
 package com.hamed.postmantoretrofit2v2.eventlisteners;
 
-import com.hamed.postmantoretrofit2v2.PluginService;
-import com.hamed.postmantoretrofit2v2.PluginState;
-import com.intellij.analysis.AnalysisScope;
+import com.hamed.postmantoretrofit2v2.pluginstate.PluginService;
+import com.hamed.postmantoretrofit2v2.pluginstate.PluginState;
+import com.hamed.postmantoretrofit2v2.utils.ClassInfo;
+import com.hamed.postmantoretrofit2v2.utils.ProjectUtils;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.packageDependencies.ForwardDependenciesBuilder;
-import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MyProjectStartupListener implements StartupActivity {
 
     @Override
     public void runActivity(@NotNull Project project) {
         PluginState state = PluginService.getInstance(project).getState();
+        assert state != null;
+
         System.out.println("Re-calculate the ResponseTypeClassesList");
-        if(!state.getResponseTypeClassesDirectory().isEmpty())
+        if(!state.getReturnTypeClassesDirectory().isEmpty())
         {
-            VirtualFile file = LocalFileSystem.getInstance().findFileByPath(state.getResponseTypeClassesDirectory());
-            System.out.println("Selected classes directory virtual file: " + file.getPath());
-            ArrayList<String> classesList = new ArrayList<>();
+            ArrayList<ClassInfo> classesList = new ArrayList<>();
 
             ApplicationManager.getApplication().executeOnPooledThread(() -> {
                 DumbService dumbService = DumbService.getInstance(project);
                 classesList.addAll(dumbService.runReadActionInSmartMode(() -> {
-
-                    ArrayList<String> javaFilesList = new ArrayList<>();
-                    ForwardDependenciesBuilder forwardDependenciesBuilder = new ForwardDependenciesBuilder(project, new AnalysisScope(project, List.of(file)));
-                    forwardDependenciesBuilder.analyze();
-                    ArrayList<PsiFile> list = new ArrayList<>(forwardDependenciesBuilder.getDirectDependencies().keySet());
-                    for (PsiFile f : list)
-                        if (f.getName().contains(".java") && !classesList.contains(f.getName()))
-                            javaFilesList.add(f.getName().replace(".java", ""));
-                    return javaFilesList;
+                    VirtualFile directory = LocalFileSystem.getInstance().findFileByPath(state.getReturnTypeClassesDirectory());
+                    return ProjectUtils.getClassesInDirectory(project, directory, classesList);
                 }));
 
-                state.setResponseTypeClassesList(classesList);
+                state.setReturnTypeClassInfoList(classesList);
             });
         }
     }

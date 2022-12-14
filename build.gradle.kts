@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.hamed"
-version = "1.4.2"
+version = "1.5.0-alpha"
 
 repositories {
     mavenCentral()
@@ -21,13 +21,15 @@ intellij {
 
 dependencies {
 
-    implementation("org.jsonschema2pojo:jsonschema2pojo:1.1.2")
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation("com.fifesoft:rsyntaxtextarea:3.3.0")
 }
 
 tasks {
     // Set the JVM compatibility versions
     withType<JavaCompile> {
+
+        // Java language level used to compile sources and to generate the files for - Java 11 is required since 2020.3
         sourceCompatibility = "11"
         targetCompatibility = "11"
     }

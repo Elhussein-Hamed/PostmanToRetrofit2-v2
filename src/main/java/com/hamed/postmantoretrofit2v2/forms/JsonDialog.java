@@ -2,8 +2,8 @@ package com.hamed.postmantoretrofit2v2.forms;
 
 import com.hamed.postmantoretrofit2v2.Collection;
 import com.hamed.postmantoretrofit2v2.Model;
-import com.hamed.postmantoretrofit2v2.PluginService;
-import com.hamed.postmantoretrofit2v2.PluginState;
+import com.hamed.postmantoretrofit2v2.pluginstate.PluginService;
+import com.hamed.postmantoretrofit2v2.pluginstate.PluginState;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
@@ -38,15 +38,19 @@ public class JsonDialog extends JDialog  {
 
     public JsonDialog(Project project, Editor editor) {
         mProject = project;
+        PluginState state = PluginService.getInstance(project).getState();
+        assert state != null;
 
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
         mModel = new Model(project, editor);
         optionsDialog = new OptionsDialog(this, project);
+        optionsDialog.pack();
+        optionsDialog.setTitle("Options");
+        optionsDialog.setSize(600, 400);
 
         // Open the last directory that the user navigated to
-        PluginState state = PluginService.getInstance(project).getState();
         if (!state.getLastVisitedDir().isEmpty())
             fileChooser = new JFileChooser(state.getLastVisitedDir());
         else
@@ -84,31 +88,31 @@ public class JsonDialog extends JDialog  {
     }
 
     private void onFileSelected(ActionEvent e) {
+        PluginState state = PluginService.getInstance(mProject).getState();
+        assert state != null;
+        if (e.getActionCommand().equals(APPROVE_SELECTION))
         {
-            if (e.getActionCommand().equals(APPROVE_SELECTION))
-            {
-                File selectedFile = fileChooser.getSelectedFile();
+            File selectedFile = fileChooser.getSelectedFile();
 
-                // Save the current directory
-                PluginState state = PluginService.getInstance(mProject).getState();
-                String currentDirectory = fileChooser.getCurrentDirectory().toString();
-                state.setLastVisitedDir(currentDirectory);
-                try {
-                    String fileContent = Files.readString(selectedFile.toPath());
-                    jsonTextArea.setText(fileContent);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
+            // Save the current directory
+            String currentDirectory = fileChooser.getCurrentDirectory().toString();
+            state.setLastVisitedDir(currentDirectory);
+            try {
+                String fileContent = Files.readString(selectedFile.toPath());
+                jsonTextArea.setText(fileContent);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void onOK() {
         Collection collection = mModel.parsePostman(jsonTextArea.getText());
-        System.out.println("RxJava Response Format: " + optionsDialog.getRxJavaResponseFormat());
+        System.out.println("RxJava Response Format: " + optionsDialog.getRxJavaReturnFormat());
         try {
             if (collection != null)
-                mModel.generateRxJavaCode(collection.getItem(), dynamic_header.isSelected(), optionsDialog.getRxJavaResponseFormat());
+                mModel.generateRxJavaCode(collection.getItems(), dynamic_header.isSelected(), optionsDialog.getRxJavaReturnFormat(), this);
             else if (!jsonTextArea.getText().isEmpty()) {
 
                 Notification notification = new Notification("Error Report"
@@ -143,11 +147,7 @@ public class JsonDialog extends JDialog  {
 
     private void onDisplayOptionsDialog()
     {
-        optionsDialog.pack();
-        optionsDialog.setTitle("Options");
-        optionsDialog.setSize(600, 400);
-        optionsDialog.setLocationRelativeTo(null);
-
+        optionsDialog.setLocation(this.getLocation());
         optionsDialog.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent we) {
@@ -156,8 +156,6 @@ public class JsonDialog extends JDialog  {
         });
 
         optionsDialog.setVisible(true);
-        optionsDialog.toFront();
-        optionsDialog.requestFocus();
     }
 
     private void createUIComponents() {

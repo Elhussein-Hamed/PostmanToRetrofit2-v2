@@ -1,18 +1,25 @@
 package com.hamed.postmantoretrofit2v2;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
+/**
+ * Model class used by Gson to parse Postman collection Json
+ */
+@SuppressWarnings("unused")
 public class Collection {
 
-    private InfoBean info;
+    private Info info;
     private List<?> variables;
-    private List<ItemBean> item;
+    @SerializedName("item")
+    private List<Item> items;
 
-    public InfoBean getInfo() {
+    public Info getInfo() {
         return info;
     }
 
-    public void setInfo(InfoBean info) {
+    public void setInfo(Info info) {
         this.info = info;
     }
 
@@ -24,26 +31,26 @@ public class Collection {
         this.variables = variables;
     }
 
-    public List<ItemBean> getItem() {
-        return item;
+    public List<Item> getItems() {
+        return items;
     }
 
-    public void setItem(List<ItemBean> item) {
-        this.item = item;
+    public void setItems(List<Item> items) {
+        this.items = items;
     }
 
-    public boolean isValid() { return this.info != null && this.variables != null && this.item != null; }
+    public boolean isValid() { return !(this.info == null && this.variables == null && this.items == null); }
 
     @Override
     public String toString() {
         return "Collection{" +
                 "info=" + info +
                 ", variables=" + variables +
-                ", item=" + item +
+                ", item=" + items +
                 '}';
     }
 
-    public static class InfoBean {
+    public static class Info {
 
         private String name;
         private String _postman_id;
@@ -84,7 +91,7 @@ public class Collection {
 
         @Override
         public String toString() {
-            return "InfoBean{" +
+            return "Info{" +
                     "name='" + name + '\'' +
                     ", _postman_id='" + _postman_id + '\'' +
                     ", description='" + description + '\'' +
@@ -93,12 +100,13 @@ public class Collection {
         }
     }
 
-    public static class ItemBean {
+    public static class Item {
 
         private String name;
 
-        private RequestBean request;
-        private List<ItemBean> item;
+        private Request request;
+        @SerializedName("item")
+        private List<Item> items;
         private List<?> response;
 
         public String getName() {
@@ -109,15 +117,15 @@ public class Collection {
             this.name = name;
         }
 
-        public List<ItemBean> getItem() { return item; }
+        public List<Item> getItems() { return items; }
 
-        public void setItem(List<ItemBean> item) { this.item = item; }
+        public void setItems(List<Item> items) { this.items = items; }
 
-        public RequestBean getRequest() {
+        public Request getRequest() {
             return request;
         }
 
-        public void setRequest(RequestBean request) {
+        public void setRequest(Request request) {
             this.request = request;
         }
 
@@ -131,20 +139,22 @@ public class Collection {
 
         @Override
         public String toString() {
-            return "ItemBean{" +
+            return "Item{" +
                     "name='" + name + '\'' +
                     ", request=" + request +
-                    ", item=" + item +
+                    ", item=" + items +
                     ", response=" + response +
                     '}';
         }
 
-        public static class RequestBean {
+        public static class Request {
             private Object url;
             private String method;
-            private BodyBean body;
+            private Body body;
             private String description;
-            private List<HeaderBean> header;
+
+            @SerializedName("header")
+            private List<Header> headers;
 
             public Object getUrl() {
                 return url;
@@ -162,11 +172,11 @@ public class Collection {
                 this.method = method;
             }
 
-            public BodyBean getBody() {
+            public Body getBody() {
                 return body;
             }
 
-            public void setBody(BodyBean body) {
+            public void setBody(Body body) {
                 this.body = body;
             }
 
@@ -178,29 +188,29 @@ public class Collection {
                 this.description = description;
             }
 
-            public List<HeaderBean> getHeader() {
-                return header;
+            public List<Header> getHeaders() {
+                return headers;
             }
 
-            public void setHeader(List<HeaderBean> header) {
-                this.header = header;
+            public void setHeaders(List<Header> headers) {
+                this.headers = headers;
             }
 
             @Override
             public String toString() {
-                return "RequestBean{" +
+                return "Request{" +
                         "url=" + url +
                         ", method='" + method + '\'' +
                         ", body=" + body +
                         ", description='" + description + '\'' +
-                        ", header=" + header +
+                        ", headers=" + headers +
                         '}';
             }
 
-            public static class BodyBean {
+            public static class Body {
                 private String mode;
-                private List<UrlencodedBean> urlencoded;
-                private List<FormdataBean> formdata;
+                private List<Urlencoded> urlencoded;
+                private List<Formdata> formdata;
 
                 public String getMode() {
                     return mode;
@@ -210,23 +220,23 @@ public class Collection {
                     this.mode = mode;
                 }
 
-                public List<UrlencodedBean> getUrlencoded() {
+                public List<Urlencoded> getUrlencoded() {
                     return urlencoded;
                 }
 
-                public void setUrlencoded(List<UrlencodedBean> urlencoded) {
+                public void setUrlencoded(List<Urlencoded> urlencoded) {
                     this.urlencoded = urlencoded;
                 }
 
-                public List<FormdataBean> getFormdata() {
+                public List<Formdata> getFormdata() {
                     return formdata;
                 }
 
-                public void setFormdata(List<FormdataBean> formdata) {
+                public void setFormdata(List<Formdata> formdata) {
                     this.formdata = formdata;
                 }
 
-                public static class UrlencodedBean {
+                public static class Urlencoded {
                     private String key;
                     private String value;
                     private String description;
@@ -266,7 +276,7 @@ public class Collection {
 
                     @Override
                     public String toString() {
-                        return "UrlencodedBean{" +
+                        return "Urlencoded{" +
                                 "key='" + key + '\'' +
                                 ", value='" + value + '\'' +
                                 ", description='" + description + '\'' +
@@ -275,7 +285,7 @@ public class Collection {
                     }
                 }
 
-                public static class FormdataBean {
+                public static class Formdata {
                     private String key;
                     private String value;
                     private String type;
@@ -306,7 +316,7 @@ public class Collection {
 
                     @Override
                     public String toString() {
-                        return "FormdataBean{" +
+                        return "Formdata{" +
                                 "key='" + key + '\'' +
                                 ", value='" + value + '\'' +
                                 ", type='" + type + '\'' +
@@ -315,7 +325,7 @@ public class Collection {
                 }
             }
 
-            public static class HeaderBean {
+            public static class Header {
                 private String key;
                 private String value;
                 private String description;
@@ -346,7 +356,7 @@ public class Collection {
 
                 @Override
                 public String toString() {
-                    return "HeaderBean{" +
+                    return "Header{" +
                             "key='" + key + '\'' +
                             ", value='" + value + '\'' +
                             ", description='" + description + '\'' +
