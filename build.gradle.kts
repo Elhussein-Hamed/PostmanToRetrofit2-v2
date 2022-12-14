@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.hamed"
-version = "1.5.0-alpha"
+version = "1.5.0"
 
 repositories {
     mavenCentral()
