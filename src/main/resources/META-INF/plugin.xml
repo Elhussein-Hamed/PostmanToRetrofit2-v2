@@ -105,7 +105,7 @@
 
     <actions>
         <!-- Add your actions here -->
-        <action id="Retrofit2Generator" class="com.hamed.postmantoretrofit2v2.Retrofit2Generator" text="Retrofit2Generator"
+        <action id="Retrofit2Generator2" class="com.hamed.postmantoretrofit2v2.Retrofit2Generator" text="Generate Retrofit2 from Postman Collection"
                 description="Generate Retrofit code from Postman collection">
             <add-to-group group-id="GenerateGroup" anchor="last"/>
         </action>

@@ -1,18 +1,15 @@
 package com.hamed.postmantoretrofit2v2.forms;
 
-import com.hamed.postmantoretrofit2v2.Collection;
-import com.hamed.postmantoretrofit2v2.Model;
+import com.hamed.postmantoretrofit2v2.Constants;
+import com.hamed.postmantoretrofit2v2.forms.listeners.DialogClosedListener;
+import com.hamed.postmantoretrofit2v2.forms.listeners.JsonDialogReturnedData;
 import com.hamed.postmantoretrofit2v2.pluginstate.PluginService;
 import com.hamed.postmantoretrofit2v2.pluginstate.PluginState;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationListener;
-import com.intellij.notification.NotificationType;
-import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
-import java.awt.event.ActionEvent;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -28,27 +25,32 @@ public class JsonDialog extends JDialog  {
     private JButton buttonOK;
     private JButton buttonCancel;
     private JTextArea jsonTextArea;
-    private JCheckBox dynamic_header;
+    private JCheckBox dynamicHeaderCheckBox;
     private JButton buttonShowSelectFileDialog;
     private JButton buttonOptions;
-    private final JFileChooser fileChooser;
-    private final Model mModel;
-    private final OptionsDialog optionsDialog;
+    private JFileChooser fileChooser;
     private final Project mProject;
+    private DialogClosedListener dialogClosedListener;
 
-    public JsonDialog(Project project, Editor editor) {
+    OptionsDialog optionsDialog;
+    Container optionsDialogContentPane;
+
+    public JsonDialog(Project project) {
         mProject = project;
-        PluginState state = PluginService.getInstance(project).getState();
-        assert state != null;
+        optionsDialog = new OptionsDialog(this, mProject);
+        optionsDialogContentPane = optionsDialog.getContentPane();
 
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        mModel = new Model(project, editor);
-        optionsDialog = new OptionsDialog(this, project);
-        optionsDialog.pack();
-        optionsDialog.setTitle("Options");
-        optionsDialog.setSize(600, 400);
+
+        setupFileChooser();
+        setupActionListeners();
+    }
+
+    private void setupFileChooser() {
+        PluginState state = PluginService.getInstance(mProject).getState();
+        assert state != null;
 
         // Open the last directory that the user navigated to
         if (!state.getLastVisitedDir().isEmpty())
@@ -68,7 +70,25 @@ public class JsonDialog extends JDialog  {
                 return "JSON file (*.json)";
             }
         });
-        fileChooser.addActionListener(this::onFileSelected);
+        fileChooser.addActionListener( e -> {
+            if (e.getActionCommand().equals(APPROVE_SELECTION))
+            {
+                File selectedFile = fileChooser.getSelectedFile();
+
+                // Save the current directory
+                String currentDirectory = fileChooser.getCurrentDirectory().toString();
+                state.setLastVisitedDir(currentDirectory);
+                try {
+                    String fileContent = Files.readString(selectedFile.toPath());
+                    jsonTextArea.setText(fileContent);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
+
+    private void setupActionListeners() {
 
         buttonOK.addActionListener(e -> onOK());
         buttonCancel.addActionListener(e -> onCancel());
@@ -87,58 +107,16 @@ public class JsonDialog extends JDialog  {
         contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
-    private void onFileSelected(ActionEvent e) {
-        PluginState state = PluginService.getInstance(mProject).getState();
-        assert state != null;
-        if (e.getActionCommand().equals(APPROVE_SELECTION))
-        {
-            File selectedFile = fileChooser.getSelectedFile();
-
-            // Save the current directory
-            String currentDirectory = fileChooser.getCurrentDirectory().toString();
-            state.setLastVisitedDir(currentDirectory);
-            try {
-                String fileContent = Files.readString(selectedFile.toPath());
-                jsonTextArea.setText(fileContent);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-    }
-
-    @SuppressWarnings("deprecation")
     private void onOK() {
-        Collection collection = mModel.parsePostman(jsonTextArea.getText());
-        System.out.println("RxJava Response Format: " + optionsDialog.getReturnTypeFormat());
-        try {
-            if (collection != null)
-                mModel.generateRetrofitCode(collection.getItems(), dynamic_header.isSelected(), optionsDialog.getReturnTypeFormat(), this);
-            else if (!jsonTextArea.getText().isEmpty()) {
-
-                Notification notification = new Notification("Error Report"
-                        , "Parsing error"
-                        , "Failed to parse the postman collection, please check if the postman collection is correct " +
-                        "or Create an issue " +
-                        " <a href=\"https://github.com/Elhussein-Hamed/PostmanToRetrofit2-v2/issues\">here</a>"
-                        , NotificationType.ERROR);
-
-                notification.setListener(NotificationListener.URL_OPENING_LISTENER);
-                notification.notify(mProject);
-            }
-        }
-        catch (Exception e)
-        {
-            dispose();
-            // Throw the exception again to be handled in PluginErrorReportSubmitter
-            throw e;
-        }
-
         dispose();
+        if (dialogClosedListener != null)
+            dialogClosedListener.onUserConfirm(new JsonDialogReturnedData(jsonTextArea.getText(), dynamicHeaderCheckBox.isSelected()));
     }
 
     private void onCancel() {
-        // add your code here if necessary
         dispose();
+        if (dialogClosedListener != null)
+            dialogClosedListener.onCancelled();
     }
 
     private void onShowSelectFileDialog() {
@@ -147,18 +125,20 @@ public class JsonDialog extends JDialog  {
 
     private void onDisplayOptionsDialog()
     {
+        optionsDialog.setContentPane(optionsDialogContentPane);
+        optionsDialog.pack();
+        optionsDialog.setTitle(Constants.UIConstants.OPTIONS_DIALOG_TITLE);
+        optionsDialog.setSize(Constants.UIConstants.DIALOG_WIDTH, Constants.UIConstants.DIALOG_HEIGHT);
         optionsDialog.setLocation(this.getLocation());
-        optionsDialog.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosed(WindowEvent we) {
-                buttonOK.requestFocusInWindow();
-            }
-        });
-
         optionsDialog.setVisible(true);
     }
 
+    public void setOnDialogClosedListener(DialogClosedListener dialogClosedListener)
+    {
+        this.dialogClosedListener = dialogClosedListener;
+    }
+
     private void createUIComponents() {
-        dynamic_header = new JCheckBox();
+        dynamicHeaderCheckBox = new JCheckBox();
     }
 }

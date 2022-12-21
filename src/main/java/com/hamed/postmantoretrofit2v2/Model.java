@@ -4,6 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.hamed.postmantoretrofit2v2.Collection.Item;
 import com.hamed.postmantoretrofit2v2.forms.ClassPickerDialog;
+import com.hamed.postmantoretrofit2v2.forms.listeners.ClassPickerDialogReturnedData;
+import com.hamed.postmantoretrofit2v2.forms.listeners.DialogClosedListener;
+import com.hamed.postmantoretrofit2v2.forms.listeners.ReturnedData;
 import com.hamed.postmantoretrofit2v2.pluginstate.Language;
 import com.hamed.postmantoretrofit2v2.pluginstate.PluginService;
 import com.hamed.postmantoretrofit2v2.pluginstate.PluginState;
@@ -86,31 +89,41 @@ public class Model {
         returnTypeFormat = Utils.highlightReturnTypeWithHashes(returnTypeFormat);
         ArrayList<String> retrofitAnnotatedMethods = constructRetrofitAnnotatedMethods(items, isDynamicHeader, returnTypeFormat);
 
-        for (String retrofitAnnotatedMethod : retrofitAnnotatedMethods) {
+        for (int i = 0; i < retrofitAnnotatedMethods.size(); i++) {
 
             PluginState state = PluginService.getInstance(mProject).getState();
             if (Objects.requireNonNull(state).getPromptToSelectClassForReturnType()) {
 
-                ClassPickerDialog classPickerDialog = new ClassPickerDialog(parentDialog, mProject, mEditor, retrofitAnnotatedMethod);
+                ClassPickerDialog classPickerDialog = new ClassPickerDialog(parentDialog, mProject, mEditor, retrofitAnnotatedMethods.get(i));
                 classPickerDialog.pack();
-                classPickerDialog.setTitle("Postman To Retrofit2 V2");
-                classPickerDialog.setSize(600, 400);
+                classPickerDialog.setTitle(Constants.UIConstants.MAIN_DIALOG_TITLE);
+                classPickerDialog.setSize(Constants.UIConstants.DIALOG_WIDTH, Constants.UIConstants.DIALOG_HEIGHT);
                 classPickerDialog.setLocation(parentDialog.getLocation());
+
+                final boolean[] breakDueToDialogCancel = {false};
+                int index = i;
+                classPickerDialog.setOnDialogClosedListener(new DialogClosedListener() {
+                    @Override
+                    public void onCancelled() {
+                        breakDueToDialogCancel[0] = true;
+                    }
+
+                    @Override
+                    public void onUserConfirm(ReturnedData data) {
+                        ClassPickerDialogReturnedData returnedData = (ClassPickerDialogReturnedData) data;
+                        System.out.println("ClassPickerDialogReturnedData: modifiedRetrofitAnnotatedMethod:" + returnedData.getModifiedRetrofitAnnotatedMethod());
+                        retrofitAnnotatedMethods.set(index, returnedData.getModifiedRetrofitAnnotatedMethod());
+                    }
+                });
                 classPickerDialog.setVisible(true);
 
-                if (classPickerDialog.isCanceled())
+                if (breakDueToDialogCancel[0])
                     break;
-
-                System.out.println("classPickerDialog.getClassName():" + classPickerDialog.getModifiedRetrofitAnnotatedMethod());
-                if (classPickerDialog.getModifiedRetrofitAnnotatedMethod() != null) {
-                    retrofitAnnotatedMethod = classPickerDialog.getModifiedRetrofitAnnotatedMethod();
-                }
             }
 
-            retrofitAnnotatedMethod = Utils.removeHashesAroundReturnType(retrofitAnnotatedMethod);
+            String retrofitAnnotatedMethod = Utils.removeHashesAroundReturnType(retrofitAnnotatedMethods.get(i));
             int finalLastCaretPosition = lastCaretPosition;
-            String finalRetrofitAnnotatedMethod = retrofitAnnotatedMethod;
-            WriteCommandAction.runWriteCommandAction(mProject, () -> mEditor.getDocument().insertString(finalLastCaretPosition, "\n" + finalRetrofitAnnotatedMethod + "\n"));
+            WriteCommandAction.runWriteCommandAction(mProject, () -> mEditor.getDocument().insertString(finalLastCaretPosition, "\n" + retrofitAnnotatedMethod + "\n"));
             lastCaretPosition += retrofitAnnotatedMethod.length() + 2 /* 2 '\n'*/;
         }
 

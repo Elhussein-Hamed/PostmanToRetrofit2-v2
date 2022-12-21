@@ -2,6 +2,8 @@ package com.hamed.postmantoretrofit2v2.forms;
 
 import com.hamed.postmantoretrofit2v2.Constants;
 import com.hamed.postmantoretrofit2v2.datacontext.DataContextWrapper;
+import com.hamed.postmantoretrofit2v2.forms.listeners.ClassPickerDialogReturnedData;
+import com.hamed.postmantoretrofit2v2.forms.listeners.DialogClosedListener;
 import com.hamed.postmantoretrofit2v2.messaging.Message;
 import com.hamed.postmantoretrofit2v2.messaging.MessageBroker;
 import com.hamed.postmantoretrofit2v2.messaging.MessageSubscriber;
@@ -58,19 +60,15 @@ public class ClassPickerDialog extends JDialog implements MessageSubscriber {
     private RSyntaxTextArea outputOverviewTextArea;
     private final Project mProject;
     private final Editor mEditor;
-
     private final String mRetrofitAnnotatedMethod;
 
-    private boolean isCanceled;
-    private boolean keepDefault;
+    private DialogClosedListener dialogClosedListener;
 
     public ClassPickerDialog(JDialog parentDialog, Project project, Editor editor, String retrofitAnnotatedMethods) {
         super(parentDialog);
         this.mProject = project;
         this.mEditor = editor;
         this.mRetrofitAnnotatedMethod = retrofitAnnotatedMethods;
-        this.isCanceled = false;
-        this.keepDefault = false;
         PluginState state = PluginService.getInstance(mProject).getState();
         assert state != null;
 
@@ -79,13 +77,7 @@ public class ClassPickerDialog extends JDialog implements MessageSubscriber {
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
-        classListComboBox.addActionListener(this::onClassListComboBoxChanged);
-        changeReturnTypeComboBox.addActionListener(this::onReturnTypeComboBoxChanged);
-        buttonOK.addActionListener(e -> onOK());
-        buttonCancel.addActionListener(e -> onCancel());
-        buttonKeepDefault.addActionListener(e -> onKeepDefault());
-        generateANewClassButton.addActionListener(e -> onGenerateNewClass());
-        makeReturnTypeAListCheckBox.addActionListener(this::onMakeReturnTypeAListCheckBoxStateChanged);
+        setupActionListeners();
 
         // Disable the class list check box and change to list button if the return type doesn't include a class
         if (Constants.listOfReturnTypesWithoutClass.contains(state.getReturnType())) {
@@ -99,24 +91,20 @@ public class ClassPickerDialog extends JDialog implements MessageSubscriber {
             outputOverviewTextArea.setText(replaceReturnTypeInRetrofitAnnotatedMethod((ClassInfo) classListComboBox.getSelectedItem(), false));
             outputOverviewTextArea.setCaretPosition(0);
         }
+        else
+            outputOverviewTextArea.setText(Utils.removeHashesAroundReturnType(mRetrofitAnnotatedMethod));
+    }
 
-        // call onCancel() when cross is clicked
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                onCancel();
+    private void setupActionListeners() {
+
+        classListComboBox.addActionListener(e -> {
+            if (classListComboBox.getSelectedItem() != null) {
+                outputOverviewTextArea.setText(replaceReturnTypeInRetrofitAnnotatedMethod((ClassInfo) classListComboBox.getSelectedItem(), makeReturnTypeAListCheckBox.isSelected()));
+                outputOverviewTextArea.setCaretPosition(0);
             }
         });
 
-        // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-    }
-
-
-
-    private void onReturnTypeComboBoxChanged(ActionEvent e) {
-        if (e.getActionCommand().equals(changeReturnTypeComboBox.getActionCommand())) {
-
+        changeReturnTypeComboBox.addActionListener(e -> {
             if (Constants.listOfReturnTypesWithoutClass.contains((String) changeReturnTypeComboBox.getSelectedItem())) {
                 classListComboBox.setEnabled(false);
                 makeReturnTypeAListCheckBox.setEnabled(false);
@@ -126,106 +114,56 @@ public class ClassPickerDialog extends JDialog implements MessageSubscriber {
                 makeReturnTypeAListCheckBox.setEnabled(true);
             }
 
-            if (classListComboBox.getSelectedItem() != null) {
-                outputOverviewTextArea.setText(replaceReturnTypeInRetrofitAnnotatedMethod((ClassInfo) classListComboBox.getSelectedItem(), makeReturnTypeAListCheckBox.isSelected()));
-            }
-
+            outputOverviewTextArea.setText(replaceReturnTypeInRetrofitAnnotatedMethod((ClassInfo) classListComboBox.getSelectedItem(), makeReturnTypeAListCheckBox.isSelected()));
             outputOverviewTextArea.setCaretPosition(0);
-        }
-    }
+        });
 
-    private void onMakeReturnTypeAListCheckBoxStateChanged(ActionEvent e) {
+        buttonOK.addActionListener(e -> onOK());
+        buttonCancel.addActionListener(e -> onCancel());
+        buttonKeepDefault.addActionListener(e -> onKeepDefault());
 
-        if (e.getID() == ActionEvent.ACTION_PERFORMED)
-        {
-            if (makeReturnTypeAListCheckBox.isSelected()) {
-                outputOverviewTextArea.setText(replaceReturnTypeInRetrofitAnnotatedMethod((ClassInfo) Objects.requireNonNull(classListComboBox.getSelectedItem()), true));
-            }
-            else
+        generateANewClassButton.addActionListener(e -> onGenerateNewClass());
+        makeReturnTypeAListCheckBox.addActionListener(e -> {
+            if (e.getID() == ActionEvent.ACTION_PERFORMED)
             {
-                outputOverviewTextArea.setText(replaceReturnTypeInRetrofitAnnotatedMethod((ClassInfo) Objects.requireNonNull(classListComboBox.getSelectedItem()), false));
+                ClassInfo classInfoToDisplay = null;
+                if (classListComboBox.getSelectedItem() != null)
+                    classInfoToDisplay = (ClassInfo) classListComboBox.getSelectedItem();
+
+                if (makeReturnTypeAListCheckBox.isSelected())
+                    outputOverviewTextArea.setText(replaceReturnTypeInRetrofitAnnotatedMethod(classInfoToDisplay, true));
+                else
+                    outputOverviewTextArea.setText(replaceReturnTypeInRetrofitAnnotatedMethod(classInfoToDisplay, false));
             }
-        }
-    }
+        });
 
-    private void onClassListComboBoxChanged(ActionEvent e) {
+        // call onCancel() when cross is clicked
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) { onCancel(); }
+        });
 
-        if (e.getActionCommand().equals(classListComboBox.getActionCommand())) {
-            ClassInfo className = (ClassInfo) classListComboBox.getSelectedItem();
-            if (className != null) {
-                outputOverviewTextArea.setText(replaceReturnTypeInRetrofitAnnotatedMethod((ClassInfo) classListComboBox.getSelectedItem(), makeReturnTypeAListCheckBox.isSelected()));
-            }
-
-            outputOverviewTextArea.setCaretPosition(0);
-        }
+        // call onCancel() on ESCAPE
+        contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
     private void onOK() {
         dispose();
+        dialogClosedListener.onUserConfirm(new ClassPickerDialogReturnedData(replaceReturnTypeInRetrofitAnnotatedMethod((ClassInfo) classListComboBox.getSelectedItem(), makeReturnTypeAListCheckBox.isSelected())));
     }
 
     private void onKeepDefault() {
-        // Keep the default return type and class
-        keepDefault = true;
         dispose();
+        dialogClosedListener.onUserConfirm(new ClassPickerDialogReturnedData(mRetrofitAnnotatedMethod));
     }
 
     private void onCancel() {
-        keepDefault = true;
-        isCanceled = true;
         dispose();
+        dialogClosedListener.onCancelled();
     }
 
-    public boolean isCanceled()
-    {
-        return isCanceled;
-    }
+    private void onGenerateNewClass() {
 
-    @Override
-    public void dispose() {
-        super.dispose();
-        MessageBroker.getInstance().removeSubscriber(this);
-    }
-
-    @Override
-    public void onMessageReceived(Message message) {
-
-        System.out.println("ClassPickerDialog: onMessageReceived");
-
-        if (message instanceof NewClassInfoAddedMessage) {
-            ClassInfo classInfo = (ClassInfo) message.getContent();
-
-            // Use setSelectedItem behaviour to check if the filename already exists in the combo
-            // box list. setSelectedItem doesn't do anything if filename does not exist.
-            classListComboBox.setSelectedItem(classInfo);
-
-            // Check if setSelectedItem change the selected item
-            if (classListComboBox.getSelectedItem() == null || !classListComboBox.getSelectedItem().equals(classInfo)) {
-                classListComboBox.addItem(classInfo);
-                classListComboBox.setSelectedItem(classInfo);
-                System.out.println("Added file: " + classInfo.getClassName() + " to Combo Box list");
-            }
-        }
-    }
-
-    private String replaceReturnTypeInRetrofitAnnotatedMethod(ClassInfo returnTypeClassInfo, boolean makeReturnTypeAList) {
-
-        String returnTypeClass = returnTypeClassInfo.getClassName();
-
-        if (makeReturnTypeAList)
-            returnTypeClass = "List<" + returnTypeClass + ">";
-
-        String returnType = (String) changeReturnTypeComboBox.getSelectedItem();
-        if (returnType == null)
-            returnType = Objects.requireNonNull(PluginService.getInstance(mProject).getState()).getReturnType();
-
-        returnType = returnType.replaceAll("T", returnTypeClass);
-
-        return mRetrofitAnnotatedMethod.replaceAll("##.*##", returnType);
-    }
-
-    private void onGenerateNewClass()
-    {
         PluginState state = PluginService.getInstance(mProject).getState();
         assert state != null;
 
@@ -257,13 +195,19 @@ public class ClassPickerDialog extends JDialog implements MessageSubscriber {
             return;
         }
 
+        // RoboPojoGenerator expects the source directory to create the class in. The directory as
+        // a virtual file and a PSI directory needs to be passed in the data context.
         VirtualFile returnTypeClassesDirVirtualFile = LocalFileSystem.getInstance().findFileByPath(state.getReturnTypeClassesDirectory());
         assert returnTypeClassesDirVirtualFile != null;
         PsiDirectory psiDirectory = PsiManager.getInstance(mProject).findDirectory(returnTypeClassesDirVirtualFile);
 
+        // Fill in the DataKeys in the data context which are required in the action event passed to
+        // GeneratePOJOAction.
+        // See: https://github.com/robohorse/RoboPOJOGenerator/blob/c54bf938fc0b454cc87bf03173a2a6167f932e28/core/src/main/kotlin/com/robohorse/robopojogenerator/delegates/EnvironmentDelegate.kt#L24
+        // and  https://github.com/robohorse/RoboPOJOGenerator/blob/c54bf938fc0b454cc87bf03173a2a6167f932e28/core/src/main/kotlin/com/robohorse/robopojogenerator/delegates/EnvironmentDelegate.kt#L43
         Map<String, Object> map = new HashMap<>();
-        map.put(CommonDataKeys.NAVIGATABLE.getName(), psiDirectory);
         map.put(LangDataKeys.VIRTUAL_FILE.getName(), returnTypeClassesDirVirtualFile);
+        map.put(CommonDataKeys.NAVIGATABLE.getName(), psiDirectory);
 
         DataContext dataContext = DataContextWrapper.getContext(map, DataManager.getInstance().getDataContext(mEditor.getComponent()));
 
@@ -279,13 +223,66 @@ public class ClassPickerDialog extends JDialog implements MessageSubscriber {
         }
     }
 
-    public String getModifiedRetrofitAnnotatedMethod()
-    {
-        // If the dialog was not cancelled, the combo-box will have a valid value
-        if (keepDefault)
-            return mRetrofitAnnotatedMethod;
-        else
-            return replaceReturnTypeInRetrofitAnnotatedMethod((ClassInfo) Objects.requireNonNull(classListComboBox.getSelectedItem()), makeReturnTypeAListCheckBox.isSelected());
+    @Override
+    public void dispose() {
+        super.dispose();
+        MessageBroker.getInstance().removeSubscriber(this);
+    }
+
+    public void setOnDialogClosedListener(DialogClosedListener dialogClosedListener) {
+        this.dialogClosedListener = dialogClosedListener;
+    }
+
+    @Override
+    public void onMessageReceived(Message message) {
+
+        System.out.println("ClassPickerDialog: onMessageReceived");
+
+        if (message instanceof NewClassInfoAddedMessage) {
+            ClassInfo classInfo = (ClassInfo) message.getContent();
+
+            // Use setSelectedItem behaviour to check if the filename already exists in the combo
+            // box list. setSelectedItem doesn't do anything if filename does not exist.
+            classListComboBox.setSelectedItem(classInfo);
+
+            // Check if setSelectedItem change the selected item
+            if (classListComboBox.getSelectedItem() == null || !classListComboBox.getSelectedItem().equals(classInfo)) {
+                classListComboBox.addItem(classInfo);
+                classListComboBox.setSelectedItem(classInfo);
+                System.out.println("Added file: " + classInfo.getClassName() + " to Combo Box list");
+            }
+        }
+    }
+
+    private String replaceReturnTypeInRetrofitAnnotatedMethod(ClassInfo returnTypeClassInfo, boolean makeReturnTypeAList) {
+
+        // Modify the retrofit annotated method declaration
+        // 1- As is => replace the return type with the selected class
+        // 2- As a list => replace the return type with a list of the selected class
+        // 3- selected class is null and as is => replace the return type with the default type
+        // 4- selected class is null and as a list => replace the return type with a list of the default return type
+
+        String returnTypeFormat = (String) changeReturnTypeComboBox.getSelectedItem();
+        assert returnTypeFormat != null;
+
+        String returnTypeClass;
+        if (returnTypeClassInfo != null) {
+            // 1- As is => replace the return type with the selected class
+            returnTypeClass = returnTypeClassInfo.getClassName();
+        }
+        else {
+
+            // Get default return type from mRetrofitAnnotatedMethod
+            // Use replace all as a shortcut to only get the return type class name
+            returnTypeClass = String.join("", mRetrofitAnnotatedMethod.split("\n")).replaceAll(".*##(?:\\w+<)*?(\\w+Response).*##.*", "$1");
+            System.out.println("Return type class: " + returnTypeClass);
+        }
+
+        if (makeReturnTypeAList)
+            returnTypeClass = "List<" + returnTypeClass + ">";
+
+        String returnType = returnTypeFormat.replaceAll("T", returnTypeClass);
+        return mRetrofitAnnotatedMethod.replaceAll("##.*##", returnType);
     }
 
     private void createUIComponents() {
@@ -293,24 +290,22 @@ public class ClassPickerDialog extends JDialog implements MessageSubscriber {
         PluginState state = PluginService.getInstance(mProject).getState();
         assert state != null;
 
+        // Initialise the combo-box to change the return type
         changeReturnTypeComboBox = new ComboBox<>();
         String[] returnTypeList;
-        if (state.getReturnTypeRadioButton() == ReturnTypeRadioButton.BUTTON_RETROFIT_RAW_TYPES) {
+        if (state.getReturnTypeRadioButton() == ReturnTypeRadioButton.BUTTON_RETROFIT_RAW_TYPES)
             returnTypeList = Constants.retrofit2RawTypes;
-        }
-        else if (state.getReturnTypeRadioButton() == ReturnTypeRadioButton.BUTTON_RXJAVA_TYPES) {
+        else if (state.getReturnTypeRadioButton() == ReturnTypeRadioButton.BUTTON_RXJAVA_TYPES)
             returnTypeList = Constants.rxJavaReturnTypes;
-        }
-        else {
+        else
             returnTypeList = Constants.retrofit2RawTypesKotlinCoroutines;
-        }
 
-        for (String returnType: returnTypeList) {
+        for (String returnType: returnTypeList)
             changeReturnTypeComboBox.addItem(returnType);
-        }
 
         changeReturnTypeComboBox.setSelectedItem(state.getReturnType());
 
+        // Initialise the input and the output text areas
         String syntaxStyle = SyntaxConstants.SYNTAX_STYLE_JAVA;
         if (state.getLanguage() == Language.KOTLIN)
             syntaxStyle = SyntaxConstants.SYNTAX_STYLE_KOTLIN;
@@ -333,8 +328,7 @@ public class ClassPickerDialog extends JDialog implements MessageSubscriber {
 
         // Get the list of classes in the project
         classListComboBox = new ComboBox<>();
-        for (ClassInfo classFileInfo: state.getReturnTypeClassInfoList()) {
+        for (ClassInfo classFileInfo: state.getReturnTypeClassInfoList())
             classListComboBox.addItem(classFileInfo);
-        }
     }
 }

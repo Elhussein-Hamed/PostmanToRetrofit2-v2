@@ -7,22 +7,23 @@ import java.util.ArrayList;
 
 public class PluginState {
 
-    private String returnType;
     private String lastVisitedDir;
     private Boolean promptToSelectClassForReturnType;
+    private ReturnTypeRadioButton returnTypeRadioButton;
+    private String returnType;
     @OptionTag(converter = ClassInfoConverter.class)
     private ArrayList<ClassInfo> returnTypeClassInfoList;
     private String returnTypeClassesDirectory;
     private Language language;
-    private ReturnTypeRadioButton returnTypeRadioButton;
 
     public PluginState() {
-        this.returnType = "";
         this.lastVisitedDir = "";
         this.promptToSelectClassForReturnType = false;
+        this.returnType = "";
         this.returnTypeClassInfoList = new ArrayList<>();
         this.returnTypeClassesDirectory = "";
         this.language = Language.JAVA;
+        this.returnTypeRadioButton = ReturnTypeRadioButton.BUTTON_RETROFIT_RAW_TYPES;
     }
 
     public String getReturnType() {
