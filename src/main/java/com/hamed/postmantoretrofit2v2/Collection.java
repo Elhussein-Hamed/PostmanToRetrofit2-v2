@@ -100,14 +100,52 @@ public class Collection {
         }
     }
 
+    public static class VariableItem {
+
+        private String key;
+        private String value;
+
+        public String getKey() {
+            return key;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return "VariableItem{" +
+                    "key='" + key + '\'' +
+                    ", value='" + value + '\'' +
+                    '}';
+        }
+    }
+
     public static class Item {
 
+        private String id;
         private String name;
-
         private Request request;
         @SerializedName("item")
         private List<Item> items;
         private List<?> response;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
 
         public String getName() {
             return name;
@@ -140,7 +178,8 @@ public class Collection {
         @Override
         public String toString() {
             return "Item{" +
-                    "name='" + name + '\'' +
+                    "id='" + id + '\'' +
+                    ", name='" + name + '\'' +
                     ", request=" + request +
                     ", item=" + items +
                     ", response=" + response +
@@ -148,7 +187,7 @@ public class Collection {
         }
 
         public static class Request {
-            private Object url;
+            private Url url;
             private String method;
             private Body body;
             private String description;
@@ -156,11 +195,11 @@ public class Collection {
             @SerializedName("header")
             private List<Header> headers;
 
-            public Object getUrl() {
+            public Url getUrl() {
                 return url;
             }
 
-            public void setUrl(Object url) {
+            public void setUrl(Url url) {
                 this.url = url;
             }
 
@@ -205,6 +244,127 @@ public class Collection {
                         ", description='" + description + '\'' +
                         ", headers=" + headers +
                         '}';
+            }
+
+            public static class Url {
+
+                @SerializedName("path")
+                private List<String> path;
+
+                @SerializedName("protocol")
+                private String protocol;
+
+                @SerializedName("host")
+                private List<String> host;
+
+                @SerializedName("variable")
+                private List<VariableItem> variable;
+
+                @SerializedName("raw")
+                private String raw;
+
+                @SerializedName("query")
+                private List<Query> queries;
+
+                public void setPath(List<String> path){
+                    this.path = path;
+                }
+
+                public List<String> getPath(){
+                    return path;
+                }
+
+                public void setProtocol(String protocol){
+                    this.protocol = protocol;
+                }
+
+                public String getProtocol(){
+                    return protocol;
+                }
+
+                public void setHost(List<String> host){
+                    this.host = host;
+                }
+
+                public List<String> getHost(){
+                    return host;
+                }
+
+                public void setVariable(List<VariableItem> variable){
+                    this.variable = variable;
+                }
+
+                public List<VariableItem> getVariable(){
+                    return variable;
+                }
+
+                public void setRaw(String raw){
+                    this.raw = raw;
+                }
+
+                public String getRaw(){
+                    return raw;
+                }
+
+                public List<Query> getQueries() {
+                    return queries;
+                }
+
+                public void setQueries(List<Query> queries) {
+                    this.queries = queries;
+                }
+
+                @Override
+                public String toString() {
+                    return "Url{" +
+                            "path=" + path +
+                            ", protocol='" + protocol + '\'' +
+                            ", host=" + host +
+                            ", variable=" + variable +
+                            ", raw='" + raw + '\'' +
+                            ", queries=" + queries +
+                            '}';
+                }
+
+                public static class Query {
+                    private String key;
+                    private String value;
+
+                    private boolean disabled;
+
+                    public String getKey() {
+                        return key;
+                    }
+
+                    public void setKey(String key) {
+                        this.key = key;
+                    }
+
+                    public String getValue() {
+                        return value;
+                    }
+
+                    public void setValue(String value) {
+                        this.value = value;
+                    }
+
+                    public boolean isDisabled() {
+                        return disabled;
+                    }
+
+                    public void setDisabled(boolean disabled) {
+                        this.disabled = disabled;
+                    }
+
+                    @Override
+                    public String toString() {
+                        return "Query{" +
+                                "key='" + key + '\'' +
+                                ", value='" + value + '\'' +
+                                ", disabled=" + disabled +
+                                '}';
+                    }
+                }
             }
 
             public static class Body {
