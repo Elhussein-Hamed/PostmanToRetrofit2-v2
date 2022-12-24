@@ -1,7 +1,6 @@
 package com.hamed.postmantoretrofit2v2.utils;
 
 import com.esotericsoftware.kryo.util.IntArray;
-import com.google.gson.internal.LinkedTreeMap;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,24 +62,6 @@ public class Utils {
     public static String removeHashesAroundReturnType(String method)
     {
         return method.replaceAll("#", "");
-    }
-
-    @SuppressWarnings("rawtypes")
-    public static String getUrlFromGsonObject(Object urlObject)
-    {
-        String url = "";
-        if(urlObject instanceof String) {
-            url = (String) urlObject;
-        }
-        else if(urlObject instanceof LinkedTreeMap) {
-            LinkedTreeMap urlMap = (LinkedTreeMap) urlObject;
-            url = urlMap.get("raw").toString();
-        }
-        else {
-            System.out.println("The url within the collection is of an unsupported type");
-        }
-
-        return url;
     }
 
     public static ArrayList<String> extractParamsFromUrlApiPath(String urlApiPath)

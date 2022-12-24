@@ -4,8 +4,6 @@ import com.hamed.postmantoretrofit2v2.forms.JsonDialog;
 import com.hamed.postmantoretrofit2v2.forms.listeners.DialogClosedListener;
 import com.hamed.postmantoretrofit2v2.forms.listeners.JsonDialogReturnedData;
 import com.hamed.postmantoretrofit2v2.forms.listeners.ReturnedData;
-import com.hamed.postmantoretrofit2v2.pluginstate.PluginService;
-import com.hamed.postmantoretrofit2v2.pluginstate.PluginState;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationListener;
 import com.intellij.notification.NotificationType;
@@ -15,8 +13,6 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 
-import java.util.Objects;
-
 public class Retrofit2Generator extends AnAction {
 
     @Override
@@ -24,7 +20,6 @@ public class Retrofit2Generator extends AnAction {
 
         Project project = e.getData(PlatformDataKeys.PROJECT);
         Editor editor = e.getData(PlatformDataKeys.EDITOR);
-        Model model = new Model(project, editor);
 
         JsonDialog jsonDialog = new JsonDialog(project);
         jsonDialog.pack();
@@ -44,19 +39,17 @@ public class Retrofit2Generator extends AnAction {
                     JsonDialogReturnedData jsonDialogReturnedData = (JsonDialogReturnedData) data;
 
                     // Parse the Postman collection json text
+                    Model model = new Model();
                     Collection collection = model.parsePostman(jsonDialogReturnedData.getCollectionJsonText());
 
                     // If converting json to a Collection object was successful
                     if (collection != null) {
 
-                        // Get the return type from the stored plugin state
-                        PluginState state = PluginService.getInstance(Objects.requireNonNull(project)).getState();
-                        assert state != null;
-
-                        System.out.println("Selected return type: " + state.getReturnType());
-                        model.generateRetrofitCode(collection.getItems(),
+                        assert editor != null;
+                        UserSettings userSettings = new UserSettings(project);
+                        model.generateRetrofitCode(project, editor, collection.getItems(),
                                 jsonDialogReturnedData.useDynamicHeaders(),
-                                state.getReturnType(),
+                                userSettings,
                                 jsonDialog);
                     }
                     else if (!jsonDialogReturnedData.getCollectionJsonText().isEmpty()) {
