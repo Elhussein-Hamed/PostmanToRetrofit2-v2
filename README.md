@@ -1,5 +1,5 @@
 # PostmanToRetrofit2
-This is an Android Studio plugin which can generate Retrofit2's java code from Postman's collection.
+This is an Android Studio plugin which can generate Retrofit2's Java/Kotlin code from Postman's collection.
 
 ## Install
 ### From Android Studio plugin marketplace
