@@ -8,7 +8,7 @@
 	"item": [
 		{
 			"name": "GetPost",
-			"request": "https://jsonplaceholder.typicode.com/post/1",
+			"request": "https://jsonplaceholder.typicode.com/posts/1",
 			"response": []
 		}
 	]

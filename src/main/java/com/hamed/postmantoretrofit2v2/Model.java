@@ -30,9 +30,6 @@ public class Model {
 
     private int INDENT_SIZE = 4;
 
-    private final String NEW_LINE = System.getProperty("line.separator");
-
-
     @Nullable
     public Collection parsePostman(String jsonString) {
         try{
@@ -94,8 +91,8 @@ public class Model {
 
             String retrofitAnnotatedMethod = Utils.removeHashesAroundReturnType(retrofitAnnotatedMethods.get(i));
             int finalLastCaretPosition = lastCaretPosition;
-            WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().insertString(finalLastCaretPosition, NEW_LINE + retrofitAnnotatedMethod + NEW_LINE));
-            lastCaretPosition += retrofitAnnotatedMethod.length() + 2 /* 2 'NEW_LINE'*/;
+            WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().insertString(finalLastCaretPosition, "\n" + retrofitAnnotatedMethod + "\n"));
+            lastCaretPosition += retrofitAnnotatedMethod.length() + 2 /* 2 '\n'*/;
         }
 
         editor.getCaretModel().getCurrentCaret().moveToOffset(lastCaretPosition);
@@ -134,9 +131,9 @@ public class Model {
                         .append("\"");
 
                 if(item.getRequest().getHeaders().indexOf(header) != item.getRequest().getHeaders().size() - 1)
-                    result.append(",").append(NEW_LINE).append("              ");
+                    result.append(",\n");
             }
-            result.append("})").append(NEW_LINE);
+            result.append("})\n");
         }
 
         return result.toString();
@@ -152,7 +149,7 @@ public class Model {
                         header.getKey(), header.getKey().replaceAll("[^A-Za-z0-9()\\[\\]]", "")));
 
                 if(item.getRequest().getHeaders().indexOf(header) != item.getRequest().getHeaders().size() - 1)
-                    result.append(",").append(NEW_LINE).append("              ");
+                    result.append(",\n");
             }
         }
 
@@ -171,15 +168,14 @@ public class Model {
         // Add form url encoded annotation if needed
         if(item.getRequest().getBody() != null && item.getRequest().getBody() .getUrlencoded() != null)
             result.append(Utils.getIndentation(INDENT_SIZE))
-                    .append("@FormUrlEncoded").append(NEW_LINE);
+                    .append("@FormUrlEncoded\n");
 
         result.append(Utils.getIndentation(INDENT_SIZE))
                 .append("@")
                 .append(httpMethod)
                 .append("(\"")
                 .append(url)
-                .append("\")")
-                .append(NEW_LINE);
+                .append("\")\n");
 
         return result.toString();
     }
@@ -229,7 +225,8 @@ public class Model {
                 addFieldParams(item, language),
                 addQueryParams(item, language),
                 addBodyParam(item, language),
-                useCoroutines));
+                useCoroutines)
+        );
 
         return result.toString();
     }

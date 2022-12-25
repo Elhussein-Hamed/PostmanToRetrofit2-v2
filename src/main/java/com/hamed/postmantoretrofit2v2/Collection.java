@@ -41,6 +41,7 @@ public class Collection {
 
     public boolean isValid() { return !(this.info == null && this.variables == null && this.items == null); }
 
+    public boolean isEmpty() { return items == null;  }
     @Override
     public String toString() {
         return "Collection{" +
@@ -394,6 +395,15 @@ public class Collection {
 
                 public void setFormdata(List<Formdata> formdata) {
                     this.formdata = formdata;
+                }
+
+                @Override
+                public String toString() {
+                    return "Body{" +
+                            "mode='" + mode + '\'' +
+                            ", urlencoded=" + urlencoded +
+                            ", formdata=" + formdata +
+                            '}';
                 }
 
                 public static class Urlencoded {

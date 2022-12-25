@@ -45,12 +45,18 @@ public class Retrofit2Generator extends AnAction {
                     // If converting json to a Collection object was successful
                     if (collection != null) {
 
-                        assert editor != null;
-                        UserSettings userSettings = new UserSettings(project);
-                        model.generateRetrofitCode(project, editor, collection.getItems(),
-                                jsonDialogReturnedData.useDynamicHeaders(),
-                                userSettings,
-                                jsonDialog);
+                        System.out.println("Collection items: " + collection.getItems());
+                        if (!collection.isEmpty()) {
+                            assert editor != null;
+                            UserSettings userSettings = new UserSettings(project);
+                            model.generateRetrofitCode(project, editor, collection.getItems(),
+                                    jsonDialogReturnedData.useDynamicHeaders(),
+                                    userSettings,
+                                    jsonDialog);
+                        }
+                        else {
+                            System.out.println("Empty collection provided!");
+                        }
                     }
                     else if (!jsonDialogReturnedData.getCollectionJsonText().isEmpty()) {
 
