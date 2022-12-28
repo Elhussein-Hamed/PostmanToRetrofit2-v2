@@ -21,6 +21,12 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        <h2>1.5.2</h2>
+        <h3>Improvements</h3>
+        <ul>
+          <li>Updated the Json parser to parse the collections that have 'request' or 'url' as a string instead of a Json object</li>
+        </ul>
+
         <h2>1.5.1</h2>
         <h3>Bug fixes</h3>
         <ul>
