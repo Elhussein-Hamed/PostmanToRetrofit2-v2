@@ -1,4 +1,4 @@
-package com.hamed.postmantoretrofit2v2.pluginstate;
+package com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums;
 
 /*
 * An enum to make it easier to know which RadioButton is currently selected in the GUI

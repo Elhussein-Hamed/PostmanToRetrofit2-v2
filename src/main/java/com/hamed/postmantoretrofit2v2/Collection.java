@@ -3,6 +3,7 @@ package com.hamed.postmantoretrofit2v2;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Model class used by Gson to parse Postman collection Json
@@ -138,7 +139,9 @@ public class Collection {
         private Request request;
         @SerializedName("item")
         private List<Item> items;
-        private List<?> response;
+
+        @SerializedName("response")
+        private List<Response> responses;
 
         public String getId() {
             return id;
@@ -168,12 +171,12 @@ public class Collection {
             this.request = request;
         }
 
-        public List<?> getResponse() {
-            return response;
+        public List<Response> getResponse() {
+            return responses;
         }
 
-        public void setResponse(List<?> response) {
-            this.response = response;
+        public void setResponse(List<Response> responses) {
+            this.responses = responses;
         }
 
         @Override
@@ -183,8 +186,21 @@ public class Collection {
                     ", name='" + name + '\'' +
                     ", request=" + request +
                     ", item=" + items +
-                    ", response=" + response +
+                    ", responses=" + responses +
                     '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Item item = (Item) o;
+            return Objects.equals(id, item.id) && Objects.equals(name, item.name) && Objects.equals(request, item.request) && Objects.equals(items, item.items) && Objects.equals(responses, item.responses);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, name, request, items, responses);
         }
 
         public static class Request {
@@ -532,6 +548,76 @@ public class Collection {
                             ", description='" + description + '\'' +
                             '}';
                 }
+            }
+        }
+
+        public static class Response {
+
+            @SerializedName("_postman_previewlanguage")
+            private String postmanPreviewlanguage;
+
+            @SerializedName("code")
+            private int code;
+
+            @SerializedName("name")
+            private String name;
+
+            @SerializedName("body")
+            private String body;
+
+            @SerializedName("status")
+            private String status;
+
+            public void setPostmanPreviewlanguage(String postmanPreviewlanguage) {
+                this.postmanPreviewlanguage = postmanPreviewlanguage;
+            }
+
+            public String getPostmanPreviewlanguage() {
+                return postmanPreviewlanguage;
+            }
+
+            public void setCode(int code) {
+                this.code = code;
+            }
+
+            public int getCode() {
+                return code;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setBody(String body) {
+                this.body = body;
+            }
+
+            public String getBody() {
+                return body;
+            }
+
+            public void setStatus(String status) {
+                this.status = status;
+            }
+
+            public String getStatus() {
+                return status;
+            }
+
+            @Override
+            public String toString() {
+                return
+                        "Response{" +
+                                ",_postman_previewlanguage = '" + postmanPreviewlanguage + '\'' +
+                                ",code = '" + code + '\'' +
+                                ",name = '" + name + '\'' +
+                                ",body = '" + body + '\'' +
+                                ",status = '" + status + '\'' +
+                                "}";
             }
         }
     }

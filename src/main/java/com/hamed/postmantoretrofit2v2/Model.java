@@ -3,13 +3,14 @@ package com.hamed.postmantoretrofit2v2;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hamed.postmantoretrofit2v2.Collection.Item;
+import com.hamed.postmantoretrofit2v2.classgeneration.ResponseClassGenerator;
 import com.hamed.postmantoretrofit2v2.forms.ClassPickerDialog;
 import com.hamed.postmantoretrofit2v2.forms.listeners.ClassPickerDialogReturnedData;
 import com.hamed.postmantoretrofit2v2.forms.listeners.DialogClosedListener;
 import com.hamed.postmantoretrofit2v2.forms.listeners.ReturnedData;
 import com.hamed.postmantoretrofit2v2.gsondeserialisers.RequestJsonDeserializer;
 import com.hamed.postmantoretrofit2v2.gsondeserialisers.UrlJsonDeserializer;
-import com.hamed.postmantoretrofit2v2.pluginstate.Language;
+import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums.Language;
 import com.hamed.postmantoretrofit2v2.utils.RetrofitSyntaxHelper;
 import com.hamed.postmantoretrofit2v2.utils.Utils;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -21,6 +22,7 @@ import javax.swing.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,8 +57,16 @@ public class Model {
 
         INDENT_SIZE = userSettings.getIndentSize();
 
+        // TEMP: Test the automatic class generation from a response
+        boolean generateClassFromResponse = true;
+        HashMap<Item, String> generatedClasses = new HashMap<>();
+
         String returnTypeFormat = Utils.highlightReturnTypeWithHashes(userSettings.getReturnType());
-        ArrayList<String> retrofitAnnotatedMethods = constructRetrofitAnnotatedMethods(items, isDynamicHeader, returnTypeFormat, userSettings.getLanguage(), userSettings.useCoroutines());
+
+        if (generateClassFromResponse)
+            generatedClasses = generateClassFromResponse(project, items, userSettings);
+
+        ArrayList<String> retrofitAnnotatedMethods = constructRetrofitAnnotatedMethods(items, isDynamicHeader, returnTypeFormat, userSettings.getLanguage(), userSettings.useCoroutines(), generatedClasses);
 
         for (int i = 0; i < retrofitAnnotatedMethods.size(); i++) {
 
@@ -98,17 +108,39 @@ public class Model {
         editor.getCaretModel().getCurrentCaret().moveToOffset(lastCaretPosition);
     }
 
-    public ArrayList<String> constructRetrofitAnnotatedMethods(List<Item> items, boolean isDynamicHeader, String returnTypeFormat, Language language, boolean useCoroutines)
+    private HashMap<Item, String> generateClassFromResponse(Project project, List<Item> items, UserSettings userSettings) {
+
+        HashMap<Item, String> mappedGeneratedClasses = new HashMap<>();
+        for (Item item: items) {
+            if (item.getItems() != null && item.getItems().size() > 0) {
+                mappedGeneratedClasses.putAll(generateClassFromResponse(project, item.getItems(), userSettings));
+            }
+            else {
+                if (item.getResponse().size() > 0) {
+                    // The class generation uses only the first response
+                    Item.Response response = item.getResponse().get(0);
+                    String className = response.getName();
+                    String jsonBody = response.getBody();
+                    if(ResponseClassGenerator.generateClasses(project, userSettings.getReturnTypeClassesDirectory() , className, jsonBody))
+                        mappedGeneratedClasses.put(item, className);
+                }
+            }
+        }
+
+        return mappedGeneratedClasses;
+    }
+
+    public ArrayList<String> constructRetrofitAnnotatedMethods(List<Item> items, boolean isDynamicHeader, String returnTypeFormat, Language language, boolean useCoroutines, HashMap<Item, String> generatedClasses)
     {
         ArrayList<String> retrofitAnnotatedMethods = new ArrayList<>();
         for(Item item : items) {
             if (item.getItems() != null && item.getItems().size() > 0) {
-                retrofitAnnotatedMethods.addAll(constructRetrofitAnnotatedMethods(item.getItems(), isDynamicHeader, returnTypeFormat, language, useCoroutines));
+                retrofitAnnotatedMethods.addAll(constructRetrofitAnnotatedMethods(item.getItems(), isDynamicHeader, returnTypeFormat, language, useCoroutines, generatedClasses));
             }
             else {
                 String header = (isDynamicHeader) ? "" : getStaticHeader(item);
                 String annotation = getAnnotation(item);
-                String method = getMethod(item, isDynamicHeader, returnTypeFormat, language, useCoroutines);
+                String method = getMethod(item, isDynamicHeader, returnTypeFormat, language, useCoroutines, generatedClasses);
                 retrofitAnnotatedMethods.add(header + annotation + method);
             }
         }
@@ -198,26 +230,30 @@ public class Model {
         return url;
     }
 
-    private String getMethod(Item item, boolean isDynamicHeader, String returnTypeFormat, Language language, boolean useCoroutines) {
+    private String getMethod(Item item, boolean isDynamicHeader, String returnTypeFormat, Language language, boolean useCoroutines, HashMap<Item, String> generatedClasses) {
 
-        String methodName =  item.getName().trim();
-        if (methodName.startsWith("http"))
-        {
+        String methodName = item.getName().trim();
+        if (methodName.startsWith("http")) {
             System.out.println("The item: " + item.getName() + ", seems to be a url, consider updating it to a proper name");
             methodName = item.getRequest().getMethod();
         }
 
         methodName = Utils.convertToTitleCase(methodName).replace(" ", ""); // Remove any white spaces
 
-        StringBuilder result = new StringBuilder(Utils.getIndentation(INDENT_SIZE));
-
-        String returnType = returnTypeFormat.replace("T", methodName + RETURN_TYPE_POSTFIX);
+        String returnType;
+        if (generatedClasses.size() > 0 && generatedClasses.containsKey(item)) {
+            returnType = returnTypeFormat.replace("T", generatedClasses.get(item));
+        }
+        else {
+            returnType = returnTypeFormat.replace("T", methodName + RETURN_TYPE_POSTFIX);
+        }
 
         String dynamicHeader = "";
-        if (isDynamicHeader)
-                dynamicHeader = getDynamicHeader(item, language);
+        if (isDynamicHeader) {
+            dynamicHeader = getDynamicHeader(item, language);
+        }
 
-        result.append(RetrofitSyntaxHelper.constructMethodSignature(language,
+        return Utils.getIndentation(INDENT_SIZE) + RetrofitSyntaxHelper.constructMethodSignature(language,
                 returnType,
                 methodName,
                 dynamicHeader,
@@ -225,10 +261,7 @@ public class Model {
                 addFieldParams(item, language),
                 addQueryParams(item, language),
                 addBodyParam(item, language),
-                useCoroutines)
-        );
-
-        return result.toString();
+                useCoroutines);
     }
 
     private String addPathParams(Item item, Language language) {

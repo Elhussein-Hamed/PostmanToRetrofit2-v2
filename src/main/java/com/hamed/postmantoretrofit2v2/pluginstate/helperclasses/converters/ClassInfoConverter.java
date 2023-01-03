@@ -1,4 +1,4 @@
-package com.hamed.postmantoretrofit2v2.pluginstate;
+package com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.converters;
 
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.Gson;

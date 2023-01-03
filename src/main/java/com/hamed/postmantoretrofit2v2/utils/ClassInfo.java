@@ -1,6 +1,6 @@
 package com.hamed.postmantoretrofit2v2.utils;
 
-import com.hamed.postmantoretrofit2v2.pluginstate.Language;
+import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums.Language;
 
 import java.util.Objects;
 

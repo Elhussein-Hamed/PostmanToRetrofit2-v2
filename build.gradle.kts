@@ -1,10 +1,11 @@
 plugins {
     id("java")
+    id("org.jetbrains.kotlin.jvm") version "1.7.0"
     id("org.jetbrains.intellij") version "1.9.0"
 }
 
 group = "com.hamed"
-version = "1.5.2"
+version = "1.5.3-beta"
 
 repositories {
     mavenCentral()
@@ -32,6 +33,12 @@ tasks {
         // Java language level used to compile sources and to generate the files for - Java 11 is required since 2020.3
         sourceCompatibility = "11"
         targetCompatibility = "11"
+    }
+
+    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = "11"
+        }
     }
 
     patchPluginXml {

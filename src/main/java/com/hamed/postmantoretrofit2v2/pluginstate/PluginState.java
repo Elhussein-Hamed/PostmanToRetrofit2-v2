@@ -1,5 +1,8 @@
 package com.hamed.postmantoretrofit2v2.pluginstate;
 
+import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.converters.ClassInfoConverter;
+import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums.Language;
+import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums.ReturnTypeRadioButton;
 import com.hamed.postmantoretrofit2v2.utils.ClassInfo;
 import com.intellij.util.xmlb.annotations.OptionTag;
 

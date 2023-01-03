@@ -1,25 +1,31 @@
 package com.hamed.postmantoretrofit2v2.forms;
 
 import com.hamed.postmantoretrofit2v2.Constants;
-import com.hamed.postmantoretrofit2v2.pluginstate.Language;
+import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.*;
 import com.hamed.postmantoretrofit2v2.pluginstate.PluginService;
 import com.hamed.postmantoretrofit2v2.pluginstate.PluginState;
-import com.hamed.postmantoretrofit2v2.pluginstate.ReturnTypeRadioButton;
+import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums.Framework;
+import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums.Language;
+import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums.ReturnTypeRadioButton;
 import com.hamed.postmantoretrofit2v2.utils.ClassInfo;
 import com.hamed.postmantoretrofit2v2.utils.ProjectUtils;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.ui.JBUI;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.google.common.primitives.Ints.max;
 import static javax.swing.JFileChooser.APPROVE_SELECTION;
 import static javax.swing.JFileChooser.DIRECTORIES_ONLY;
 
@@ -37,6 +43,9 @@ public class OptionsDialog extends JDialog {
     private JRadioButton retrofitTypesRadioButton;
     private JRadioButton rxJavaTypesRadioButton;
     private JRadioButton retrofitCoroutinesRadioButton;
+    private JCheckBox automaticGenerationCheckBox;
+    private JPanel automaticGenerationOptionsPanel;
+    private JComboBox<String> frameworkComboBox;
     private ButtonGroup returnTypeButtonGroup;
     private String storedSelectedReturnType;
     private String initialSelectedReturnType;
@@ -50,6 +59,8 @@ public class OptionsDialog extends JDialog {
     private JFileChooser fileChooser;
 
     private final Project mProject;
+
+    private AutomaticClassGenerationOptions automaticClassGenerationOptions;
 
     public OptionsDialog(JDialog owner, Project project) {
         super(owner);
@@ -103,7 +114,8 @@ public class OptionsDialog extends JDialog {
         buttonOk.addActionListener(this::onOK);
         buttonCancel.addActionListener(e -> onCancel());
 
-        languageComboBox.addActionListener( e -> {
+        languageComboBox.addItemListener( e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
                 if (languageComboBox.getSelectedIndex() == 0) { // Java
 
                     // Disable the coroutines option as it is not applicable to java
@@ -113,11 +125,21 @@ public class OptionsDialog extends JDialog {
                     if (returnTypeButtonGroup.getSelection().getActionCommand().equals(retrofitCoroutinesRadioButton.getActionCommand())) {
                         retrofitTypesRadioButton.setSelected(true);
                     }
-                }
-                else { // Kotlin
+
+                    // Also load the corresponding framework options
+                    frameworkComboBox.removeAllItems();
+                    for (int i = 0; i < Constants.javaSupportedJsonFrameworks.length; i++)
+                        frameworkComboBox.addItem(Constants.javaSupportedJsonFrameworks[i]);
+                } else { // Kotlin
                     // Enable the coroutines option
                     retrofitCoroutinesRadioButton.setEnabled(true);
+
+                    // Also load the corresponding framework options
+                    frameworkComboBox.removeAllItems();
+                    for (int i = 0; i < Constants.kotlinSupportedJsonFrameworks.length; i++)
+                        frameworkComboBox.addItem(Constants.kotlinSupportedJsonFrameworks[i]);
                 }
+            }
         });
 
         returnTypeComboBox.addActionListener(e -> {
@@ -129,18 +151,13 @@ public class OptionsDialog extends JDialog {
             }
         });
 
-        promptToSelectClassCheckBox.addActionListener(e -> {
-            if (e.getID() == ActionEvent.ACTION_PERFORMED)
-            {
-                if (promptToSelectClassCheckBox.isSelected()) {
-                    browseButton.setEnabled(true);
-                    selectedDirTextField.setEnabled(true);
-                }
-                else
-                {
-                    browseButton.setEnabled(false);
-                    selectedDirTextField.setEnabled(false);
-                }
+        promptToSelectClassCheckBox.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                browseButton.setEnabled(true);
+                selectedDirTextField.setEnabled(true);
+            } else {
+                browseButton.setEnabled(false);
+                selectedDirTextField.setEnabled(false);
             }
         });
 
@@ -149,6 +166,29 @@ public class OptionsDialog extends JDialog {
         retrofitCoroutinesRadioButton.addItemListener(e -> onRadioButtonSelected(e, Constants.retrofit2RawTypesKotlinCoroutines));
 
         browseButton.addActionListener( e -> fileChooser.showOpenDialog(getRootPane()));
+
+        automaticGenerationCheckBox.addItemListener( e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                frameworkComboBox.setEnabled(true);
+                for (Component component : automaticGenerationOptionsPanel.getComponents()) {
+                    component.setEnabled(true);
+                }
+            }
+            else {
+                frameworkComboBox.setEnabled(false);
+                for (Component component : automaticGenerationOptionsPanel.getComponents()) {
+                    component.setEnabled(false);
+                }
+            }
+        });
+
+        frameworkComboBox.addItemListener(e -> {
+                    if (e.getStateChange() == ItemEvent.SELECTED) {
+                        System.out.println("Selected item: " + e.getItem());
+                        setupAutomaticClassGenerationOptionsPanel(Language.valueOf((getLanguageComboBoxItem()).toUpperCase()), !automaticGenerationCheckBox.isSelected());
+                    }
+                }
+        );
 
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -209,6 +249,19 @@ public class OptionsDialog extends JDialog {
         if (state.getPromptToSelectClassForReturnType())
             promptToSelectClassCheckBox.doClick();
 
+        // Set up the Automatic Class Generation Options Panel which contains the
+        // generations options
+        setupAutomaticClassGenerationOptionsPanel(state.getLanguage(), true);
+
+        // Restore the state of automatic class generations check box
+        // Initially set this to be deselected and send an event to disable the components
+        // related to this check box.
+        if (automaticGenerationCheckBox.isSelected())
+            automaticGenerationCheckBox.doClick();
+        else {
+            automaticGenerationCheckBox.setSelected(true);
+            automaticGenerationCheckBox.doClick();
+        }
     }
 
     @Override
@@ -298,4 +351,210 @@ public class OptionsDialog extends JDialog {
     {
         return (String) languageComboBox.getSelectedItem();
     }
+
+    private void createUIComponents() {
+        PluginState state = PluginService.getInstance(mProject).getState();
+        assert state != null;
+
+        if (state.getLanguage() == Language.JAVA)
+            frameworkComboBox = new ComboBox<>(Constants.javaSupportedJsonFrameworks);
+        else
+            frameworkComboBox = new ComboBox<>(Constants.kotlinSupportedJsonFrameworks);
+    }
+
+    private void setupAutomaticClassGenerationOptionsPanel(Language language, boolean initialiseAsDisabled)
+    {
+        ArrayList<JCheckBox> optionsCheckBoxes;
+
+        String framework = (String) frameworkComboBox.getSelectedItem();
+        System.out.println("Framework selection:" + framework);
+        assert framework != null;
+        if (language == Language.JAVA) {
+
+            // For the generation options, in case of:
+            // - Records: use JavaAutomaticClassGenerationCommonOptions
+            // - Lombok: use JavaAutomaticClassGenerationLombokOptions
+            // - AutoValue: use JavaAutomaticClassGenerationAutoValueOptions
+            // - else use JavaAutomaticClassGenerationAdditionalOptions
+            if (framework.equals(Framework.LOMBOK.toString())) {
+                automaticClassGenerationOptions = new JavaAutomaticClassGenerationLombokOptions();
+            }
+            else if (framework.equals(Framework.NONE_RECORDS.toString()) ||
+                    framework.equals(Framework.GSON_RECORDS.toString()) ||
+                    framework.equals(Framework.JACKSON_RECORDS.toString()) ||
+                    framework.equals(Framework.LOGAN_SQUARE_RECORDS.toString()) ||
+                    framework.equals(Framework.MOSHI_RECORDS.toString()) ||
+                    framework.equals(Framework.FASTJSON_RECORDS.toString())) {
+                automaticClassGenerationOptions = new JavaAutomaticClassGenerationCommonOptions();
+            }
+            else if (framework.equals(Framework.AUTO_VALUE.toString())) {
+                automaticClassGenerationOptions = new JavaAutomaticClassGenerationAutoValueOptions();
+            }
+            else {
+                automaticClassGenerationOptions = new JavaAutomaticClassGenerationAdditionalOptions();
+            }
+        }
+        else {
+            // For the generation options, in case of:
+            // - Moshi: use KotlinAutomaticClassGenerationMoshiOptions
+            // - else use JavaAutomaticClassGenerationAdditionalOptions
+            if (framework.equals(Framework.MOSHI.toString())) {
+                automaticClassGenerationOptions = new KotlinAutomaticClassGenerationMoshiOptions();
+            }
+            else {
+                automaticClassGenerationOptions = new KotlinAutomaticClassGenerationCommonOptions();
+            }
+        }
+
+        optionsCheckBoxes = createListOfCheckBoxesBasedOnOptions(automaticClassGenerationOptions, initialiseAsDisabled);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = 1;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.weightx = 1;
+        gbc.insets = JBUI.insetsLeft(8);
+        int contentPaneWidth = contentPane.getMinimumSize().width;
+
+        automaticGenerationOptionsPanel.removeAll();
+        automaticGenerationOptionsPanel.revalidate();
+        automaticGenerationOptionsPanel.repaint();
+
+        for (JCheckBox currentOptionsCheckBox : optionsCheckBoxes) {
+
+            System.out.println("currentOptionsCheckBox: " + currentOptionsCheckBox.toString());
+
+            Dimension dimension = automaticGenerationOptionsPanel.getMinimumSize();
+            //System.out.println("optionsCheckBox.getMinimumSize().width: " + currentOptionsCheckBox.getMinimumSize().width);
+            //System.out.println("contentPaneWidth: " + contentPaneWidth);
+            //System.out.println("Dimension: " + dimension);
+
+            // If the Panel first row was filled, move to the next column.
+            // NOTE: This is not a fool-proof solution as it only works for the first row. After that,
+            // it will move to a new column with every added CheckBox
+            if (dimension.width + currentOptionsCheckBox.getMinimumSize().width >= contentPaneWidth) {
+
+                System.out.println("Move to next column");
+                gbc.gridy += 1;
+
+                // To make the layout look good, span the added CheckBox into multiple cells if needed.
+                int previousRawMaxCheckBoxWidth = retrievePreviousRowMaxCheckBoxWidth(optionsCheckBoxes, currentOptionsCheckBox);
+                System.out.println("Previous row check box max width: " + previousRawMaxCheckBoxWidth);
+                if (previousRawMaxCheckBoxWidth < currentOptionsCheckBox.getMinimumSize().width) {
+                    gbc.gridwidth += 1;
+                }
+                else {
+                    gbc.gridwidth = 1;
+                }
+            }
+
+            automaticGenerationOptionsPanel.add(currentOptionsCheckBox, gbc);
+            automaticGenerationOptionsPanel.revalidate();
+            automaticGenerationOptionsPanel.repaint();
+        }
+   }
+
+   private int retrievePreviousRowMaxCheckBoxWidth(ArrayList<JCheckBox> checkBoxArrayList, JCheckBox currentCheckBox)
+   {
+       int maxWidth = 0;
+       for (JCheckBox checkBox : checkBoxArrayList)
+       {
+           if (checkBox != currentCheckBox)
+               maxWidth = max(maxWidth, checkBox.getMinimumSize().width);
+           else
+               break;
+       }
+
+       return maxWidth;
+   }
+
+   private ArrayList<JCheckBox> createListOfCheckBoxesBasedOnOptions(AutomaticClassGenerationOptions generationOptions, boolean initialiseAsDisabled) {
+
+        ArrayList<JCheckBox> optionsCheckBoxes = new ArrayList<>();
+       if (generationOptions instanceof JavaAutomaticClassGenerationAutoValueOptions) {
+           optionsCheckBoxes = new ArrayList<>(); // No options
+       }
+       else if (generationOptions instanceof JavaAutomaticClassGenerationAdditionalOptions) {
+           optionsCheckBoxes = createListOfCheckBoxes(4,
+                   new String[]{"Use Java primitive fields", "Create setters", "Create getters", "Override toString()"},
+                   new ItemListener[]{
+                           e -> ((JavaAutomaticClassGenerationAdditionalOptions) generationOptions)
+                                   .setUseJavaPrimitiveOptions(e.getStateChange() == ItemEvent.SELECTED),
+                           e -> ((JavaAutomaticClassGenerationAdditionalOptions) generationOptions)
+                                   .setCreateSetters(e.getStateChange() == ItemEvent.SELECTED),
+                           e -> ((JavaAutomaticClassGenerationAdditionalOptions) generationOptions)
+                                   .setCreateGetters(e.getStateChange() == ItemEvent.SELECTED),
+                           e -> ((JavaAutomaticClassGenerationAdditionalOptions) generationOptions)
+                                   .setOverrideToString(e.getStateChange() == ItemEvent.SELECTED)
+                   },
+                   initialiseAsDisabled);
+       }
+       else if (generationOptions instanceof JavaAutomaticClassGenerationLombokOptions) {
+           optionsCheckBoxes = createListOfCheckBoxes(2,
+                   new String[]{"Use Java primitive fields", "Use @Value"},
+                   new ItemListener[]{
+                           e -> ((JavaAutomaticClassGenerationLombokOptions) generationOptions)
+                                   .setUseJavaPrimitiveOptions(e.getStateChange() == ItemEvent.SELECTED),
+                           e -> ((JavaAutomaticClassGenerationLombokOptions) generationOptions)
+                                   .setUseAtValue(e.getStateChange() == ItemEvent.SELECTED)
+                   }, initialiseAsDisabled);
+       }
+       else if (generationOptions instanceof JavaAutomaticClassGenerationCommonOptions) {
+           System.out.println("Inside JavaAutomaticClassGenerationCommonOptions");
+           optionsCheckBoxes = createListOfCheckBoxes(1,
+                   new String[]{"Use Java primitive fields"},
+                   new ItemListener[]{
+                           e -> ((JavaAutomaticClassGenerationCommonOptions) generationOptions)
+                                   .setUseJavaPrimitiveOptions(e.getStateChange() == ItemEvent.SELECTED)
+                   }, initialiseAsDisabled);
+       }
+       else if (generationOptions instanceof KotlinAutomaticClassGenerationMoshiOptions) {
+           optionsCheckBoxes = createListOfCheckBoxes(5,
+                   new String[]{"Use Data classes", "Single file", "Nullable Fields", "Parcelable (Android)", "Generate Adapter"},
+                   new ItemListener[]{
+                           e -> ((KotlinAutomaticClassGenerationMoshiOptions) generationOptions)
+                                   .setUseDataClasses(e.getStateChange() == ItemEvent.SELECTED),
+                           e -> ((KotlinAutomaticClassGenerationMoshiOptions) generationOptions)
+                                   .setSingleFile(e.getStateChange() == ItemEvent.SELECTED),
+                           e -> ((KotlinAutomaticClassGenerationMoshiOptions) generationOptions)
+                                   .setNullableFields(e.getStateChange() == ItemEvent.SELECTED),
+                           e -> ((KotlinAutomaticClassGenerationMoshiOptions) generationOptions)
+                                   .setParcelableAndroid(e.getStateChange() == ItemEvent.SELECTED),
+                           e -> ((KotlinAutomaticClassGenerationMoshiOptions) generationOptions)
+                                   .setGenerateAdapter(e.getStateChange() == ItemEvent.SELECTED)
+                   }, initialiseAsDisabled);
+
+       }
+       else if (generationOptions instanceof KotlinAutomaticClassGenerationCommonOptions) {
+           optionsCheckBoxes = createListOfCheckBoxes(4,
+                   new String[]{"Use Data classes", "Single file", "Nullable Fields", "Parcelable (Android)"},
+                   new ItemListener[]{
+                           e -> ((KotlinAutomaticClassGenerationCommonOptions) generationOptions)
+                                   .setUseDataClasses(e.getStateChange() == ItemEvent.SELECTED),
+                           e -> ((KotlinAutomaticClassGenerationCommonOptions) generationOptions)
+                                   .setSingleFile(e.getStateChange() == ItemEvent.SELECTED),
+                           e -> ((KotlinAutomaticClassGenerationCommonOptions) generationOptions)
+                                   .setNullableFields(e.getStateChange() == ItemEvent.SELECTED),
+                           e -> ((KotlinAutomaticClassGenerationCommonOptions) generationOptions)
+                                   .setParcelableAndroid(e.getStateChange() == ItemEvent.SELECTED)
+                   }, initialiseAsDisabled);
+       }
+
+       return optionsCheckBoxes;
+   }
+
+   private ArrayList<JCheckBox> createListOfCheckBoxes(int num, String[] labels, ItemListener[] listeners, boolean initialiseAsDisabled)
+   {
+       assert num == labels.length;
+       assert num == listeners.length;
+       ArrayList<JCheckBox> checkBoxArrayList = new ArrayList<>();
+       for (int i = 0; i < num; i++) {
+           JCheckBox checkBox = new JCheckBox();
+           checkBox.setEnabled(!initialiseAsDisabled);
+           checkBox.setText(labels[i]);
+           checkBox.addItemListener(listeners[i]);
+           checkBoxArrayList.add(checkBox);
+       }
+       return checkBoxArrayList;
+   }
 }

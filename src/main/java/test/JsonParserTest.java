@@ -6,7 +6,7 @@ import com.hamed.postmantoretrofit2v2.Collection;
 import com.hamed.postmantoretrofit2v2.Model;
 import com.hamed.postmantoretrofit2v2.gsondeserialisers.RequestJsonDeserializer;
 import com.hamed.postmantoretrofit2v2.gsondeserialisers.UrlJsonDeserializer;
-import com.hamed.postmantoretrofit2v2.pluginstate.Language;
+import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums.Language;
 import com.hamed.postmantoretrofit2v2.utils.Utils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class JsonParserTest {
 
@@ -49,7 +50,7 @@ public class JsonParserTest {
                 "https://jsonplaceholder.typicode.com/posts/1");
 
         ArrayList<String> annotatedMethods = model.constructRetrofitAnnotatedMethods(collection.getItems(),
-                false, returnType, Language.JAVA, false);
+                false, returnType, Language.JAVA, false, new HashMap<>());
 
         Assert.assertEquals(annotatedMethods.size(), 1);
         String annotatedMethod = annotatedMethods.get(0);
@@ -83,7 +84,7 @@ public class JsonParserTest {
                 "https://jsonplaceholder.typicode.com/posts/1");
 
         ArrayList<String> annotatedMethods = model.constructRetrofitAnnotatedMethods(collection.getItems(),
-                false, returnType, Language.JAVA, false);
+                false, returnType, Language.JAVA, false, new HashMap<>());
 
         Assert.assertEquals(annotatedMethods.size(), 1);
         String annotatedMethod = annotatedMethods.get(0);
@@ -117,7 +118,7 @@ public class JsonParserTest {
                 "https://jsonplaceholder.typicode.com/posts/1");
 
         ArrayList<String> annotatedMethods = model.constructRetrofitAnnotatedMethods(collection.getItems(),
-                false, returnType, Language.JAVA, false);
+                false, returnType, Language.JAVA, false, new HashMap<>());
 
         Assert.assertEquals(annotatedMethods.size(), 1);
         String annotatedMethod = annotatedMethods.get(0);
@@ -151,7 +152,7 @@ public class JsonParserTest {
                 "https://jsonplaceholder.typicode.com/posts/:id");
 
         ArrayList<String> annotatedMethods = model.constructRetrofitAnnotatedMethods(collection.getItems(),
-                false, returnType, Language.JAVA, false);
+                false, returnType, Language.JAVA, false, new HashMap<>());
 
         Assert.assertEquals(annotatedMethods.size(), 1);
         String annotatedMethod = annotatedMethods.get(0);
@@ -185,7 +186,7 @@ public class JsonParserTest {
                 "https://jsonplaceholder.typicode.com/posts");
 
         ArrayList<String> annotatedMethods = model.constructRetrofitAnnotatedMethods(collection.getItems(),
-                false, returnType, Language.JAVA, false);
+                false, returnType, Language.JAVA, false, new HashMap<>());
 
         Assert.assertEquals(annotatedMethods.size(), 1);
         String annotatedMethod = annotatedMethods.get(0);

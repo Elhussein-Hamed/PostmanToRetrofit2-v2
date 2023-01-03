@@ -1,5 +1,7 @@
 package com.hamed.postmantoretrofit2v2;
 
+import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums.Framework;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,11 @@ public class Constants {
     public static final ArrayList<String> listOfReturnTypesWithoutClass =  new ArrayList<>(List.of(new String[]{"Completable"}));
 
     public static final ArrayList<String> supportedClassFileExtensions =  new ArrayList<>(List.of(new String[]{"java", "kt"}));
+
+    public static final String [] javaSupportedJsonFrameworks = Framework.stringValues();
+    public static final String [] kotlinSupportedJsonFrameworks = { Framework.NONE.toString(),
+            Framework.GSON.toString(), Framework.JACKSON.toString(), Framework.LOGAN_SQUARE.toString(),
+            Framework.MOSHI.toString(), Framework.FASTJSON.toString() };
 
 
 }

@@ -8,19 +8,16 @@ import com.hamed.postmantoretrofit2v2.messaging.Message;
 import com.hamed.postmantoretrofit2v2.messaging.MessageBroker;
 import com.hamed.postmantoretrofit2v2.messaging.MessageSubscriber;
 import com.hamed.postmantoretrofit2v2.messaging.NewClassInfoAddedMessage;
-import com.hamed.postmantoretrofit2v2.pluginstate.Language;
+import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums.Language;
 import com.hamed.postmantoretrofit2v2.pluginstate.PluginService;
 import com.hamed.postmantoretrofit2v2.pluginstate.PluginState;
-import com.hamed.postmantoretrofit2v2.pluginstate.ReturnTypeRadioButton;
+import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums.ReturnTypeRadioButton;
 import com.hamed.postmantoretrofit2v2.utils.ClassInfo;
-import com.hamed.postmantoretrofit2v2.utils.ProjectUtils;
+import com.hamed.postmantoretrofit2v2.utils.DependencyPluginHelper;
 import com.hamed.postmantoretrofit2v2.utils.Utils;
 import com.intellij.ide.DataManager;
-import com.intellij.ide.plugins.PluginManager;
-import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.Messages;
@@ -61,7 +58,6 @@ public class ClassPickerDialog extends JDialog implements MessageSubscriber {
     private final Project mProject;
     private final Editor mEditor;
     private final String mRetrofitAnnotatedMethod;
-
     private DialogClosedListener dialogClosedListener;
 
     public ClassPickerDialog(JDialog parentDialog, Project project, Editor editor, String retrofitAnnotatedMethods) {
@@ -167,33 +163,8 @@ public class ClassPickerDialog extends JDialog implements MessageSubscriber {
         PluginState state = PluginService.getInstance(mProject).getState();
         assert state != null;
 
-        if (PluginManagerCore.isDisabled(PluginId.getId("com.robohorse.robopojogenerator")))
-        {
-            System.out.println("RoboPojoGenerator plugin is disabled");
-            // Todo: Prompt the user to enable the plugin
-            boolean doEnable = Messages.showYesNoDialog(
-                    "The RoboPojoGenerator plugin used to generate the classes is disabled, " +
-                            "would you like to enable it? Requires IDE restart.",
-                    "Enable RoboPojoGenerator Plugin?",
-                    "Enable",
-                    "Keep Disabled",
-                    Messages.getQuestionIcon()
-            ) == Messages.YES;
-
-            if (doEnable) {
-                PluginManager.getInstance().enablePlugin(PluginId.getId("com.robohorse.robopojogenerator"));
-                System.out.println("Enabled RoboPojoGenerator plugin");
-                ProjectUtils.restartIde();
-            }
-            else
-                return;
-        }
-        else if (!PluginManagerCore.isPluginInstalled(PluginId.getId("com.robohorse.robopojogenerator")))
-        {
-            System.out.println("Robo Pojo Generator plugin is not installed");
-            Messages.showMessageDialog(mProject, "Error RoboPojoGenerator plugin is not installed, please install it from the market place", "Dependency Plugin Missing", Messages.getWarningIcon());
+        if (!DependencyPluginHelper.isPluginUsable(mProject, "RoboPojoGenerator", "com.robohorse.robopojogenerator"))
             return;
-        }
 
         // RoboPojoGenerator expects the source directory to create the class in. The directory as
         // a virtual file and a PSI directory needs to be passed in the data context.
