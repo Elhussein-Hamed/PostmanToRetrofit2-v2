@@ -1,6 +1,7 @@
 package com.hamed.postmantoretrofit2v2.pluginstate;
 
 import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.converters.ClassInfoConverter;
+import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums.Framework;
 import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums.Language;
 import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums.ReturnTypeRadioButton;
 import com.hamed.postmantoretrofit2v2.utils.ClassInfo;
@@ -19,6 +20,10 @@ public class PluginState {
     private String returnTypeClassesDirectory;
     private Language language;
 
+    private Framework framework;
+
+    private boolean automaticallyGenerateClassFromResponses;
+
     public PluginState() {
         this.lastVisitedDir = "";
         this.promptToSelectClassForReturnType = false;
@@ -27,6 +32,8 @@ public class PluginState {
         this.returnTypeClassesDirectory = "";
         this.language = Language.JAVA;
         this.returnTypeRadioButton = ReturnTypeRadioButton.BUTTON_RETROFIT_RAW_TYPES;
+        this.framework = Framework.NONE;
+        this.automaticallyGenerateClassFromResponses = false;
     }
 
     public String getReturnType() {
@@ -79,4 +86,19 @@ public class PluginState {
 
     public void setReturnTypeClassesDirectory(String returnTypeClassesDirectory) { this.returnTypeClassesDirectory = returnTypeClassesDirectory; }
 
+    public Framework getFramework() {
+        return framework;
+    }
+
+    public void setFramework(Framework framework) {
+        this.framework = framework;
+    }
+
+    public boolean isAutomaticallyGenerateClassFromResponses() {
+        return automaticallyGenerateClassFromResponses;
+    }
+
+    public void setAutomaticallyGenerateClassFromResponses(boolean automaticallyGenerateClassFromResponses) {
+        this.automaticallyGenerateClassFromResponses = automaticallyGenerateClassFromResponses;
+    }
 }

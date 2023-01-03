@@ -57,13 +57,11 @@ public class Model {
 
         INDENT_SIZE = userSettings.getIndentSize();
 
-        // TEMP: Test the automatic class generation from a response
-        boolean generateClassFromResponse = true;
         HashMap<Item, String> generatedClasses = new HashMap<>();
 
         String returnTypeFormat = Utils.highlightReturnTypeWithHashes(userSettings.getReturnType());
 
-        if (generateClassFromResponse)
+        if (userSettings.automaticallyGenerateClassesFromResponses())
             generatedClasses = generateClassFromResponse(project, items, userSettings);
 
         ArrayList<String> retrofitAnnotatedMethods = constructRetrofitAnnotatedMethods(items, isDynamicHeader, returnTypeFormat, userSettings.getLanguage(), userSettings.useCoroutines(), generatedClasses);
@@ -121,7 +119,7 @@ public class Model {
                     Item.Response response = item.getResponse().get(0);
                     String className = response.getName();
                     String jsonBody = response.getBody();
-                    if(ResponseClassGenerator.generateClasses(project, userSettings.getReturnTypeClassesDirectory() , className, jsonBody))
+                    if(ResponseClassGenerator.generateClasses(project, userSettings.getReturnTypeClassesDirectory() , className, jsonBody, userSettings.getLanguage(), userSettings.getFramework(), userSettings.getAutomaticClassGenerationOptions()))
                         mappedGeneratedClasses.put(item, className);
                 }
             }

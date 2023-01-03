@@ -3,8 +3,11 @@ package com.hamed.postmantoretrofit2v2.forms;
 import com.hamed.postmantoretrofit2v2.Constants;
 import com.hamed.postmantoretrofit2v2.forms.listeners.DialogClosedListener;
 import com.hamed.postmantoretrofit2v2.forms.listeners.JsonDialogReturnedData;
+import com.hamed.postmantoretrofit2v2.forms.listeners.OptionsDialogReturnedData;
+import com.hamed.postmantoretrofit2v2.forms.listeners.ReturnedData;
 import com.hamed.postmantoretrofit2v2.pluginstate.PluginService;
 import com.hamed.postmantoretrofit2v2.pluginstate.PluginState;
+import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.AutomaticClassGenerationOptions;
 import com.intellij.openapi.project.Project;
 
 import javax.swing.*;
@@ -33,12 +36,14 @@ public class JsonDialog extends JDialog  {
     private DialogClosedListener dialogClosedListener;
 
     OptionsDialog optionsDialog;
+    AutomaticClassGenerationOptions automaticClassGenerationOptions;
     Container optionsDialogContentPane;
 
     public JsonDialog(Project project) {
         mProject = project;
         optionsDialog = new OptionsDialog(this, mProject);
         optionsDialogContentPane = optionsDialog.getContentPane();
+        automaticClassGenerationOptions = new AutomaticClassGenerationOptions();
 
         setContentPane(contentPane);
         setModal(true);
@@ -110,7 +115,7 @@ public class JsonDialog extends JDialog  {
     private void onOK() {
         dispose();
         if (dialogClosedListener != null)
-            dialogClosedListener.onUserConfirm(new JsonDialogReturnedData(jsonTextArea.getText(), dynamicHeaderCheckBox.isSelected()));
+            dialogClosedListener.onUserConfirm(new JsonDialogReturnedData(jsonTextArea.getText(), dynamicHeaderCheckBox.isSelected(), automaticClassGenerationOptions));
     }
 
     private void onCancel() {
@@ -130,6 +135,18 @@ public class JsonDialog extends JDialog  {
         optionsDialog.setTitle(Constants.UIConstants.OPTIONS_DIALOG_TITLE);
         optionsDialog.setSize(Constants.UIConstants.DIALOG_WIDTH, Constants.UIConstants.DIALOG_HEIGHT);
         optionsDialog.setLocation(this.getLocation());
+        optionsDialog.setDialogClosedListener(new DialogClosedListener() {
+            @Override
+            public void onCancelled() {
+                // nothing to do
+            }
+
+            @Override
+            public void onUserConfirm(ReturnedData data) {
+                OptionsDialogReturnedData dialogReturnedData = (OptionsDialogReturnedData) data;
+                automaticClassGenerationOptions = dialogReturnedData.getAutomaticClassGenerationOptions();
+            }
+        });
         optionsDialog.setVisible(true);
     }
 

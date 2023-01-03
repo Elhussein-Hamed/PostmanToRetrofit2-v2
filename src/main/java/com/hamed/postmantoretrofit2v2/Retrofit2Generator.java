@@ -49,6 +49,7 @@ public class Retrofit2Generator extends AnAction {
                         if (!collection.isEmpty()) {
                             assert editor != null;
                             UserSettings userSettings = new UserSettings(project);
+                            userSettings.setAutomaticClassGenerationOptions(jsonDialogReturnedData.getAutomaticClassGenerationOptions());
                             model.generateRetrofitCode(project, editor, collection.getItems(),
                                     jsonDialogReturnedData.useDynamicHeaders(),
                                     userSettings,

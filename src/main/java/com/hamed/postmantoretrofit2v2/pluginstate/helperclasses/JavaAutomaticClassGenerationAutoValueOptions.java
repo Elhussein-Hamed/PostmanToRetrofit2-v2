@@ -1,4 +1,0 @@
-package com.hamed.postmantoretrofit2v2.pluginstate.helperclasses;
-
-public class JavaAutomaticClassGenerationAutoValueOptions implements AutomaticClassGenerationOptions {
-}

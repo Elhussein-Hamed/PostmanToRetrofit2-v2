@@ -1,5 +1,7 @@
 package com.hamed.postmantoretrofit2v2;
 
+import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.AutomaticClassGenerationOptions;
+import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums.Framework;
 import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums.Language;
 import com.hamed.postmantoretrofit2v2.pluginstate.PluginService;
 import com.hamed.postmantoretrofit2v2.pluginstate.PluginState;
@@ -24,8 +26,11 @@ public class UserSettings {
 
     private final Project mProject;
 
+    private AutomaticClassGenerationOptions automaticClassGenerationOptions;
+
     public UserSettings(Project project) {
         this.mProject = project;
+        this.automaticClassGenerationOptions = new AutomaticClassGenerationOptions();
     }
 
     public int getIndentSize() {
@@ -82,5 +87,27 @@ public class UserSettings {
         PluginState state = PluginService.getInstance(mProject).getState();
         assert state != null;
         return state.getReturnTypeClassesDirectory();
+    }
+
+    public boolean automaticallyGenerateClassesFromResponses()
+    {
+        PluginState state = PluginService.getInstance(mProject).getState();
+        assert state != null;
+        return state.isAutomaticallyGenerateClassFromResponses();
+    }
+
+    public Framework getFramework()
+    {
+        PluginState state = PluginService.getInstance(mProject).getState();
+        assert state != null;
+        return state.getFramework();
+    }
+
+    public AutomaticClassGenerationOptions getAutomaticClassGenerationOptions() {
+        return automaticClassGenerationOptions;
+    }
+
+    public void setAutomaticClassGenerationOptions(AutomaticClassGenerationOptions automaticClassGenerationOptions) {
+        this.automaticClassGenerationOptions = automaticClassGenerationOptions;
     }
 }
