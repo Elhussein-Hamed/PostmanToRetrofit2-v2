@@ -9,7 +9,6 @@ version = "1.5.3-beta"
 
 repositories {
     mavenCentral()
-    maven { url "https://jitpack.io" }
 }
 
 // Configure Gradle IntelliJ Plugin
@@ -25,7 +24,6 @@ dependencies {
 
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
     implementation("com.fifesoft:rsyntaxtextarea:3.3.0")
-    implementation("com.github.Elhussein-Hamed:PostmanToRetrofit2-v2:1.5.2")
 }
 
 tasks {
