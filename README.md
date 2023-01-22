@@ -1,6 +1,19 @@
 # PostmanToRetrofit2
 This is an Android Studio plugin which can generate Retrofit2's Java/Kotlin code from Postman's collection.
 
+## Features:
+<ul>
+<li>Supports RxJava and Coroutines with Retrofit2</li>
+<li>Class generation and selection for each request in the collection from the directory of your choice</li>
+<li>Automatic class generation from saved responses in a collection</li>
+<li>Sub-collections within a collection handling</li>
+<li>Postman Url parameters (i.e. :param) handling</li>
+<li>Postman form-data, form-urlencoded and raw body types handling</li>
+<li>GUI to help selecting the Postman collection from the file system and to choose the conversion settings</li>
+<li>mnemonics support in the GUI</li>
+<li>Saving the last user settings per project</li>
+</ul>
+
 ## Install
 ### From Android Studio plugin marketplace
 Open Android Studio:

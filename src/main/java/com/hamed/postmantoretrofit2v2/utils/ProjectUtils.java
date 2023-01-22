@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ProjectUtils {
 
-    public static void restartIde()
+    public static boolean restartIde()
     {
         boolean result = Messages.showYesNoDialog(
                 "Would you like to restart the IDE?",
@@ -30,6 +30,8 @@ public class ProjectUtils {
 
             app.restart(true);
         }
+
+        return false;
     }
 
     public static ArrayList<ClassInfo> getClassesInDirectory(Project project, VirtualFile directory, ArrayList<ClassInfo> originalList)

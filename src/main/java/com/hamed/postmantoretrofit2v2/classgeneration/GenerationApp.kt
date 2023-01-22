@@ -8,13 +8,16 @@ import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
 
 class GenerationApp : KoinComponent {
+
+    private var controller: GeneratePOJOActionController
+
     init {
         GlobalContext.getOrNull() ?: startKoin {
             modules(generatorModule)
         }
-    }
 
-     private val controller: GeneratePOJOActionController = GeneratePOJOActionController(GlobalContext.get().get())
+        controller = GeneratePOJOActionController(GlobalContext.get().get())
+    }
 
     fun generate(model: GenerationModel, projectModel: ProjectModel) {
         controller.generate(model, projectModel)

@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.hamed"
-version = "1.5.3-beta"
+version = "1.6.0"
 
 repositories {
     mavenCentral()
@@ -15,16 +15,15 @@ repositories {
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
-    version.set("2022.2.4")
+    version.set("2022.2")
     type.set("IC") // Target IDE Platform
 
-    plugins.set(listOf("com.robohorse.robopojogenerator:2.3.8"))
+    plugins.set(listOf("com.robohorse.robopojogenerator:2.4.0"))
 }
 
 dependencies {
-
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
-    implementation("com.fifesoft:rsyntaxtextarea:3.3.0")
+    implementation("com.fifesoft:rsyntaxtextarea:3.3.1")
 }
 
 tasks {

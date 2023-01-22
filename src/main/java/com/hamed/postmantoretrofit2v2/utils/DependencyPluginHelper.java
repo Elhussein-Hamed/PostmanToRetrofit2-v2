@@ -5,6 +5,7 @@ import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.robohorse.robopojogenerator.models.FrameworkVW;
 
 public class DependencyPluginHelper {
     
@@ -25,7 +26,7 @@ public class DependencyPluginHelper {
             if (doEnable) {
                 PluginManager.getInstance().enablePlugin(PluginId.getId(pluginId));
                 System.out.printf("Enabled %s plugin\n", pluginName);
-                ProjectUtils.restartIde();
+                return ProjectUtils.restartIde();
             }
             else
                 return false;
@@ -34,6 +35,16 @@ public class DependencyPluginHelper {
         {
             System.out.printf("%s plugin is not installed\n", pluginName);
             Messages.showMessageDialog(project, String.format("Error %s plugin is not installed, please install it from the market place", pluginName), "Dependency Plugin Missing", Messages.getWarningIcon());
+            return false;
+        }
+
+        // Extra check in case the plugin was installed but the IDE was not restarted
+        try {
+            new FrameworkVW.Gson();
+        }
+        catch (NoClassDefFoundError e) {
+            System.out.println("Caught an exception");
+            Messages.showMessageDialog(project, String.format("%s plugin seems to be installed but IDE restart is required. Please restart the IDE.", pluginName), "IDE Restart Required", Messages.getWarningIcon());
             return false;
         }
         

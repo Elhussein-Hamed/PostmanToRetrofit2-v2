@@ -11,6 +11,7 @@ import com.hamed.postmantoretrofit2v2.forms.listeners.ReturnedData;
 import com.hamed.postmantoretrofit2v2.gsondeserialisers.RequestJsonDeserializer;
 import com.hamed.postmantoretrofit2v2.gsondeserialisers.UrlJsonDeserializer;
 import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums.Language;
+import com.hamed.postmantoretrofit2v2.utils.DependencyPluginHelper;
 import com.hamed.postmantoretrofit2v2.utils.RetrofitSyntaxHelper;
 import com.hamed.postmantoretrofit2v2.utils.Utils;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -62,7 +63,8 @@ public class Model {
         String returnTypeFormat = Utils.highlightReturnTypeWithHashes(userSettings.getReturnType());
 
         if (userSettings.automaticallyGenerateClassesFromResponses())
-            generatedClasses = generateClassFromResponse(project, items, userSettings);
+            if (DependencyPluginHelper.isPluginUsable(project, "RoboPojoGenerator", "com.robohorse.robopojogenerator"))
+                generatedClasses = generateClassFromResponse(project, items, userSettings);
 
         ArrayList<String> retrofitAnnotatedMethods = constructRetrofitAnnotatedMethods(items, isDynamicHeader, returnTypeFormat, userSettings.getLanguage(), userSettings.useCoroutines(), generatedClasses);
 
@@ -217,7 +219,12 @@ public class Model {
             String domain = uri.getHost();
             url = url.replace("http://", "");
             url = url.replace("https://", "");
-            url = url.replace(domain, "");
+
+            try {
+                url = url.replace(domain, "");
+            } catch (NullPointerException e) {
+                throw new NullPointerException("Couldn't get the domain for URL: " + uri + "\n" + e.getMessage());
+            }
 
             // Replace all path variables
             url = url.replaceAll(":(\\w+)", "{$1}");

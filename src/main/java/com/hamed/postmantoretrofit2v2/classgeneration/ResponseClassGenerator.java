@@ -3,7 +3,6 @@ package com.hamed.postmantoretrofit2v2.classgeneration;
 import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.AutomaticClassGenerationOptions;
 import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums.Framework;
 import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums.Language;
-import com.hamed.postmantoretrofit2v2.utils.DependencyPluginHelper;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.Messages;
@@ -23,9 +22,6 @@ public class ResponseClassGenerator {
         // Response body example:
         // "{\n    \"userId\": 1,\n    \"id\": 1,\n    \"title\": \"sunt aut facere repellat provident occaecati excepturi optio reprehenderit\",\n    \"body\": \"quia et suscipit\\nsuscipit recusandae consequuntur expedita et cum\\nreprehenderit molestiae ut ut quas totam\\nnostrum rerum est autem sunt rem eveniet architecto\"\n}"
         //responseBody = "{\n    \"userId\": 1,\n    \"id\": 1,\n    \"title\": \"sunt aut facere repellat provident occaecati excepturi optio reprehenderit\",\n    \"body\": \"quia et suscipit\\nsuscipit recusandae consequuntur expedita et cum\\nreprehenderit molestiae ut ut quas totam\\nnostrum rerum est autem sunt rem eveniet architecto\"\n}";
-
-        if (!DependencyPluginHelper.isPluginUsable(project, "RoboPojoGenerator", "com.robohorse.robopojogenerator"))
-            return false;
 
         try {
             // Prepare the generation model
@@ -74,12 +70,14 @@ public class ResponseClassGenerator {
                         "Parsing Json Failure", Messages.getWarningIcon());
             }
 
+            return true;
+
         } catch (NoClassDefFoundError ex) {
             // Restart the IDE
             Messages.showMessageDialog(project, "Error calling RoboPojoGenerator plugin, please restart the IDE", "Plugin Requires Restart", Messages.getWarningIcon());
         }
 
-        return true;
+        return false;
     }
     
     private static FrameworkVW getFrameworkVW(Framework framework)

@@ -14,13 +14,30 @@
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-      Convert postman collection to Retrofit2 Java/Kotlin code<br>
-      This is a fork of <a href="https://plugins.jetbrains.com/plugin/11612-postman-to-retrofit2">Postman to Retrofit2</a>.<br>
-      This is an open source project, please check out the <a href="https://github.com/Elhussein-Hamed/PostmanToRetrofit2-v2">GitHup page</a>.
-      Any suggestions and improvements are most welcome!
+      <br>Convert postman collection to Retrofit2 Java/Kotlin code</br>
+
+      <b><br>Features:</br></b>
+      <ul>
+          <li>Retrofit2 with RxJava and Coroutines</li>
+          <li>Class generation and selection for each request in the collection from the directory of your choice</li>
+          <li>Automatic class generation from saved responses in a collection</li>
+          <li>Sub-collections within a collection handling</li>
+          <li>Postman Url parameters (i.e. :param) handling</li>
+          <li>Postman form-data, form-urlencoded and raw body types handling</li>
+          <li>GUI to help selecting the Postman collection from the file system and to choose the conversion settings</li>
+          <li>mnemonics in the GUI</li>
+          <li>Saving the last user settings per project</li>
+      </ul>
+
     ]]></description>
 
     <change-notes><![CDATA[
+        <h2>1.6.0</h2>
+        <h3>New Features</h3>
+        <ul>
+          <li>Automatic class generation from saved responses in a collection</li>
+        </ul>
+
         <h2>1.5.2</h2>
         <h3>Improvements</h3>
         <ul>
