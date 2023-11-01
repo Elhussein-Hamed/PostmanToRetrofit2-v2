@@ -1,12 +1,14 @@
+import org.jetbrains.intellij.tasks.RunPluginVerifierTask
+
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.7.0"
-    id("org.jetbrains.intellij") version "1.9.0"
+    id("org.jetbrains.intellij") version "1.12.0"
     id("maven-publish")
 }
 
 group = "com.hamed"
-version = "1.6.0"
+version = "1.6.1"
 
 repositories {
     mavenCentral()
@@ -15,10 +17,10 @@ repositories {
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
-    version.set("2022.2")
+    version.set("2023.2")
     type.set("IC") // Target IDE Platform
 
-    plugins.set(listOf("com.robohorse.robopojogenerator:2.4.0"))
+    plugins.set(listOf("com.robohorse.robopojogenerator:2.4.1"))
 }
 
 dependencies {
@@ -31,19 +33,27 @@ tasks {
     withType<JavaCompile> {
 
         // Java language level used to compile sources and to generate the files for - Java 11 is required since 2020.3
-        sourceCompatibility = "11"
-        targetCompatibility = "11"
+        sourceCompatibility = "17"
+        targetCompatibility = "17"
     }
 
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions {
-            jvmTarget = "11"
+            jvmTarget = "17"
         }
     }
 
     patchPluginXml {
         sinceBuild.set("203.0")
-        untilBuild.set("223.*")
+    }
+
+    listProductsReleases {
+        doFirst {
+            val text =
+                File("${project.buildDir}/tmp/downloadIdeaProductReleasesXml/idea_product_releases.xml").readText()
+            val output = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n$text"
+            File("${project.buildDir}/tmp/downloadIdeaProductReleasesXml/idea_product_releases.xml").writeText(output)
+        }
     }
 
     signPlugin {

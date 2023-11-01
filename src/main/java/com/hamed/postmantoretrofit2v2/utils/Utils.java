@@ -1,6 +1,5 @@
 package com.hamed.postmantoretrofit2v2.utils;
 
-import com.esotericsoftware.kryo.util.IntArray;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,14 +33,14 @@ public class Utils {
     public static String skipQuotes(String src)
     {
         StringBuilder output = new StringBuilder(src);
-        IntArray insertAtIndexList = new IntArray();
+        ArrayList<Integer> insertAtIndexList = new ArrayList<>();
         for(int i = 0; i < src.length(); i++)
         {
             if (src.charAt(i) == '\"')
                 insertAtIndexList.add(i);
         }
 
-        for (int i = 0; i < insertAtIndexList.size; i++) {
+        for (int i = 0; i < insertAtIndexList.size(); i++) {
             // Whenever a '\' is inserted ensure that the index of the next '"' occurrence is incremented.
             output.insert(insertAtIndexList.get(i) + i, "\\");
         }
