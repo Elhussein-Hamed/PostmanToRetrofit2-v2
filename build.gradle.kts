@@ -1,4 +1,3 @@
-import org.jetbrains.intellij.tasks.RunPluginVerifierTask
 
 plugins {
     id("java")
