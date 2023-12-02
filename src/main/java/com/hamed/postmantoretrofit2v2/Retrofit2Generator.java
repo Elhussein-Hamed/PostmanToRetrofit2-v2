@@ -4,14 +4,16 @@ import com.hamed.postmantoretrofit2v2.forms.JsonDialog;
 import com.hamed.postmantoretrofit2v2.forms.listeners.DialogClosedListener;
 import com.hamed.postmantoretrofit2v2.forms.listeners.JsonDialogReturnedData;
 import com.hamed.postmantoretrofit2v2.forms.listeners.ReturnedData;
+import com.intellij.ide.BrowserUtil;
 import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationListener;
+import com.intellij.notification.NotificationAction;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
 
 public class Retrofit2Generator extends AnAction {
 
@@ -33,7 +35,6 @@ public class Retrofit2Generator extends AnAction {
             }
 
             @Override
-            @SuppressWarnings("deprecation")
             public void onUserConfirm(ReturnedData data) {
                 if (data instanceof JsonDialogReturnedData) {
                     JsonDialogReturnedData jsonDialogReturnedData = (JsonDialogReturnedData) data;
@@ -45,7 +46,7 @@ public class Retrofit2Generator extends AnAction {
                     // If converting json to a Collection object was successful
                     if (collection != null) {
 
-                        System.out.println("Collection items: " + collection.getItems());
+                        //System.out.println("Collection items: " + collection.getItems());
                         if (!collection.isEmpty()) {
                             assert editor != null;
                             UserSettings userSettings = new UserSettings(project);
@@ -62,14 +63,7 @@ public class Retrofit2Generator extends AnAction {
                     else if (!jsonDialogReturnedData.getCollectionJsonText().isEmpty()) {
 
                         // Notify the user that the collection json text is not valid
-                        Notification notification = new Notification("Error Report"
-                                , "Parsing error"
-                                , "Failed to parse the postman collection, please check if the postman collection is correct " +
-                                "or Create an issue " +
-                                " <a href=\"https://github.com/Elhussein-Hamed/PostmanToRetrofit2-v2/issues\">here</a>"
-                                , NotificationType.ERROR);
-
-                        notification.setListener(NotificationListener.URL_OPENING_LISTENER);
+                        Notification notification = getNotification();
                         notification.notify(project);
                     }
                 }
@@ -77,5 +71,18 @@ public class Retrofit2Generator extends AnAction {
         });
 
         jsonDialog.setVisible(true);
+    }
+
+    @NotNull
+    private static Notification getNotification() {
+        Notification notification = new Notification("Error Report"
+                , "Parsing error"
+                , "Failed to parse the postman collection, please check if the postman collection is correct " +
+                "or Create an issue in Github"
+                , NotificationType.ERROR);
+
+        notification.addAction(NotificationAction.createSimple("Create an issue",
+                () -> BrowserUtil.browse("https://github.com/Elhussein-Hamed/PostmanToRetrofit2-v2/issues")));
+        return notification;
     }
 }

@@ -32,7 +32,7 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <h2>1.6.1</h2>
+        <h2>2.0.0</h2>
         <ul>
           <li>An update for new IDE versions</li>
         </ul>
@@ -125,6 +125,7 @@
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
     <depends
         optional="true"
         config-file="myPluginId-roboPojoGenerator.xml">com.robohorse.robopojogenerator</depends>

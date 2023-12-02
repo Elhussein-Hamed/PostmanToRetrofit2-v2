@@ -1,17 +1,16 @@
 package com.hamed.postmantoretrofit2v2.utils;
 
 import com.hamed.postmantoretrofit2v2.Constants;
-import com.intellij.analysis.AnalysisScope;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.packageDependencies.ForwardDependenciesBuilder;
-import com.intellij.psi.PsiFile;
+import com.intellij.psi.search.FilenameIndex;
+import com.intellij.psi.search.GlobalSearchScope;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 public class ProjectUtils {
 
@@ -37,19 +36,15 @@ public class ProjectUtils {
     public static ArrayList<ClassInfo> getClassesInDirectory(Project project, VirtualFile directory, ArrayList<ClassInfo> originalList)
     {
         ArrayList<ClassInfo> javaFilesList = new ArrayList<>();
-        ForwardDependenciesBuilder forwardDependenciesBuilder = new ForwardDependenciesBuilder(project, new AnalysisScope(project, List.of(directory)));
-        System.out.println("Analysing classes directory...");
-        forwardDependenciesBuilder.analyze();
-        System.out.println("Done analysing");
-        ArrayList<PsiFile> list = new ArrayList<>(forwardDependenciesBuilder.getDirectDependencies().keySet());
-        for (PsiFile f : list) {
-            String filename = f.getVirtualFile().getNameWithoutExtension();
-            String extension = f.getVirtualFile().getExtension();
+        for (int i = 0; i < Constants.supportedClassFileExtensions.size(); i++) {
 
-            if (Constants.supportedClassFileExtensions.contains(extension)) {
-                ClassInfo classInfo = new ClassInfo(filename, extension);
-                if (!originalList.contains(classInfo))
-                    javaFilesList.add(classInfo);
+            Collection<VirtualFile> files = FilenameIndex.getAllFilesByExt(project, Constants.supportedClassFileExtensions.get(i), GlobalSearchScope.projectScope(project));
+            for (VirtualFile file : files) {
+                if (file.getParent().getPath().equals(directory.getPath())) {
+                    ClassInfo classInfo = new ClassInfo(file.getNameWithoutExtension(), file.getExtension());
+                    if (!originalList.contains(classInfo))
+                        javaFilesList.add(classInfo);
+                }
             }
         }
         return javaFilesList;

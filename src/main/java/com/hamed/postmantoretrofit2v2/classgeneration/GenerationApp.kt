@@ -1,5 +1,7 @@
 package com.hamed.postmantoretrofit2v2.classgeneration
 
+import com.robohorse.robopojogenerator.appModule
+import com.robohorse.robopojogenerator.coreModule
 import com.robohorse.robopojogenerator.generatorModule
 import com.robohorse.robopojogenerator.models.GenerationModel
 import com.robohorse.robopojogenerator.models.ProjectModel
@@ -13,7 +15,7 @@ class GenerationApp : KoinComponent {
 
     init {
         GlobalContext.getOrNull() ?: startKoin {
-            modules(generatorModule)
+            modules(appModule + generatorModule + coreModule)
         }
 
         controller = GeneratePOJOActionController(GlobalContext.get().get())

@@ -38,21 +38,21 @@ public class MyBulkFileListener implements BulkFileListener {
     @Override
     public void after(@NotNull List<? extends @NotNull VFileEvent> events) {
 
-        final List<? extends @NotNull VFileEvent> finalEvents = events;
-        StartupManager.getInstance(mProject).runAfterOpened(() -> {
+        if (StartupManager.getInstance(mProject).postStartupActivityPassed())
+        {
             ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(mProject).getFileIndex();
 
             if (mProject.getProjectFile() == null || projectFileIndex.getContentRootForFile(mProject.getProjectFile()) == null)
             {
                 System.out.println("The project file doesn't seem to exit yet, " +
                         "hence it cannot be used to deduce the project directory. " +
-                        "The following events are ignored: " + finalEvents);
+                        "The following events are ignored: " + events);
                 return;
             }
 
             VirtualFile projectRootDir = projectFileIndex.getContentRootForFile(mProject.getProjectFile());
             assert projectRootDir != null;
-            finalEvents.stream()
+            events.stream()
                     .filter(event -> event.getFile() != null
                             && (projectFileIndex.isInContent(event.getFile())  // Ensure the file belongs to this project
                             || event.getFile().getPath().contains(projectRootDir.getPath()) // Or ensure the file is under the project directory or one of its subdirectories
@@ -61,8 +61,7 @@ public class MyBulkFileListener implements BulkFileListener {
                     .collect(Collectors.toList())
                     .forEach(this::handleEvent);
 
-        });
-
+        }
     }
 
     private void handleEvent(VFileEvent event) {

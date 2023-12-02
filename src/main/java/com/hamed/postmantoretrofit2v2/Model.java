@@ -42,7 +42,6 @@ public class Model {
                     .create();
 
             Collection collection = gson.fromJson(jsonString, Collection.class);
-            System.out.println(collection);
             if (collection != null && !collection.isValid())
                 throw new Exception("Invalid collection");
             return collection;
@@ -112,11 +111,11 @@ public class Model {
 
         HashMap<Item, String> mappedGeneratedClasses = new HashMap<>();
         for (Item item: items) {
-            if (item.getItems() != null && item.getItems().size() > 0) {
+            if (item.getItems() != null && !item.getItems().isEmpty()) {
                 mappedGeneratedClasses.putAll(generateClassFromResponse(project, item.getItems(), userSettings));
             }
             else {
-                if (item.getResponse().size() > 0) {
+                if (!item.getResponse().isEmpty()) {
                     // The class generation uses only the first response
                     Item.Response response = item.getResponse().get(0);
                     String className = response.getName();
@@ -134,7 +133,7 @@ public class Model {
     {
         ArrayList<String> retrofitAnnotatedMethods = new ArrayList<>();
         for(Item item : items) {
-            if (item.getItems() != null && item.getItems().size() > 0) {
+            if (item.getItems() != null && !item.getItems().isEmpty()) {
                 retrofitAnnotatedMethods.addAll(constructRetrofitAnnotatedMethods(item.getItems(), isDynamicHeader, returnTypeFormat, language, useCoroutines, generatedClasses));
             }
             else {
@@ -151,7 +150,7 @@ public class Model {
     private String getStaticHeader(Item item) {
         StringBuilder result = new StringBuilder();
 
-        if(item.getRequest().getHeaders() !=null && item.getRequest().getHeaders().size() > 0) {
+        if(item.getRequest().getHeaders() !=null && !item.getRequest().getHeaders().isEmpty()) {
             result.append(Utils.getIndentation(INDENT_SIZE))
                     .append("@Headers({");
 
@@ -174,7 +173,7 @@ public class Model {
     private String getDynamicHeader(Item item, Language language) {
         StringBuilder result = new StringBuilder();
 
-        if(item.getRequest().getHeaders()!=null && item.getRequest().getHeaders().size() > 0) {
+        if(item.getRequest().getHeaders()!=null && !item.getRequest().getHeaders().isEmpty()) {
 
             for(Item.Request.Header header : item.getRequest().getHeaders()) {
                 result.append(RetrofitSyntaxHelper.constructAnnotatedParam(language, "@Header",
@@ -246,7 +245,7 @@ public class Model {
         methodName = Utils.convertToTitleCase(methodName).replace(" ", ""); // Remove any white spaces
 
         String returnType;
-        if (generatedClasses.size() > 0 && generatedClasses.containsKey(item)) {
+        if (!generatedClasses.isEmpty() && generatedClasses.containsKey(item)) {
             returnType = returnTypeFormat.replace("T", generatedClasses.get(item));
         }
         else {

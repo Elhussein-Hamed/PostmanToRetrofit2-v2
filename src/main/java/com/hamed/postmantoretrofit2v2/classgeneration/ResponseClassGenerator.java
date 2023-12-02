@@ -4,7 +4,7 @@ import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.AutomaticClassGe
 import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums.Framework;
 import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.enums.Language;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.PackageIndex;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -50,7 +50,8 @@ public class ResponseClassGenerator {
             PsiDirectory psiDirectory = PsiManager.getInstance(project).findDirectory(returnTypeClassesDirVirtualFile);
             assert psiDirectory != null;
 
-            String packageName = ProjectRootManager.getInstance(project).getFileIndex().getPackageNameByDirectory(returnTypeClassesDirVirtualFile);
+
+            String packageName = PackageIndex.getInstance(project).getPackageNameByDirectory(returnTypeClassesDirVirtualFile);
 
             ProjectModel projectModel = new ProjectModel(
                     psiDirectory,

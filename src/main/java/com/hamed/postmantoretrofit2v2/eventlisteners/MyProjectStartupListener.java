@@ -7,17 +7,21 @@ import com.hamed.postmantoretrofit2v2.utils.ProjectUtils;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupActivity;
+import com.intellij.openapi.startup.ProjectActivity;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import kotlin.Unit;
+import kotlin.coroutines.Continuation;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
-public class MyProjectStartupListener implements StartupActivity {
+public class MyProjectStartupListener implements ProjectActivity {
 
+    @Nullable
     @Override
-    public void runActivity(@NotNull Project project) {
+    public Object execute(@NotNull Project project, @NotNull Continuation<? super Unit> continuation) {
         PluginState state = PluginService.getInstance(project).getState();
         assert state != null;
 
@@ -32,9 +36,11 @@ public class MyProjectStartupListener implements StartupActivity {
                     VirtualFile directory = LocalFileSystem.getInstance().findFileByPath(state.getReturnTypeClassesDirectory());
                     return ProjectUtils.getClassesInDirectory(project, directory, classesList);
                 }));
-
+                System.out.println("MyProjectStartupListener - classesList in " + state.getReturnTypeClassesDirectory()
+                        + ": " + classesList);
                 state.setReturnTypeClassInfoList(classesList);
             });
         }
+        return null;
     }
 }

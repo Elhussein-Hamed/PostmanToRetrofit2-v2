@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.hamed"
-version = "1.6.1"
+version = "2.0.0"
 
 repositories {
     mavenCentral()
@@ -19,7 +19,7 @@ intellij {
     version.set("2023.2")
     type.set("IC") // Target IDE Platform
 
-    plugins.set(listOf("com.robohorse.robopojogenerator:2.4.1"))
+    plugins.set(listOf("com.robohorse.robopojogenerator:2.4.1", "com.intellij.java"))
 }
 
 dependencies {
@@ -43,7 +43,7 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("203.0")
+        sinceBuild.set("231.0") // From 2023.1
     }
 
     listProductsReleases {
