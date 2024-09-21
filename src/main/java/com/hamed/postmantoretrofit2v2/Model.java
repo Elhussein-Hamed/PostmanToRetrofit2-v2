@@ -120,8 +120,12 @@ public class Model {
                     Item.Response response = item.getResponse().get(0);
                     String className = response.getName();
                     String jsonBody = response.getBody();
-                    if(ResponseClassGenerator.generateClasses(project, userSettings.getReturnTypeClassesDirectory() , className, jsonBody, userSettings.getLanguage(), userSettings.getFramework(), userSettings.getAutomaticClassGenerationOptions()))
+                    if(ResponseClassGenerator.generateClasses(project, userSettings.getReturnTypeClassesDirectory(),
+                            userSettings.getGeneratedClassesPackageName(), className, jsonBody,
+                            userSettings.getLanguage(), userSettings.getFramework(),
+                            userSettings.getAutomaticClassGenerationOptions())) {
                         mappedGeneratedClasses.put(item, className);
+                    }
                 }
             }
         }

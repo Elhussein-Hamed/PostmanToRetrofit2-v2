@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MyBulkFileListener implements BulkFileListener {
 
@@ -58,7 +57,7 @@ public class MyBulkFileListener implements BulkFileListener {
                             || event.getFile().getPath().contains(projectRootDir.getPath()) // Or ensure the file is under the project directory or one of its subdirectories
                             && event.getFile().getExtension() != null  // Ensure the file has an extension
                             && Constants.supportedClassFileExtensions.contains(event.getFile().getExtension()))) // Ensure the extension is one of the supported extensions
-                    .collect(Collectors.toList())
+                    .toList()
                     .forEach(this::handleEvent);
 
         }

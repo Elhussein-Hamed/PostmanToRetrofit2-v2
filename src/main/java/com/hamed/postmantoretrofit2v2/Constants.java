@@ -11,7 +11,7 @@ public class Constants {
         public static final String MAIN_DIALOG_TITLE = "Postman To Retrofit2 V2";
         public static final String OPTIONS_DIALOG_TITLE = "Options";
         public static final int DIALOG_WIDTH = 600;
-        public static final int DIALOG_HEIGHT = 400;
+        public static final int DIALOG_HEIGHT = 500;
     }
 
     public static final String[] retrofit2RawTypes = { "Call<T>", "Call<Response<T>>" };

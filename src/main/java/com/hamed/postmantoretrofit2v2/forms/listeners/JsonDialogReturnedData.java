@@ -9,10 +9,13 @@ public class JsonDialogReturnedData implements ReturnedData {
 
     private final AutomaticClassGenerationOptions automaticClassGenerationOptions;
 
-    public JsonDialogReturnedData(String collectionJsonText, boolean useDynamicHeaders, AutomaticClassGenerationOptions automaticClassGenerationOptions) {
+    private final String generatedClassesPackageName;
+
+    public JsonDialogReturnedData(String collectionJsonText, boolean useDynamicHeaders, AutomaticClassGenerationOptions automaticClassGenerationOptions, String generatedClassesPackageName) {
         this.collectionJsonText = collectionJsonText;
         this.useDynamicHeaders = useDynamicHeaders;
         this.automaticClassGenerationOptions = automaticClassGenerationOptions;
+        this.generatedClassesPackageName = generatedClassesPackageName;
     }
 
     public String getCollectionJsonText() {
@@ -25,5 +28,9 @@ public class JsonDialogReturnedData implements ReturnedData {
 
     public AutomaticClassGenerationOptions getAutomaticClassGenerationOptions() {
         return automaticClassGenerationOptions;
+    }
+
+    public String getGeneratedClassesPackageName() {
+        return generatedClassesPackageName;
     }
 }

@@ -15,6 +15,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
+
 public class Retrofit2Generator extends AnAction {
 
     @Override
@@ -36,8 +38,7 @@ public class Retrofit2Generator extends AnAction {
 
             @Override
             public void onUserConfirm(ReturnedData data) {
-                if (data instanceof JsonDialogReturnedData) {
-                    JsonDialogReturnedData jsonDialogReturnedData = (JsonDialogReturnedData) data;
+                if (data instanceof JsonDialogReturnedData jsonDialogReturnedData) {
 
                     // Parse the Postman collection json text
                     Model model = new Model();
@@ -51,6 +52,7 @@ public class Retrofit2Generator extends AnAction {
                             assert editor != null;
                             UserSettings userSettings = new UserSettings(project);
                             userSettings.setAutomaticClassGenerationOptions(jsonDialogReturnedData.getAutomaticClassGenerationOptions());
+                            userSettings.setGeneratedClassesPackageName(jsonDialogReturnedData.getGeneratedClassesPackageName());
                             model.generateRetrofitCode(project, editor, collection.getItems(),
                                     jsonDialogReturnedData.useDynamicHeaders(),
                                     userSettings,
@@ -70,7 +72,7 @@ public class Retrofit2Generator extends AnAction {
             }
         });
 
-        jsonDialog.setVisible(true);
+        SwingUtilities.invokeLater(() -> jsonDialog.setVisible(true));
     }
 
     @NotNull

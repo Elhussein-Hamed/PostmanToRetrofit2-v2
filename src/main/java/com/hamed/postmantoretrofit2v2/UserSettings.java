@@ -28,9 +28,12 @@ public class UserSettings {
 
     private AutomaticClassGenerationOptions automaticClassGenerationOptions;
 
+    private String generatedClassesPackageName;
+
     public UserSettings(Project project) {
         this.mProject = project;
         this.automaticClassGenerationOptions = new AutomaticClassGenerationOptions();
+        this.generatedClassesPackageName = "";
     }
 
     public int getIndentSize() {
@@ -109,5 +112,13 @@ public class UserSettings {
 
     public void setAutomaticClassGenerationOptions(AutomaticClassGenerationOptions automaticClassGenerationOptions) {
         this.automaticClassGenerationOptions = automaticClassGenerationOptions;
+    }
+
+    public String getGeneratedClassesPackageName() {
+        return generatedClassesPackageName;
+    }
+
+    public void setGeneratedClassesPackageName(String generatedClassesPackageName) {
+        this.generatedClassesPackageName = generatedClassesPackageName;
     }
 }

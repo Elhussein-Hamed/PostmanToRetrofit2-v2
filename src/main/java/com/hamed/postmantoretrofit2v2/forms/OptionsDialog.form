@@ -275,7 +275,6 @@
         <properties>
           <enabled value="false"/>
           <font/>
-          <label resource-bundle="labels" key="OptionsDialog.ButtonText.Browse"/>
           <text resource-bundle="labels" key="OptionsDialog.ButtonText.Browse"/>
         </properties>
       </component>

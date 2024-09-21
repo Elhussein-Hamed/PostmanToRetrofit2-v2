@@ -19,7 +19,7 @@ import java.util.HashMap;
 public class JsonParserTest {
 
     Gson gson;
-    String jsonFilesDirectory = new File("").getAbsolutePath() + "/src/main/java/test/jsonfiles/";
+    String jsonFilesDirectory = new File("").getAbsolutePath() + "/src/test/java/test/jsonfiles/";
 
     // Use a single return type for all the test cases
     String returnType = "Single<T>";

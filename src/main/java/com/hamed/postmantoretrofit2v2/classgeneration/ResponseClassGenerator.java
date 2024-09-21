@@ -8,8 +8,10 @@ import com.intellij.openapi.roots.PackageIndex;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiPackage;
 import com.robohorse.robopojogenerator.models.FrameworkVW;
 import com.robohorse.robopojogenerator.models.GenerationModel;
 import com.robohorse.robopojogenerator.models.ProjectModel;
@@ -17,7 +19,7 @@ import org.json.JSONException;
 
 public class ResponseClassGenerator {
 
-    public static boolean generateClasses(Project project, String directory, String name, String responseBody, Language language, Framework framework, AutomaticClassGenerationOptions generationOptions)
+    public static boolean generateClasses(Project project, String directory, String packageName, String name, String responseBody, Language language, Framework framework, AutomaticClassGenerationOptions generationOptions)
     {
         // Response body example:
         // "{\n    \"userId\": 1,\n    \"id\": 1,\n    \"title\": \"sunt aut facere repellat provident occaecati excepturi optio reprehenderit\",\n    \"body\": \"quia et suscipit\\nsuscipit recusandae consequuntur expedita et cum\\nreprehenderit molestiae ut ut quas totam\\nnostrum rerum est autem sunt rem eveniet architecto\"\n}"
@@ -49,9 +51,6 @@ public class ResponseClassGenerator {
             assert returnTypeClassesDirVirtualFile != null;
             PsiDirectory psiDirectory = PsiManager.getInstance(project).findDirectory(returnTypeClassesDirVirtualFile);
             assert psiDirectory != null;
-
-
-            String packageName = PackageIndex.getInstance(project).getPackageNameByDirectory(returnTypeClassesDirVirtualFile);
 
             ProjectModel projectModel = new ProjectModel(
                     psiDirectory,

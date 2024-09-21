@@ -1,6 +1,7 @@
 package com.hamed.postmantoretrofit2v2.forms;
 
 import com.hamed.postmantoretrofit2v2.Constants;
+import com.hamed.postmantoretrofit2v2.UserSettings;
 import com.hamed.postmantoretrofit2v2.forms.listeners.DialogClosedListener;
 import com.hamed.postmantoretrofit2v2.forms.listeners.JsonDialogReturnedData;
 import com.hamed.postmantoretrofit2v2.forms.listeners.OptionsDialogReturnedData;
@@ -8,7 +9,15 @@ import com.hamed.postmantoretrofit2v2.forms.listeners.ReturnedData;
 import com.hamed.postmantoretrofit2v2.pluginstate.PluginService;
 import com.hamed.postmantoretrofit2v2.pluginstate.PluginState;
 import com.hamed.postmantoretrofit2v2.pluginstate.helperclasses.AutomaticClassGenerationOptions;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.PackageIndex;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiManager;
+import com.intellij.util.concurrency.AppExecutorUtil;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -37,6 +46,7 @@ public class JsonDialog extends JDialog  {
 
     OptionsDialog optionsDialog;
     AutomaticClassGenerationOptions automaticClassGenerationOptions;
+    String generatedClassesPackageName;
     Container optionsDialogContentPane;
 
     public JsonDialog(Project project) {
@@ -44,6 +54,7 @@ public class JsonDialog extends JDialog  {
         optionsDialog = new OptionsDialog(this, mProject);
         optionsDialogContentPane = optionsDialog.getContentPane();
         automaticClassGenerationOptions = new AutomaticClassGenerationOptions();
+        generatedClassesPackageName = "";
 
         setContentPane(contentPane);
         setModal(true);
@@ -115,7 +126,7 @@ public class JsonDialog extends JDialog  {
     private void onOK() {
         dispose();
         if (dialogClosedListener != null)
-            dialogClosedListener.onUserConfirm(new JsonDialogReturnedData(jsonTextArea.getText(), dynamicHeaderCheckBox.isSelected(), automaticClassGenerationOptions));
+            dialogClosedListener.onUserConfirm(new JsonDialogReturnedData(jsonTextArea.getText(), dynamicHeaderCheckBox.isSelected(), automaticClassGenerationOptions, generatedClassesPackageName));
     }
 
     private void onCancel() {
@@ -145,9 +156,20 @@ public class JsonDialog extends JDialog  {
             public void onUserConfirm(ReturnedData data) {
                 OptionsDialogReturnedData dialogReturnedData = (OptionsDialogReturnedData) data;
                 automaticClassGenerationOptions = dialogReturnedData.getAutomaticClassGenerationOptions();
+                ReadAction.nonBlocking(() -> {
+                    UserSettings userSettings = new UserSettings(mProject);
+                    VirtualFile returnTypeClassesDirVirtualFile = LocalFileSystem.getInstance().findFileByPath(userSettings.getReturnTypeClassesDirectory());
+                    assert returnTypeClassesDirVirtualFile != null;
+                    PsiDirectory psiDirectory = PsiManager.getInstance(mProject).findDirectory(returnTypeClassesDirVirtualFile);
+                    assert psiDirectory != null;
+
+                    return PackageIndex.getInstance(mProject).getPackageNameByDirectory(returnTypeClassesDirVirtualFile);
+                }).finishOnUiThread(ApplicationManager.getApplication().getDefaultModalityState(), packageName -> {
+                    generatedClassesPackageName = packageName;
+                }).submit(AppExecutorUtil.getAppExecutorService());
             }
         });
-        optionsDialog.setVisible(true);
+        SwingUtilities.invokeLater(() -> optionsDialog.setVisible(true));
     }
 
     public void setOnDialogClosedListener(DialogClosedListener dialogClosedListener)

@@ -11,12 +11,15 @@ build/
 .idea/compiler.xml
 .idea/workspace.xml
 .idea/libraries/
+.idea/runConfigurations/
+.idea/*
 *.iws
 *.iml
 *.ipr
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+.run/*
 
 ### Eclipse ###
 .apt_generated
