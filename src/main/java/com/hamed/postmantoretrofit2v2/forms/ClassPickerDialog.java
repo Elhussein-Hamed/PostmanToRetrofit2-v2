@@ -1,7 +1,6 @@
 package com.hamed.postmantoretrofit2v2.forms;
 
 import com.hamed.postmantoretrofit2v2.Constants;
-import com.hamed.postmantoretrofit2v2.datacontext.DataContextWrapper;
 import com.hamed.postmantoretrofit2v2.forms.listeners.ClassPickerDialogReturnedData;
 import com.hamed.postmantoretrofit2v2.forms.listeners.DialogClosedListener;
 import com.hamed.postmantoretrofit2v2.messaging.Message;
@@ -36,8 +35,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public class ClassPickerDialog extends JDialog implements MessageSubscriber {
@@ -176,11 +173,10 @@ public class ClassPickerDialog extends JDialog implements MessageSubscriber {
         // GeneratePOJOAction.
         // See: https://github.com/robohorse/RoboPOJOGenerator/blob/c54bf938fc0b454cc87bf03173a2a6167f932e28/core/src/main/kotlin/com/robohorse/robopojogenerator/delegates/EnvironmentDelegate.kt#L24
         // and  https://github.com/robohorse/RoboPOJOGenerator/blob/c54bf938fc0b454cc87bf03173a2a6167f932e28/core/src/main/kotlin/com/robohorse/robopojogenerator/delegates/EnvironmentDelegate.kt#L43
-        Map<String, Object> map = new HashMap<>();
-        map.put(LangDataKeys.VIRTUAL_FILE.getName(), returnTypeClassesDirVirtualFile);
-        map.put(CommonDataKeys.NAVIGATABLE.getName(), psiDirectory);
-
-        DataContext dataContext = DataContextWrapper.getContext(map, DataManager.getInstance().getDataContext(mEditor.getComponent()));
+        DataContext dataContext = CustomizedDataContext.withSnapshot(DataManager.getInstance().getDataContext(mEditor.getComponent()), sink -> {
+            sink.set(LangDataKeys.VIRTUAL_FILE, returnTypeClassesDirVirtualFile);
+            sink.set(CommonDataKeys.NAVIGATABLE, psiDirectory);
+        });
 
         try {
             new GeneratePOJOAction().actionPerformed(
