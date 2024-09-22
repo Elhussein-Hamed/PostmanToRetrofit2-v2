@@ -1,5 +1,3 @@
-import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask
-
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.0.0"
@@ -8,7 +6,7 @@ plugins {
 }
 
 group = "com.hamed"
-version = "2.2.0"
+version = "2.3.0"
 
 repositories {
     mavenCentral()
@@ -26,7 +24,7 @@ dependencies {
 
     intellijPlatform {
         // Target IDE Platform
-        create("IC", "2024.1")
+        intellijIdeaCommunity("2024.2")
 
         bundledPlugin("com.intellij.java")
         plugin("com.robohorse.robopojogenerator:2.6.1")

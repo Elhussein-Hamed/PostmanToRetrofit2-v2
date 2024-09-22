@@ -10,6 +10,9 @@ build/
 .idea/my-plugin-state.xml
 .idea/compiler.xml
 .idea/workspace.xml
+.idea/misc.xml
+.idea/kotlinc.xml
+.idea/inspectionProfiles/*
 .idea/libraries/
 .idea/runConfigurations/
 .idea/*
@@ -20,6 +23,7 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 .run/*
+.intellijPlatform/**
 
 ### Eclipse ###
 .apt_generated
