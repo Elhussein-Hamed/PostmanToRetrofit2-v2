@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.hamed"
-version = "2.3.0"
+version = "3.0.0"
 
 repositories {
     mavenCentral()
@@ -62,7 +62,7 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("231.0") // From 2023.1
+        sinceBuild.set("242.0") // From 2024.2
     }
 
     signPlugin {
